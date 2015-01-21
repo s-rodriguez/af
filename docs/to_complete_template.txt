@@ -1,0 +1,150 @@
+Objetivo
+
+	Introduccion al tema
+		- que es la anonimizacion
+		- porque usar anonimizacion
+		- futuro + anonimizacion
+		- uso de arquitecturas cloud con datos publicos
+		- estadisticas
+			- investigacion
+			- generar conocimiento e informacion
+			- nutrir modelos de datos existentes
+	Porque de la eleccion?
+		- campo en expansion
+		- muy relevante la anonimizacion hoy en dia
+		- no existe algo generico
+		- Desafio
+			- Es una tematica compleja
+			- Intervienen datos privados
+				- Intervienen aspectos legales
+			- Hay material, pero es escaso
+			- Mucha investigacion
+			- Lograr determinar tecnica correcta
+
+Alcance
+	Requerimientos Funcionales
+		[Detalle de funcionalidades que deberá tener la aplicación a desarrollar]
+		Introduccion al sistema
+			- que va a hacer?
+				- Estructurar cualquier tipo de BD? 
+				- Seleccion de tablas a anonimizar por el usuario?
+				- Anonimizar datos. (En que formato? Por que?)
+				- Que voy a hacer con los datos anonimizados?
+					- Tengo conexion a la nube?
+						- No? Tengo estructura para adaptarme?
+					- Genero estadisticas de esos datos?
+						- Cuales? Por que? Para que?
+
+			- como lo va a hacer? 
+				- Estructuracion de DB xxx?
+				- Archivo de configuracion para la anonimizacion?
+				- Tecnicas de anonimizacion?
+				- Tipos de estadisticas?
+
+	Mapa de Alcance
+		[Desprender de los Req. Funcionales]
+			- Enumeracion de modulos y funcionalidades del sistema.
+
+	Mapa de Fuera de Alcance
+		- cloud entra?
+			- arquitectura adaptable?
+		- estadisticas?
+			- algunas futuras?
+		- documentacion?
+		- manual de usuario?				
+
+
+	Requerimentos no Funcionales
+
+		Hardware
+		[Detalle del equipamiento mínimo que se requerirá para instalar la aplicación a desarrollar]
+			- Hay alguna restriccion de hardware?
+				- Corre local?
+				- Consume mucho espacio/memoria?
+
+		Software
+		[Detalle de software de base (indicar si se desarrolla para un sistema opertativo en particular o con independencia de plataforma, manejador de base de datos, servidor web, etc.), indicando en cada caso si es libre o propietario, etc.]
+			- Multiplataforma?
+			- Corre local?
+			- DBM?
+			- Arquitectura cloud?
+			- Servidores?
+
+		Seguridad
+			- Anonimizacion segura
+			- Anonimizacion reversible?
+			- Restriccion por usuario?
+			- Datos en cloud? Publicos? Como los aseguro?
+			- Metodos de control de seguridad?
+
+		Rendimiento
+			- Hay alguna restriccion/requisito?
+				- Performance?
+					- Concurrencia para la anonimizacion?
+				- Poco consumo de memoria?
+					- Uso de lazy functions?
+
+Herramientas de Desarrollo
+
+	Hardware
+	[Detalle del equipamiento que se utilizará para desarrollar la aplicación]
+
+
+	Software
+		- Backend
+			- Python
+		- Frontend
+			- En browser?
+				- Django / Rails / JS?
+			- Local?
+				- Java?
+		- GIT (Link al repo)
+		- IDE?
+		- Frameworks?
+			- Bootstrap p/ browser?
+			- Algo para Cloud?
+			- GTK?
+		- OS's?		
+
+
+Metodología
+	[Indicar la metodología de desarrollo a utilizar detallando fases o etapas y artefactos a entregar al finalizar cada una, con referencias bibliográficas]
+
+	- Metodologias?
+		- SCRUM?
+		- Kanban?
+		- XP?
+		- TDD?
+		- Cual sirve para trabajo individual? Por que?
+		- Que metodologia adaptada tomo?
+
+	- Herramientas de Gestion?
+		- JIRA
+		- TRELLO
+		- Otras?
+
+	- Herramientas de Modelado?
+		- UML
+
+	- Trazabilidad en el codigo?
+	- Duracion de iteraciones?
+	- Tipo de hitos/objetivos de iteraciones?
+	- Existencia de Tests?
+	- Formas de comunicacion/entrega
+
+Cronograma
+[En caso de que la metodología sea iterativa e incremental detallar ciclos y alcances con duración en días y carga de trabajo por persona; la carga total  de horas hombre por persona no puede ser inferior a 380]
+
+	- Dividir trabajo por iteraciones.
+	- Calcular etapas equitativas
+	- Tener en cuenta:
+		- Estimacion sobre Spikes
+		- Uso de tecnologias nuevas?
+
+
+
+Referencias
+
+
+
+
