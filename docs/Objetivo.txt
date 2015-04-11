@@ -52,9 +52,9 @@ Hoy en dia, existen diversas tecnicas para ocultar o oscurecer IPI [7] (No tenem
 	- Preservacion del prefijo: Se retiene del prefijo de una direccion IP n-bits
 
 Modelos de Anonimizacion
-Si la anonimizacion no se realiza de manera correcta, puede tener consecuencias severas. Un ejemplo claro y reciente es el de Netflix [8], donde publico una base de datos con usuarios y peliculas seleccionadas; para proteger la identidad de los usuarios, se reemplazaron los nombres por numeros aleatorios y se removieron detalles personales. Sin embargo, correlacionando los datos con otra base publica de peliculas, se pudieron deducir las identidades de varios de los usuarios.
+Si la anonimizacion no se realiza de manera correcta, puede tener consecuencias severas. Un ejemplo claro y reciente es el de Netflix [8], donde hicieron publica una base de datos con usuarios y peliculas seleccionadas; para proteger la identidad de los usuarios, se reemplazaron los nombres por numeros aleatorios y se removieron detalles personales. Sin embargo, correlacionando los datos con otra base publica de peliculas, se pudieron deducir las identidades de varios de los usuarios.
 
-Es por este motivo, que para anonimizar de manera correcta se debe hacer mas que eliminar o oscurecer datos. A raiz de esto, surgieron modelos que ayudan a mejorar la anonimizacion.
+Es por este motivo, que para anonimizar de manera correcta se debe hacer mas que eliminar o oscurecer datos. A raiz de esto, surgieron modelos que ayudan a mejorar la anonimizacion. Entre ellos, los mas destacados son: k-Anonimity y l-Diversity
 
 k-Anonimity [9]
 El objetivo de este modelo es hacer cada registro sea indistinguible de un numero 'k' de otros registros. Se dice que un set de datos esta 'k-anonimizado' si para cada registro con determinados atributos, existen por lo menos otros 'k-1' registros que coinciden con el valor esos mismos atributos.
@@ -77,18 +77,15 @@ EJEMPLO Table 3 (INTEL PDF)
 Mientras que este modelo añade un grado mayor de privacidad que anterior por si solo, la ocurrencia natural de atributos sensibles puede que no provea suficiente variedad para alcanzar el objetivo teorico. Es por esto, que data ficticia puede ser insertada para incrementar las ocurrencias, pero hay que balancear el incremento ya que esto afecta el proceso posterior de analisis de datos
 
 
-t-Closeness [11]
-Este modelo es un refinamiento del anterior, 
+Debido a que la anonimizacion como tal se encuentra en etapa de crecimiento e investigacion, continuamente se estan proponiendo mejoras a tecnicas y modelos existentes (Como por ejemplo es el caso del modelo t-Closeness [11] que viene a ser una mejora a aplicar luego del l-Diversity), asi como tambien se revisan los conceptos de privacidad de datos. 
 
+Es por este motivo, que si bien ha habido un progreso importante en pos de proteger la privacidad de las personas, se desconocen mucho al momento y existen areas listas para ser investigadas.
 
+Una de estas areas es el analizar que tan fuerte es la anonimizacion de datos realizada a partir de determinados modelos. Nacen preguntas tales como cuantos atributos son necesarios que se divulguen para que la anonimizacion realizada pueda ser reversible? (Es decir, de un set de datos anonimizados, poder deducir los datos originales) Que riesgo existe si el set de datos anonimizados es linkeado con otras bases publicas? Ya vimos que existen casos donde se cree que haber aplicado tecnicas de anonimizacion es suficiente para garantizar la privacidad, y sin embargo usando la tecnologia de hoy en dia y bases publicas es posible volver a los datos originales.
 
-Puede ser reversible?
-		Hay forma de des-anonimizar la informacion a partir de un dato?
-		Se puede obtener informacion de datos anonimizados que sea consecuente con la info sin anonimizar?
-		Riesgos dentro de la anonimizacion?
+Otra area de interes es la mineria de datos y extraccion de informacion concreta de los datos anonimizados. Si anonimizo un set de datos, que y cuanta informacion concreta puedo sacar del mismo? Que tan consistente es con los datos originales? Que tecnicas o formas de extraccion de datos es la recomendada para datos anonimizados?
 
-		Se sabe muy poco
-
+El objetivo de este trabajo es por un lado proveer un framework de anonimizacion generico que permita utilizar las tecnicas y modelos conocidos sobre bases de datos con informacion privada (El mismo sera utilizado como un modulo dentro de una plataforma de seguridad, con el fin de anonimizar datos provistos por clientes); y por el otro lado realizar una investigacion en las areas de riesgos de anonimizacion y de extraccion de informacion de datos anonimizados, cuyo fin es utilizar los resultados para nutrir un modelo de riesgo existente en la plataforma, asi como tambien reutilizar la informacion con fines de avanzar con la investigacion. El proyecto sera desarrollado de manera Open Source, y se pretende que el mismo siga creciendo una vez finalizado el proyecto tanto en su alcance como framework como en analisis nuevos.
 
 
 [1] ARPANET - http://en.wikipedia.org/wiki/ARPANET
