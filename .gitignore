@@ -4,3 +4,4 @@ ot
 .coverage
 *.py[co]
 af.egg-info/
+docs/_build/
