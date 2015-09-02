@@ -21,7 +21,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     platforms='any',
-    test_suite='af.test.test_af',
+    test_suite='af.tests.test_af',
     extras_require={
         'testing': ['pytest'],
     },

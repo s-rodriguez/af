@@ -5,7 +5,7 @@ del get_versions
 
 def main(cls=None, method=None, resource=None):
     """
-    Dummy Function to test setup things, like Sphinx, tox, and others.
+    Dummy Function to tests setup things, like Sphinx, tox, and others.
 
     :param cls: class associated with the request's endpoint
     :type cls: :class:`sandman.model.Model` instance
