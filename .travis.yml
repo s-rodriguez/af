@@ -9,5 +9,6 @@ notifications:
   email:
     recipients:
       - sebastianr213@gmail.com
+      - sebasrodriguez_89@hotmail.com
     on_success: change
     on_failure: always
