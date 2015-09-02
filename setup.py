@@ -1,17 +1,17 @@
 from setuptools import setup, find_packages
 import versioneer
-from af.af_cmd_class import PyTest
+from af.af_cmd_class import Tox
 
 
 def get_cmd_class():
     cmd_class = versioneer.get_cmdclass()
-    cmd_class['test'] = PyTest
+    cmd_class['test'] = Tox
     return cmd_class
 
 setup(
     name='af',
     version=versioneer.get_version(),
-    tests_require=['pytest'],
+    tests_require=['tox'],
     install_requires=[],
     cmdclass=get_cmd_class(),
     description='Anonymization Framework',
