@@ -2,7 +2,7 @@
 
 class Foo(object):
 
-    def __init__(self, number=1, name="Foo"):
+    def __init__(self, number=1, name="Foo1"):
         self.number = number
         self.name = name
 

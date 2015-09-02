@@ -1,4 +1,3 @@
--e git+https://github.com/s-rodriguez/af.git@3874cfe9e93a3af776d75511f12717ea70a05899#egg=af-develop
 alabaster==0.7.6
 Babel==2.0
 coverage==3.7.1
