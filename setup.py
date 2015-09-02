@@ -1,7 +1,12 @@
 from setuptools import setup, find_packages
 import versioneer
+from af.af_cmd_class import PyTest
 
-from _af_cmd_class import get_cmd_class
+
+def get_cmd_class():
+    cmd_class = versioneer.get_cmdclass()
+    cmd_class['test'] = PyTest
+    return cmd_class
 
 setup(
     name='af',

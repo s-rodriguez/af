@@ -1,2 +1,6 @@
 ot
 .idea/
+.tox/
+.coverage
+*.py[co]
+af.egg-info/
