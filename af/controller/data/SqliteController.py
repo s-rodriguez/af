@@ -9,7 +9,7 @@ class SqliteController(DataController):
         DataController.__init__(self, data_location)
         self.controller_type = 'sqlite'
 
-    def execute_query(self, query):
+    def _execute_query(self, query):
         with sqlite3.connect(self.data_location) as conn:
             cursor = conn.cursor()
 
@@ -23,7 +23,7 @@ class SqliteController(DataController):
         :return: list with all available tables
         """
         query = "SELECT name FROM sqlite_master WHERE type='table';"
-        tables = list(self.execute_query(query))
+        tables = list(self._execute_query(query))
         return tables
 
     def table_columns_info(self, table_name):
@@ -37,7 +37,7 @@ class SqliteController(DataController):
 
     def get_table_data(self, table_name):
         query = "SELECT * FROM {table}".format(table=table_name)
-        return list(self.execute_query(query))
+        return list(self._execute_query(query))
 
 if __name__ == '__main__':
     location = '/home/srodriguez/repos/edat/edat/utils/test.db'

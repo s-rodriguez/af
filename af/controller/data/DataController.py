@@ -6,9 +6,6 @@ class DataController:
         self.data_location = data_location
         self.controller_type = None
 
-    def execute_query(self, query):
-        return NotImplementedError
-
     def db_available_tables(self):
         return NotImplementedError
 
