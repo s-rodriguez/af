@@ -5,13 +5,14 @@ from af.controller.data.DataController import DataController
 
 class CSVController(DataController):
 
+    CONTROLLER_TYPE = 'csv'
+
     def __init__(self, data_location):
         DataController.__init__(self, data_location)
-        self.controller_type = 'csv'
         self.rows = None
 
     def db_available_tables(self):
-        return self._file_name()
+        return [[self._file_name()]]
 
     def table_columns_info(self, table_name=None):
         if self.rows is None:

@@ -5,9 +5,10 @@ from af.controller.data.DataController import DataController
 
 class SqliteController(DataController):
 
+    CONTROLLER_TYPE = 'sqlite'
+
     def __init__(self, data_location):
         DataController.__init__(self, data_location)
-        self.controller_type = 'sqlite'
 
     def _execute_query(self, query):
         with sqlite3.connect(self.data_location) as conn:

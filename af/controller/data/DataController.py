@@ -1,10 +1,12 @@
 
 
-class DataController:
+class DataController(object):
+
+    CONTROLLER_TYPE = None
 
     def __init__(self, data_location):
         self.data_location = data_location
-        self.controller_type = None
+        self.controller_type = self.CONTROLLER_TYPE
 
     def db_available_tables(self):
         return NotImplementedError
