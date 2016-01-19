@@ -40,9 +40,20 @@ class SqliteController(DataController):
         query = "SELECT * FROM {table}".format(table=table_name)
         return list(self._execute_query(query))
 
+    def get_table_columns_type(self, table_name):
+        query = "SELECT * FROM {table} LIMIT 1".format(table=table_name)
+        return [type(column) for column in list(self._execute_query(query))[0]]
+
+    def amount_of_rows(self, table_name):
+        query = "SELECT COUNT(*) FROM {table}".format(table=table_name)
+        return list(self._execute_query(query))[0][0]
+
+
 if __name__ == '__main__':
-    location = '/home/srodriguez/repos/edat/edat/utils/test.db'
+    location = '/home/srodriguez/repos/af/af/utils/test.db'
     sqlite_controller = SqliteController(location)
     print sqlite_controller.db_available_tables()
     print sqlite_controller.table_columns_info('Cars')
     print sqlite_controller.get_table_data('Cars')
+    print sqlite_controller.get_table_columns_type('Cars')
+    print sqlite_controller.amount_of_rows('Cars')
