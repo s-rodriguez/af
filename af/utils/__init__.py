@@ -1,6 +1,7 @@
 import json
 
 EDAT_PROJECT_EXTENSION = '.edat'
+CONFIG_EXTENSION = '.config'
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
