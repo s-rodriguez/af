@@ -3,6 +3,7 @@ import abc
 class DataController(object):
 
     CONTROLLER_TYPE = None
+    CONTROLLER_EXTENSION = None
 
     def __init__(self, data_location):
         self.data_location = data_location

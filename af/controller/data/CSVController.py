@@ -6,6 +6,7 @@ from af.controller.data.DataController import DataController
 class CSVController(DataController):
 
     CONTROLLER_TYPE = 'csv'
+    CONTROLLER_EXTENSION = 'CSV (*.csv)'
 
     def __init__(self, data_location):
         DataController.__init__(self, data_location)
@@ -45,7 +46,7 @@ class CSVController(DataController):
 
 
 if __name__ == '__main__':
-    location = '/home/srodriguez/repos/af/af/utils/test.csv'
+    location = '/home/gustavo/facultad/tpprof/app/af/af/utils/test.csv'
     csv_controller = CSVController(location)
     print csv_controller.db_available_tables()
     print csv_controller.table_columns_info()

@@ -6,6 +6,7 @@ from af.controller.data.DataController import DataController
 class SqliteController(DataController):
 
     CONTROLLER_TYPE = 'sqlite'
+    CONTROLLER_EXTENSION = 'SQLite (*.sqlite3 *.db *.sqlite)'
 
     def __init__(self, data_location):
         DataController.__init__(self, data_location)
