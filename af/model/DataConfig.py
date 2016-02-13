@@ -1,7 +1,7 @@
 import os
 from af.model.Attribute import Attribute
 import af.utils as utils
-from edat.exceptions import ImportException
+from af.exceptions import ImportException
 
 
 class DataConfig:
