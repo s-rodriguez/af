@@ -1,5 +1,7 @@
+import os
 from af.model.Attribute import Attribute
 import af.utils as utils
+from edat.exceptions import ImportException
 
 
 class DataConfig:
@@ -23,11 +25,20 @@ class DataConfig:
 
     def load_config(self, json_string):
         config_dict = utils.load_json(json_string)
+        self.validate_config_to_load(config_dict)
         self.location = config_dict['location']
         self.type = config_dict['data_type']
         self.table = config_dict['table']
         for attribute_config in config_dict['attributes']:
             self.attributes_list.append(Attribute(**attribute_config))
+
+    def validate_config_to_load(self, config_dict):
+        errors = []
+        if not os.path.isfile(config_dict['location']):
+            errors.append('Cannot find location of database')
+
+        if len(errors) > 0:
+            raise ImportException('\n'.join(errors))
 
     def mock_attributes(self):
         attr_id = Attribute('Id', utils.BASIC_TYPE_INT, utils.PRIVACY_TYPE_1, None)
