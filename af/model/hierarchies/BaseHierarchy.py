@@ -13,11 +13,13 @@ class BaseHierarchy(object):
                 return node
         return None
 
-    def get_generalization_level_representation(self, starting_node, generalization_level):
+    def get_generalization_level_representation(self, starting_node, generalization_level, supress_if_none=True):
         generalizated_node = starting_node
         for i in range(generalization_level):
             if generalizated_node.parent is not None:
                 generalizated_node = generalizated_node.parent
+            elif supress_if_none:
+                generalizated_node = BaseHierarchy.supression_node(generalizated_node)
         return generalizated_node
 
     def add_node(self, parent_node, leaf_node):
@@ -42,6 +44,11 @@ class BaseHierarchy(object):
             for node in parent_node.nodes:
                 self.print_hierarchy(node, next_level)
 
+    @staticmethod
+    def supression_node(node):
+        value = '*'*10
+        sup_node = Node(value, None, node)
+        return sup_node
 
 class Node(object):
 
