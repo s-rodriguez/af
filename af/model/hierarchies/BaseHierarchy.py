@@ -2,8 +2,7 @@
 
 class BaseHierarchy(object):
 
-    def __init__(self, name, root_node, leaf_nodes):
-        self.name = name
+    def __init__(self, root_node, leaf_nodes):
         self.root_node = root_node
         self.leaf_nodes = leaf_nodes
 
@@ -43,6 +42,28 @@ class BaseHierarchy(object):
         if parent_node.nodes is not None:
             for node in parent_node.nodes:
                 self.print_hierarchy(node, next_level)
+
+    def hierarchy_representation(self, nodes=None):
+        walk_nodes = [self.root_node] if nodes is None else nodes
+        hierarchy = {}
+        for node in walk_nodes:
+            if node.nodes is not None:
+                hierarchy[node.value] = self.hierarchy_representation(node.nodes)
+            else:
+                return node.value
+        return hierarchy
+
+    def populate_nodes(self, parent_node, nodes):
+        import pdb; pdb.set_trace()
+        if isinstance(nodes, dict):
+            for key, values in nodes.iteritems():
+                node = Node(key)
+                self.add_node(parent_node, node)
+                self.populate_nodes(node, values)
+        else:
+            # leaf node, only the value
+            import pdb; pdb.set_trace()
+            self.add_node(parent_node, Node(nodes))
 
     @staticmethod
     def supression_node(node):
