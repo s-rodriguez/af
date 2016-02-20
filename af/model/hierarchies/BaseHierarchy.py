@@ -53,17 +53,15 @@ class BaseHierarchy(object):
                 return node.value
         return hierarchy
 
-    def populate_nodes(self, parent_node, nodes):
-        import pdb; pdb.set_trace()
+    def populate_nodes(self, parent_node, nodes, attribute_type):
         if isinstance(nodes, dict):
             for key, values in nodes.iteritems():
-                node = Node(key)
+                node = Node(attribute_type(key))
                 self.add_node(parent_node, node)
-                self.populate_nodes(node, values)
+                self.populate_nodes(node, values, attribute_type)
         else:
             # leaf node, only the value
-            import pdb; pdb.set_trace()
-            self.add_node(parent_node, Node(nodes))
+            self.add_node(parent_node, Node(attribute_type(nodes)))
 
     @staticmethod
     def supression_node(node):

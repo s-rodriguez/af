@@ -1,3 +1,4 @@
+import argparse
 import random
 
 from af.model.hierarchies.BaseHierarchy import Node, BaseHierarchy
@@ -19,6 +20,29 @@ def create_hierarchy():
 
     return BaseHierarchyController(baseh)
 
+
 def load(config):
-    return BaseHierarchyController.load_hierarchy(config)
+    bhc = BaseHierarchyController()
+    bhc.load_hierarchy(config, int)
+    return bhc
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-play', type=int, action='store', dest='play')
+
+    results = parser.parse_args()
+
+    play = 2
+
+    if results.play == 1 or play == 1:
+        h = create_hierarchy()
+        with open('test', 'w+') as f:
+            f.write(h.get_json_representation())
+    else:
+        with open('test', 'r+') as f:
+            config = f.read()
+        bhc = load(config)
+        print bhc.get_json_representation()
 

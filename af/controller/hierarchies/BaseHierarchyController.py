@@ -1,15 +1,18 @@
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy, Node
 import af.utils as utils
+
+
 class BaseHierarchyController(object):
 
     def __init__(self, hierarchy=None):
         self.hierarchy = hierarchy
 
-    def load_hierarchy(self, config):
-        root_node = Node(config.keys()[0])
+    def load_hierarchy(self, config_json, attribute_type=str):
+        config = utils.load_json(config_json)
+        root_node = Node(attribute_type(config.keys()[0]))
         self.hierarchy = BaseHierarchy(root_node, [])
 
-        self.hierarchy.populate_nodes(root_node, config.values()[0])
+        self.hierarchy.populate_nodes(root_node, config.values()[0], attribute_type)
 
         return self.hierarchy
 
