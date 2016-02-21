@@ -5,3 +5,4 @@ ot
 *.py[co]
 af.egg-info/
 docs/_build/
+*.edat

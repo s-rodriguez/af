@@ -4,7 +4,7 @@ from af.model.transformation_techniques.TransformationTechnique import Transform
 class SuppressionTechnique(TransformationTechnique):
     TECHNIQUE_KEY = 'Suppression'
 
-    def transform(self, data):
+    def transform(self, data, lvl=None):
         """Suppress the given data in a complete way
         :param data: intended to be suppress
         """
