@@ -1,25 +1,35 @@
-import abc
+from af.controller.hierarchies.BaseHierarchyController import BaseHierarchyController
 
 
 class TransformationTechnique(object):
-    __metaclass__ = abc.ABCMeta
-    TECHNIQUE_KEY = None
 
-    def __init__(self, hierarchy):
+    def __init__(self, name, hierarchy=None):
+        self.name = name
         self.hierarchy = hierarchy
 
-    @abc.abstractmethod
     def transform(self, data, lvl=None):
         """Transform original data using its particular technique
         :param data: intended to be modified
         """
-        return
+        if self.hierarchy is None:
+            raise Exception('No hierarchy found')
+        return self.hierarchy.transform(data, lvl)
 
     def get_json_representation(self):
         """Returns the json representation of the techinque"""
-        return {'technique_key': self.TECHNIQUE_KEY}
+        hierarchy_representation = self.hierarchy.hierarchy_representation() if self.hierarchy is not None else {}
+        return {
+            'name': self.name,
+            'hierarchy': hierarchy_representation,
+            }
 
-    @abc.abstractmethod
-    def save_technique(self):
-        """Get the technique representation to be able to save it"""
-        return
+    @staticmethod
+    def load_technique(technique_config, data_type):
+        name = technique_config['name']
+        hierarchy_config = technique_config['hierarchy']
+
+        bhc = BaseHierarchyController()
+        bhc.load_hierarchy(hierarchy_config, data_type)
+
+        transformation_technique = TransformationTechnique(name, bhc.hierarchy)
+        return transformation_technique

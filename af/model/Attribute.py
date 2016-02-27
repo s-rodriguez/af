@@ -1,3 +1,4 @@
+from af.model.transformation_techniques.TransformationTechnique import TransformationTechnique
 from af.utils import load_json
 
 
@@ -7,7 +8,7 @@ class Attribute(object):
         self.name = name
         self.basic_type = basic_type
         self.privacy_type = privacy_type
-        self.transformation_technique = transformation_technique
+        self.transformation_technique = self.set_transformation_technique(transformation_technique)
 
     def get_json_representation(self):
         return {
@@ -32,8 +33,5 @@ class Attribute(object):
 
     def set_transformation_technique(self, technique):
         self.transformation_technique = None
-        #if technique is not None:
-        #    self.transformation_technique = TechniqueFactory(technique)
-        #else:
-        #    self.transformation_technique = None
-
+        if technique is not None:
+            self.transformation_technique = TransformationTechnique.load_technique(technique, self.basic_type)

@@ -69,6 +69,16 @@ class BaseHierarchy(object):
         sup_node = Node(value, None, node)
         return sup_node
 
+
+    def transform(self, data_value, lvl):
+        if self.root_node == BaseHierarchy.supression_node(None):
+            return self.root_node.value
+
+        data_node = self.get_leaf_node(data_value)
+        transformed_node = self.get_generalization_level_representation(data_node, lvl)
+        return transformed_node.value
+
+
 class Node(object):
 
     def __init__(self, value, parent=None, nodes=None):
