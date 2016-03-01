@@ -5,8 +5,10 @@ from af.model.hierarchies.BaseHierarchy import Node, BaseHierarchy
 from af.controller.hierarchies.BaseHierarchyController import BaseHierarchyController
 
 def create_hierarchy():
+    baseh = BaseHierarchy()
     root_node = Node(0)
-    baseh = BaseHierarchy(root_node, [])
+
+    baseh.add_node(baseh.root_node, root_node)
 
     for i in range(0, 3):
         n = Node(random.randint(1,100))

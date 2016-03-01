@@ -11,9 +11,8 @@ class BaseHierarchyController(object):
         config = utils.load_json(config_json)
 
         if len(config) > 0:
-            root_node = Node(attribute_type(config.keys()[0]))
-            self.hierarchy = BaseHierarchy(root_node, [])
-            self.hierarchy.populate_nodes(root_node, config.values()[0], attribute_type)
+            self.hierarchy = BaseHierarchy()
+            self.hierarchy.populate_nodes(self.hierarchy.root_node, config.values()[0], attribute_type)
         else:
             supression_node = BaseHierarchy.supression_node(None)
             self.hierarchy = BaseHierarchy(supression_node, [])

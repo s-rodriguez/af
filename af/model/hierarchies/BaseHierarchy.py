@@ -2,9 +2,15 @@
 
 class BaseHierarchy(object):
 
-    def __init__(self, root_node, leaf_nodes):
-        self.root_node = root_node
-        self.leaf_nodes = leaf_nodes
+    def __init__(self):
+        self.leaf_nodes = []
+        self.root_node = self.create_supression_node()
+
+    def create_supression_node(self):
+        value = '*'*10
+        sup_node = Node(value, None, None)
+        self.maintain_leaf_nodes(sup_node, action='add')
+        return sup_node
 
     def get_leaf_node(self, leaf_node_value):
         for node in self.leaf_nodes:
@@ -12,13 +18,12 @@ class BaseHierarchy(object):
                 return node
         return None
 
-    def get_generalization_level_representation(self, starting_node, generalization_level, supress_if_none=True):
+    def get_generalization_level_representation(self, starting_node, generalization_level):
         generalizated_node = starting_node
         for i in range(generalization_level):
-            if generalizated_node.parent is not None:
-                generalizated_node = generalizated_node.parent
-            elif supress_if_none:
-                generalizated_node = BaseHierarchy.supression_node(generalizated_node)
+            if generalizated_node.parent is None:
+                break
+            generalizated_node = generalizated_node.parent
         return generalizated_node
 
     def add_node(self, parent_node, leaf_node):
@@ -62,13 +67,6 @@ class BaseHierarchy(object):
         else:
             # leaf node, only the value
             self.add_node(parent_node, Node(attribute_type(nodes)))
-
-    @staticmethod
-    def supression_node(node):
-        value = '*'*10
-        sup_node = Node(value, None, node)
-        return sup_node
-
 
     def transform(self, data_value, lvl):
         if self.root_node == BaseHierarchy.supression_node(None):
