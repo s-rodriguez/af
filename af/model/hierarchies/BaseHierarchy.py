@@ -32,6 +32,14 @@ class BaseHierarchy(object):
         self.maintain_leaf_nodes(parent_node, action='remove')
         self.maintain_leaf_nodes(leaf_node, action='add')
 
+    def find_node(self, node_value, starting_node=None):
+        start = self.root_node if starting_node == None else starting_node
+        if node_value == start.value:
+            return start
+
+        for n in start.nodes:
+            return self.find_node(node_value, n)
+
     def maintain_leaf_nodes(self, node, action='add'):
         if action == 'add':
             self.leaf_nodes.append(node)

@@ -1,5 +1,5 @@
 import unittest
-from af.model.hierarchies.BaseHierarchy import Node
+from af.model.hierarchies.Node import Node
 
 
 class TestNodes(unittest.TestCase):
