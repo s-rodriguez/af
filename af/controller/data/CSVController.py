@@ -43,13 +43,3 @@ class CSVController(DataController):
         if self.rows is None:
             self._load_csv()
         return len(self.rows)-1
-
-
-if __name__ == '__main__':
-    location = '/home/gustavo/facultad/tpprof/app/af/af/utils/test.csv'
-    csv_controller = CSVController(location)
-    print csv_controller.db_available_tables()
-    print csv_controller.table_columns_info()
-    print csv_controller.get_table_data()
-    print csv_controller.get_table_columns_type()
-    print csv_controller.amount_of_rows()
