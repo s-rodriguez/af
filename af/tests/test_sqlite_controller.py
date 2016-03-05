@@ -18,6 +18,14 @@ class TestSqliteController(unittest.TestCase):
 
         self.assertEqual(tables_expected, tables_result, "The tables do not match")
 
+    def test_table_columns_info_ok(self):
+        expected_info = ['Id', 'Name', 'Price']
+
+        columns_info = self.controller.table_columns_info('Cars')
+        print columns_info
+        self.assertTrue(len(columns_info) == 3, "There should be data retrieved")
+        self.assertEqual(expected_info, columns_info, "Data retrieved do not match with expected")
+
     def test_get_table_data_ok(self):
         first_record = (1, u'Audi', 52642)
 
