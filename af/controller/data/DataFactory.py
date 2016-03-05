@@ -30,12 +30,3 @@ class DataFactory:
             if cls.CONTROLLER_TYPE == controller_type:
                 return cls.CONTROLLER_EXTENSION
         raise ValueError()
-
-
-
-
-if __name__ == '__main__':
-    location = '/home/srodriguez/repos/edat/edat/utils/test.db'
-    dbtype = 'sqlite'
-    controller = DataFactory.create_controller(location, dbtype)
-    print controller
