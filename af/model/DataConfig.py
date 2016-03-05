@@ -39,10 +39,3 @@ class DataConfig:
 
         if len(errors) > 0:
             raise ImportException('\n'.join(errors))
-
-    def mock_attributes(self):
-        attr_id = Attribute('Id', utils.BASIC_TYPE_INT, utils.PRIVACY_TYPE_1, None)
-        attr_name = Attribute('Name', utils.BASIC_TYPE_STRING, utils.PRIVACY_TYPE_1, None)
-        attr_price = Attribute('Price', utils.BASIC_TYPE_INT, utils.PRIVACY_TYPE_1, None)
-
-        return [attr_id, attr_name, attr_price]
