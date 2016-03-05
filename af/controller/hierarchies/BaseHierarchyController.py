@@ -10,12 +10,11 @@ class BaseHierarchyController(object):
     def load_hierarchy(self, config_json, attribute_type=str):
         config = utils.load_json(config_json)
 
-        if len(config) > 0:
-            self.hierarchy = BaseHierarchy()
-            self.hierarchy.populate_nodes(self.hierarchy.root_node, config.values()[0], attribute_type)
-        else:
-            supression_node = BaseHierarchy.supression_node(None)
-            self.hierarchy = BaseHierarchy(supression_node, [])
+        new_hierarchy = BaseHierarchy()
+        if isinstance(config, dict):
+            new_hierarchy.populate_nodes(new_hierarchy.root_node, config.values()[0], attribute_type)
+
+        self.hierarchy = new_hierarchy
 
         return self.hierarchy
 

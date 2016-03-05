@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     results = parser.parse_args()
 
-    play = 2
+    play = 1
 
     if results.play == 1 or play == 1:
         h = create_hierarchy()
