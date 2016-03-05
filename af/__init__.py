@@ -1,7 +1,11 @@
+import os
 from ._version import get_versions
 __version__ = get_versions()['version']
 del get_versions
 
+
+def af_directory():
+    return os.path.dirname(os.path.abspath(__file__))
 
 def main(cls=None, method=None, resource=None):
     """

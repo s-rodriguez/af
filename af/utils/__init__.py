@@ -7,7 +7,7 @@ DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
 
 def get_json_representation(data_dict):
-    return json.dumps(data_dict, sort_keys=True, indent=2)
+    return json.dumps(data_dict)
 
 
 def load_json_file(json_file):
