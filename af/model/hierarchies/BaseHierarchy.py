@@ -1,3 +1,4 @@
+from af.exceptions import InfoException
 from af.model.hierarchies.Node import Node
 
 
@@ -36,9 +37,11 @@ class BaseHierarchy(object):
         start = self.root_node if starting_node == None else starting_node
         if node_value == start.value:
             return start
-
-        for n in start.nodes:
-            return self.find_node(node_value, n)
+        elif len(start.nodes) > 0:
+            for n in start.nodes:
+                return self.find_node(node_value, n)
+        else:
+            return None
 
     def maintain_leaf_nodes(self, node, action='add'):
         if action == 'add':
@@ -78,9 +81,18 @@ class BaseHierarchy(object):
             self.add_node(parent_node, Node(attribute_type(nodes)))
 
     def transform(self, data_value, lvl):
-        if self.root_node == BaseHierarchy.supression_node(None):
+        if lvl == 0:
+            return data_value
+
+        if self.root_node.nodes is None:
             return self.root_node.value
 
         data_node = self.get_leaf_node(data_value)
-        transformed_node = self.get_generalization_level_representation(data_node, lvl)
-        return transformed_node.value
+        if data_node is None:
+            data_node = self.find_node(data_value)
+
+        if data_node is not None:
+            transformed_node = self.get_generalization_level_representation(data_node, lvl)
+            return transformed_node.value
+
+        raise InfoException("Couldnt find node with the value: %s" % data_value)
