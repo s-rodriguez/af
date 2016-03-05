@@ -1,6 +1,8 @@
 import unittest
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy
 from af.model.hierarchies.Node import Node
+from af.exceptions import InfoException
+
 
 class TestHierarchies(unittest.TestCase):
 
@@ -111,3 +113,16 @@ class TestHierarchies(unittest.TestCase):
         self.assertEqual(2, t1, 'Generalization value dont match')
         self.assertEqual(1, t2, 'Generalization value dont match')
         self.assertEqual(self.h.root_node.value, t3, 'Generalization value dont match')
+
+    def test_cannot_transform_inexistent_value_on_generalization_hierarchy(self):
+        node1 = Node(1)
+
+        self.h.add_node(self.h.root_node, node1)
+
+        raised_exception = False
+        try:
+            self.h.transform(33, 1)
+        except InfoException:
+            raised_exception = True
+
+        self.assertTrue(raised_exception, 'An exception should have been raised')

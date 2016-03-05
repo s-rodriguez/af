@@ -37,7 +37,7 @@ class BaseHierarchy(object):
         start = self.root_node if starting_node == None else starting_node
         if node_value == start.value:
             return start
-        elif len(start.nodes) > 0:
+        elif start.nodes is not None and len(start.nodes) > 0:
             for n in start.nodes:
                 return self.find_node(node_value, n)
         else:
