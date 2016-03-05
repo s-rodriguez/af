@@ -58,6 +58,16 @@ class TestHierarchies(unittest.TestCase):
         self.assertTrue(len(self.h.leaf_nodes) == 1, "Hierarchy should have only one leaf node after addition")
         self.assertEqual(self.h.root_node, self.h.leaf_nodes[0], "Leaf nodes should contain only the root node")
 
+    def test_maintain_leaf_nodes_raise_exception_unknown_action(self):
+        failed = False
+        try:
+            node = Node(22)
+            self.h.maintain_leaf_nodes(node, 'asdfasdfsadf')
+        except Exception:
+            failed = True
+
+        self.assertTrue(failed, "Method should have failed")
+
     def test_get_generalization_level_ok(self):
         node1 = Node(1)
         node2 = Node(2)
@@ -68,10 +78,12 @@ class TestHierarchies(unittest.TestCase):
         gen_node_0 = self.h.get_generalization_level_representation(node2, 0)
         gen_node_1 = self.h.get_generalization_level_representation(node2, 1)
         gen_node_2 = self.h.get_generalization_level_representation(node2, 2)
+        gen_node_3 = self.h.get_generalization_level_representation(node2, 3)
 
         self.assertEqual(gen_node_0, node2, "Should be the same node")
         self.assertEqual(gen_node_1, node1, "Should be the same node")
         self.assertEqual(gen_node_2, self.h.root_node, "Should be the same node")
+        self.assertEqual(gen_node_3, self.h.root_node, "Should be the same node")
 
     def test_get_generalization_level_ok(self):
         node1 = Node(1)

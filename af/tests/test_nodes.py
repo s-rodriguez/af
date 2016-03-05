@@ -28,3 +28,9 @@ class TestNodes(unittest.TestCase):
         self.assertTrue(len(node.nodes) == 1, "Node should have 1 son node")
         node.remove_node(son_node)
         self.assertTrue(node.nodes == None, "Node should no son nodes")
+
+    def test_representation(self):
+        val = 1
+        n = Node(val)
+
+        self.assertEqual(str(val), n.__repr__(), "Representation should be the node value")
