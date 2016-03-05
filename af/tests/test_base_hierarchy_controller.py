@@ -2,6 +2,7 @@ import json
 import unittest
 
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy
+from af.model.hierarchies.Node import Node
 from af.controller.hierarchies.BaseHierarchyController import BaseHierarchyController
 
 class TestBaseHierarchyController(unittest.TestCase):
@@ -34,7 +35,20 @@ class TestBaseHierarchyController(unittest.TestCase):
         self.assertTrue(len(hierarchy_loaded.leaf_nodes) == 1, "There should be only 1 leaf node")
 
     def test_get_json_representation_no_hierarchy(self):
-        expected = {}
+        expected = None
         bh_controller = BaseHierarchyController(None)
 
         self.assertEqual(expected, bh_controller.get_json_representation())
+
+    def test_get_json_representation_supression_hierarchy(self):
+        expected = json.dumps("**********")
+
+        self.assertEqual(expected, self.bh_controller.get_json_representation())
+
+    def test_get_json_representation_generalization_hierarchy(self):
+        n = Node(1)
+        self.h.add_node(self.h.root_node, n)
+
+        expected = json.dumps({"**********": 1})
+
+        self.assertEqual(expected, self.bh_controller.get_json_representation())

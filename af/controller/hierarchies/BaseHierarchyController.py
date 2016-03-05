@@ -20,7 +20,7 @@ class BaseHierarchyController(object):
 
     def get_json_representation(self):
         if self.hierarchy is None:
-            return {}
+            return None
         else:
             hierarchy_config = self.hierarchy.hierarchy_representation()
             return utils.get_json_representation(hierarchy_config)
