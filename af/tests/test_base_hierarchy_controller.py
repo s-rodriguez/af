@@ -16,7 +16,7 @@ class TestBaseHierarchyController(unittest.TestCase):
         self.assertEqual(self.h, self.bh_controller.hierarchy, "Hierarchies do not match")
 
     def test_load_generalization_hierarchy_ok(self):
-        json_saved_hierarchy = json.dumps({"**********": {1: {2: 3}}})
+        json_saved_hierarchy = {"**********": {1: {2: 3}}}
 
         hierarchy_loaded = self.bh_controller.load_hierarchy(json_saved_hierarchy, attribute_type=int)
 
@@ -28,7 +28,7 @@ class TestBaseHierarchyController(unittest.TestCase):
         self.assertEqual(1, hierarchy_loaded.root_node.nodes[0].value, "The son of the root node should have value 1")
 
     def test_load_supression_hierarchy_ok(self):
-        json_saved_hierarchy = json.dumps("**********")
+        json_saved_hierarchy = "**********"
 
         hierarchy_loaded = self.bh_controller.load_hierarchy(json_saved_hierarchy, attribute_type=int)
 
@@ -38,17 +38,17 @@ class TestBaseHierarchyController(unittest.TestCase):
         expected = None
         bh_controller = BaseHierarchyController(None)
 
-        self.assertEqual(expected, bh_controller.get_json_representation())
+        self.assertEqual(expected, bh_controller.get_hierarchy_representation())
 
     def test_get_json_representation_supression_hierarchy(self):
-        expected = json.dumps("**********")
+        expected = "**********"
 
-        self.assertEqual(expected, self.bh_controller.get_json_representation())
+        self.assertEqual(expected, self.bh_controller.get_hierarchy_representation())
 
     def test_get_json_representation_generalization_hierarchy(self):
         n = Node(1)
         self.h.add_node(self.h.root_node, n)
 
-        expected = json.dumps({"**********": 1})
+        expected = {"**********": 1}
 
-        self.assertEqual(expected, self.bh_controller.get_json_representation())
+        self.assertEqual(expected, self.bh_controller.get_hierarchy_representation())

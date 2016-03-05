@@ -19,7 +19,7 @@ class DataConfig:
             'location': self.location,
             'data_type': self.type,
             'table': self.table,
-            'attributes': [attribute.get_json_representation() for attribute in self.attributes_list],
+            'attributes': [attribute.get_representation() for attribute in self.attributes_list],
         }
         return utils.get_json_representation(config)
 
