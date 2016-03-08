@@ -28,3 +28,7 @@ class DataController(object):
     @abc.abstractmethod
     def amount_of_rows(self, table_name):
         return
+
+    @abc.abstractmethod
+    def get_frequency_of_qi_attributes(self, table_name, qi_list):
+        return
