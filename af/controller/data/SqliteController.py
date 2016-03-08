@@ -48,3 +48,8 @@ class SqliteController(DataController):
     def amount_of_rows(self, table_name):
         query = "SELECT COUNT(*) FROM {table}".format(table=table_name)
         return list(self._execute_query(query))[0][0]
+
+    def get_frequency_of_qi_attributes(self, table_name, qi_list):
+        query = "SELECT COUNT(*) FROM {table} GROUP BY ".format(table=table_name)
+        query += ','.join(qi_list)
+        return [freq[0] for freq in self._execute_query(query)]
