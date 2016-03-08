@@ -4,6 +4,9 @@ import string
 
 import sqlite3
 
+first_names = ('Amie', 'Luanne', 'Fran', 'Maranda', 'Tamar', 'Corine', 'Lawrence', 'Wade', 'Hayley', 'Eldridge', 'Damion', 'Cinderella', 'Tania', 'Aracely', 'Reta', 'Mendy', 'Thomasena', 'Lilia', 'Beulah', 'Marylyn', 'Maida', 'Kyla', 'Adrianna', 'Branden', 'Emery', 'Marquetta', 'Mohammed', 'Breanne', 'Ada', 'Mireille', 'Serina', 'Marivel', 'Ilda', 'Georgette', 'Tanja', 'Araceli', 'Catarina', 'Donovan', 'Garry', 'Dwight', 'Jacquetta', 'Alison', 'Candyce', 'Petronila', 'Donn', 'Katrice', 'Winford', 'Marlys', 'Allen', 'Franklyn')
+
+last_names = ('Sullivan', 'Carter', 'Baker', 'Hood', 'Curry', 'Jarvis', 'Holloway', 'Mendez', 'Pena', 'Shepard', 'Knight', 'Howe', 'Travis', 'Massey', 'Yu', 'Vaughan', 'Gardner', 'Sampson', 'Maxwell', 'Meadows', 'Bernard', 'Navarro', 'Bright', 'Durham', 'Young', 'Banks', 'Brennan', 'Whitaker', 'Lang', 'Chandler')
 
 def random_letters():
     return ''.join([random.choice(string.ascii_lowercase) for x in range(0, random.randint(6, 10))])
@@ -30,14 +33,14 @@ def random_diagnosis():
 
 
 def create_record():
-    name = random_letters()
-    surname = random_letters()
+    name = random.choice(first_names)
+    last_name = random.choice(last_names)
     year_of_birth = random_year_of_birth()
     gender = random_gender()
     ethnicity = random_ethnicity()
     z = random_zip()
     diagnosis = random_diagnosis()
-    return name, surname, year_of_birth, gender, ethnicity, z, diagnosis
+    return name, last_name, year_of_birth, gender, ethnicity, z, diagnosis
 
 
 def create_db(records_amount):
@@ -48,7 +51,7 @@ def create_db(records_amount):
 
     print "Create table"
     cursor.execute('''CREATE TABLE patients
-     (name text, surname text, year_of_birth integer, gender text, ethnicity text, zip integer, diagnosis integer)''')
+     (name text, last_name text, year_of_birth integer, gender text, ethnicity text, zip integer, diagnosis integer)''')
 
     print "Populate table"
 
@@ -70,6 +73,6 @@ def read_db_info():
         print r
 
 if __name__ == '__main__':
-    records_amount = 10000
+    records_amount = 150
     create_db(records_amount)
     read_db_info()
