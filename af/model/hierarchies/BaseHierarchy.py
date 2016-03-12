@@ -80,6 +80,9 @@ class BaseHierarchy(object):
             # leaf node, only the value
             self.add_node(parent_node, Node(attribute_type(nodes)))
 
+        if self.validate_hierarchy_depth() is False:
+            raise InfoException("Hierarchy depth is invalid")
+
     def transform(self, data_value, lvl):
         if lvl == 0:
             return data_value
@@ -96,3 +99,12 @@ class BaseHierarchy(object):
             return transformed_node.value
 
         raise InfoException("Couldnt find node with the value: %s" % data_value)
+
+    #TODO: validate depth after populate
+    def validate_hierarchy_depth(self):
+        return True
+
+
+
+
+
