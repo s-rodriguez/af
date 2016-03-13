@@ -138,3 +138,42 @@ class TestHierarchies(unittest.TestCase):
             raised_exception = True
 
         self.assertTrue(raised_exception, 'An exception should have been raised')
+
+    def test_hierarchy_depth_ok_leaf_nodes(self):
+        node1 = Node(1)
+        node2 = Node(2)
+        node3 = Node(3)
+
+        self.h.add_node(self.h.root_node, node1)
+        self.h.add_node(node1, node2)
+        self.h.add_node(node1, node3)
+
+        node4 = Node(4)
+        node5 = Node(5)
+        self.h.add_node(node2, node4)
+        self.h.add_node(node3, node5)
+        self.assertTrue(self.h.validate_hierarchy_depth())
+
+    def test_hierarchy_depth_ok_only_root(self):
+        node1 = Node(1)
+        self.h.add_node(self.h.root_node, node1)
+        self.assertTrue(self.h.validate_hierarchy_depth())
+
+    def test_hierarchy_depth_failed(self):
+        node1 = Node(1)
+        node2 = Node(2)
+        node3 = Node(3)
+
+        self.h.add_node(self.h.root_node, node1)
+        self.h.add_node(node1, node2)
+        self.h.add_node(node1, node3)
+
+        node4 = Node(4)
+        node5 = Node(5)
+        self.h.add_node(node2, node4)
+        self.h.add_node(node2, node5)
+        self.assertFalse(self.h.validate_hierarchy_depth())
+
+
+
+
