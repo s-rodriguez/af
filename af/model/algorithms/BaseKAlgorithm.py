@@ -7,4 +7,10 @@ class BaseKAlgorithm(BaseAlgorithm):
             raise Exception("Invalid k param")
         self.k = k
 
+    def validate_anonymize_conditions(self, qi_list):
+        quasi_identifier_frequencies = self.db_controller.obtain_quasi_identifier_frequencies(self.anonymization_table, qi_list)
+        for frequency in quasi_identifier_frequencies:
+            if frequency < self.k:
+                return False
+        return True
 
