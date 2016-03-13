@@ -7,3 +7,4 @@ class BaseKAlgorithm(BaseAlgorithm):
             raise Exception("Invalid k param")
         self.k = k
 
+

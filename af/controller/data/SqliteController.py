@@ -53,3 +53,8 @@ class SqliteController(DataController):
         query = "SELECT COUNT(*) FROM {table} GROUP BY ".format(table=table_name)
         query += ','.join(qi_list)
         return [freq[0] for freq in self._execute_query(query)]
+
+    def get_count_of_distinct_qi_values(self, table_name, qi):
+        query = "SELECT COUNT(distinct {qi}) FROM {table}".format(table=table_name, qi=qi)
+        return list(self._execute_query(query))[0][0]
+

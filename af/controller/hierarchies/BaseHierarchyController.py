@@ -11,6 +11,8 @@ class BaseHierarchyController(object):
         new_hierarchy = BaseHierarchy()
         if isinstance(config, dict):
             new_hierarchy.populate_nodes(new_hierarchy.root_node, config.values()[0], attribute_type)
+            if new_hierarchy.validate_hierarchy_depth() is not True:
+                raise Exception("Load hierarchy failed: all leaf nodes must have same depth")
 
         self.hierarchy = new_hierarchy
 
