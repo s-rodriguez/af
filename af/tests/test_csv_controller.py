@@ -10,19 +10,11 @@ class TestCSVController(unittest.TestCase):
         db_location = os.path.join(af_directory(), 'utils', 'test.csv')
         self.controller = CSVController(db_location)
 
-
-    def test_available_tables_ok(self):
-        tables_expected = [['test.csv']]
-
-        tables_result = self.controller.db_available_tables()
-
-        self.assertEqual(tables_expected, tables_result, "The tables do not match")
-
     def test_table_columns_info_ok(self):
         expected_info = ['Id', 'Name', 'Price']
 
         columns_info = self.controller.table_columns_info('Cars')
-        print columns_info
+
         self.assertTrue(len(columns_info) == 3, "There should be data retrieved")
         self.assertEqual(expected_info, columns_info, "Data retrieved do not match with expected")
 

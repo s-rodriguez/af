@@ -6,3 +6,4 @@ ot
 af.egg-info/
 docs/_build/
 *.edat
+af/utils/anonymization/

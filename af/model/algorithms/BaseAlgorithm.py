@@ -1,3 +1,6 @@
+from af.controller.data.SqliteController import SqliteController
+from af import utils
+
 class BaseAlgorithm(object):
 
     def __init__(self, data_config):
@@ -5,6 +8,7 @@ class BaseAlgorithm(object):
         self.anonymization_table = None
         self.input_table = None
         self.attributes = data_config.attributes_list
+        self.db_controller = SqliteController(utils.get_anonymization_db_location())
 
     def anonymize(self):
         pass
@@ -22,3 +26,6 @@ class BaseAlgorithm(object):
     def write_ouput_table(self):
         # this method should be implemented here
         pass
+
+    def obtain_quasi_identifier_frequencies(self, qi_list):
+        return self.db_controller.get_frequency_of_qi_attributes(self.anonymization_table, qi_list)

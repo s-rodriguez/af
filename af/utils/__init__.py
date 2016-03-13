@@ -1,4 +1,7 @@
 import json
+import os
+import sqlite3
+
 
 EDAT_PROJECT_EXTENSION = '.edat'
 CONFIG_EXTENSION = '.config'
@@ -27,3 +30,17 @@ BASIC_TYPE_DATE = 'date'
 PRIVACY_TYPE_1 = 1
 PRIVACY_TYPE_2 = 2
 # TODO REVIEW!
+
+ANONYMIZATION_DIRECTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'anonymization')
+ANONYMIZATION_DB_NAME = 'anonymizationDB.db'
+
+
+def create_anonymization_db():
+    with sqlite3.connect(os.path.join(ANONYMIZATION_DIRECTORY, ANONYMIZATION_DB_NAME)) as conn:
+        cursor = conn.cursor()
+
+
+def get_anonymization_db_location(create_if_not_exists=True):
+    if create_if_not_exists:
+        create_anonymization_db()
+    return os.path.join(ANONYMIZATION_DIRECTORY, ANONYMIZATION_DB_NAME)
