@@ -1,7 +1,8 @@
 import os
+
+from af.exceptions import ImportException
 from af.model.Attribute import Attribute
 import af.utils as utils
-from af.exceptions import ImportException
 
 
 class DataConfig:
@@ -40,5 +41,5 @@ class DataConfig:
         if len(errors) > 0:
             raise ImportException('\n'.join(errors))
 
-    def qi_attributes_list(self):
-        pass
+    def get_privacy_type_attributes_list(self, privacy_type=utils.PRIVACY_TYPE_QI):
+        return [attribute for attribute in self.attributes_list if attribute.privacy_type == privacy_type]
