@@ -3,10 +3,11 @@ from af.model.TransformationTechnique import TransformationTechnique
 
 class Attribute(object):
 
-    def __init__(self, name=None, basic_type='string', privacy_type=None, transformation_technique=None):
+    def __init__(self, name=None, basic_type='string', privacy_type=None, transformation_technique=None, weight=0):
         self.name = name
         self.basic_type = basic_type
         self.privacy_type = privacy_type
+        self.weight = weight
         self.transformation_technique = self.set_transformation_technique(transformation_technique)
 
     def get_representation(self):
@@ -14,6 +15,7 @@ class Attribute(object):
             'name': self.name,
             'basic_type': self.basic_type,
             'privacy_type': self.privacy_type,
+            'weight': self.weight,
             'transformation_technique': self.get_transformation_technique_representation()
         }
 
@@ -21,6 +23,7 @@ class Attribute(object):
         self.name = config_dict['name']
         self.basic_type = config_dict['basic_type']
         self.privacy_type = config_dict['privacy_type']
+        self.weight = config_dict['weight']
         self.set_transformation_technique(config_dict['transformation_technique'])
 
     def get_transformation_technique_representation(self):

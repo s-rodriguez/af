@@ -39,3 +39,6 @@ class DataConfig:
 
         if len(errors) > 0:
             raise ImportException('\n'.join(errors))
+
+    def qi_attributes_list(self):
+        pass
