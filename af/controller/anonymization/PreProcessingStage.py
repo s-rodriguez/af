@@ -1,22 +1,24 @@
 import os
 
+from af.controller.data.DataFactory import DataFactory
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy
 from af.utils import ANONYMIZATION_DIRECTORY, COPY_OF_ORIGINAL_DB
 
 
 class PreProcessingStage(object):
 
-    def __init__(self):
+    def __init__(self, initial_db_location):
+        self.initial_db_location = initial_db_location
         self.db_location = os.path.join(ANONYMIZATION_DIRECTORY, COPY_OF_ORIGINAL_DB)
 
     def clean_previous_work(self):
-        # if self.db_location exists -> remove it
-        pass
+        if os.path.isfile(self.db_location):
+            os.remove(self.db_location)
 
     def create_db_copy(self):
-        # controller = get_controller_from_extension(db_file_extension)
-        # controller.create_db_copy(initial_location, self.db_location)
-        pass
+        extension = os.path.basename(self.initial_db_location).split('.')[1]
+        controller = DataFactory.get_controller_from_extension(extension)
+        controller.create_db_copy(self.initial_db_location, self.db_location)
 
     def remove_identifiable_attributes(self, identifiable_list):
         #supression_value = BaseHierarchy.supression_node()

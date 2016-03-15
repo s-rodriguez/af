@@ -43,3 +43,7 @@ class CSVController(DataController):
         if self.rows is None:
             self._load_csv()
         return len(self.rows)-1
+
+    @staticmethod
+    def create_db_copy(from_location, to_location):
+        return NotImplementedError

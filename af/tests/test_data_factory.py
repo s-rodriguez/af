@@ -29,7 +29,7 @@ class TestCSVController(unittest.TestCase):
 
     def test_all_available_controllers_are_gathered_ok(self):
         available_controllers = DataFactory.get_available_controllers()
-
+        print available_controllers
         self.assertTrue(len(available_controllers) == 2, "There should be only 2 data controllers")
         self.assertTrue(SqliteController.CONTROLLER_TYPE in available_controllers, "SqliteController not found on available controllers")
         self.assertTrue(CSVController.CONTROLLER_TYPE in available_controllers, "CSVController not found on available controllers")

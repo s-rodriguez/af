@@ -1,3 +1,5 @@
+import os
+import shutil
 import sqlite3
 
 from af.controller.data.DataController import DataController
@@ -58,3 +60,8 @@ class SqliteController(DataController):
         query = "SELECT COUNT(distinct {qi}) FROM {table}".format(table=table_name, qi=qi)
         return list(self._execute_query(query))[0][0]
 
+    @staticmethod
+    def create_db_copy(from_location, to_location):
+        if os.path.isfile(from_location):
+            os.remove(from_location)
+        shutil.copy2(from_location, to_location)
