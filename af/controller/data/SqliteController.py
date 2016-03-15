@@ -62,6 +62,6 @@ class SqliteController(DataController):
 
     @staticmethod
     def create_db_copy(from_location, to_location):
-        if os.path.isfile(from_location):
-            os.remove(from_location)
+        if os.path.isfile(to_location):
+            os.remove(to_location)
         shutil.copy2(from_location, to_location)
