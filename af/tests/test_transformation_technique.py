@@ -9,7 +9,7 @@ class TestTransformationTechnique(unittest.TestCase):
 
     def setUp(self):
         bh_controller = BaseHierarchyController(BaseHierarchy())
-        saved_hierarchy = {BaseHierarchy.supression_node().value: {1: {2: 3}}}
+        saved_hierarchy = {BaseHierarchy.supression_node().value: {1: {2: {3: None}}}}
         self.hierarchy = bh_controller.load_hierarchy(saved_hierarchy, attribute_type=int)
 
     def test_creation_ok(self):
@@ -61,7 +61,7 @@ class TestTransformationTechnique(unittest.TestCase):
     def test_load_technique_ok(self):
         config = {
             'name': 'asdf',
-            'hierarchy': BaseHierarchy.supression_node().value,
+            'hierarchy': {BaseHierarchy.supression_node().value: None},
         }
         h = BaseHierarchy()
         tt = TransformationTechnique.load_technique(config, str)

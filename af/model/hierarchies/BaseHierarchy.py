@@ -65,14 +65,16 @@ class BaseHierarchy(object):
             for node in parent_node.nodes:
                 self.print_hierarchy(node, next_level)
 
-    def hierarchy_representation(self, nodes=None):
-        walk_nodes = [self.root_node] if nodes is None else nodes
+    def hierarchy_representation(self, node=None):
+        walk_node = self.root_node if node is None else node
         hierarchy = {}
-        for node in walk_nodes:
-            if node.nodes is not None:
-                hierarchy[node.value] = self.hierarchy_representation(node.nodes)
-            else:
-                return node.value
+        if walk_node.nodes is not None:
+            hierarchy[walk_node.value] = {}
+            for node in walk_node.nodes:
+                hierarchy[walk_node.value].update(self.hierarchy_representation(node))
+        else:
+            hierarchy[walk_node.value] = None
+            return hierarchy
         return hierarchy
 
     def populate_nodes(self, parent_node, nodes, attribute_type):
@@ -81,9 +83,6 @@ class BaseHierarchy(object):
                 node = Node(attribute_type(key))
                 self.add_node(parent_node, node)
                 self.populate_nodes(node, values, attribute_type)
-        else:
-            # leaf node, only the value
-            self.add_node(parent_node, Node(attribute_type(nodes)))
 
     def transform(self, data_value, lvl):
         if lvl == 0:

@@ -8,6 +8,7 @@ class TestHierarchies(unittest.TestCase):
 
     def setUp(self):
         self.h = BaseHierarchy()
+        self.saved_hierarchy = {1: {2: {3: None}}}
 
     def test_hierarchy_should_have_supression_node_by_default(self):
         self.assertTrue(self.h.root_node is not None, "Hierarchy base node should not be None")
@@ -85,18 +86,16 @@ class TestHierarchies(unittest.TestCase):
         self.assertEqual(gen_node_2, self.h.root_node, "Should be the same node")
         self.assertEqual(gen_node_3, self.h.root_node, "Should be the same node")
 
-    def test_get_generalization_level_ok(self):
+    def test_hierarchy_representation_ok(self):
         node1 = Node(1)
         self.h.add_node(self.h.root_node, node1)
 
-        representation_expected = {self.h.root_node.value: node1.value}
+        representation_expected = {self.h.root_node.value: {node1.value: None}}
 
         self.assertEqual(representation_expected, self.h.hierarchy_representation(), "The representations don't match")
 
     def test_populate_nodes_ok(self):
-        saved_hierarchy = {1: {2: 3}}
-
-        self.h.populate_nodes(self.h.root_node, saved_hierarchy, int)
+        self.h.populate_nodes(self.h.root_node, self.saved_hierarchy, int)
 
         self.assertTrue(len(self.h.leaf_nodes) == 1, "There should be only one leaf node")
         self.assertEqual(3, self.h.leaf_nodes[0].value, "The leaf node should be of value 3")
@@ -112,9 +111,7 @@ class TestHierarchies(unittest.TestCase):
         self.assertEqual(self.h.root_node.value, t1, 'Supression level above 0 should be suression node')
 
     def test_transform_generalization_ok(self):
-        saved_hierarchy = {1: {2: 3}}
-
-        self.h.populate_nodes(self.h.root_node, saved_hierarchy, int)
+        self.h.populate_nodes(self.h.root_node, self.saved_hierarchy, int)
 
         t0 = self.h.transform(3, 0)
         t1 = self.h.transform(3, 1)
@@ -172,4 +169,5 @@ class TestHierarchies(unittest.TestCase):
         node5 = Node(5)
         self.h.add_node(node2, node4)
         self.h.add_node(node2, node5)
+
         self.assertFalse(self.h.validate_hierarchy_depth())

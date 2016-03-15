@@ -1,3 +1,4 @@
+import inspect
 import unittest
 
 from af.controller.data.CSVController import CSVController
@@ -5,7 +6,7 @@ from af.controller.data.DataFactory import DataFactory
 from af.controller.data.SqliteController import SqliteController
 
 
-class TestCSVController(unittest.TestCase):
+class TestDataFactory(unittest.TestCase):
 
     def test_create_controller_ok(self):
         mock_location = 'location'
@@ -53,3 +54,21 @@ class TestCSVController(unittest.TestCase):
             failed = True
 
         self.assertTrue(failed, "The method should have failed creating an unexistent controller")
+
+    def test_get_controller_from_extension_ok(self):
+        extension = SqliteController.CONTROLLER_EXTENSION
+
+        controller = DataFactory.get_controller_from_extension(extension)
+
+        self.assertTrue(inspect.isclass(controller), "The controller retrieved is not the expected one")
+        self.assertTrue(isinstance(controller('.'), SqliteController), "The controller retrieved is not the expected one")
+
+    def test_fail_get_controller_from_extension(self):
+        failed = False
+
+        try:
+            DataFactory.get_controller_from_extension('INEXISTENT')
+        except ValueError:
+            failed = True
+
+        self.assertTrue(failed, "The method should have failed looking for an unexistent controller with that extension")

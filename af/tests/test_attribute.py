@@ -18,7 +18,7 @@ class TestAttribute(unittest.TestCase):
         
         self.technique_config = {
             'name': 'SUPRESSION',
-            'hierarchy': BaseHierarchy.supression_node().value,
+            'hierarchy': {BaseHierarchy.supression_node().value: None},
         }
 
     def test_attribute_creation_ok(self):
@@ -68,7 +68,7 @@ class TestAttribute(unittest.TestCase):
         self.attribute.set_transformation_technique(self.technique_config)
 
         self.assertEqual(self.technique_config['name'], self.attribute.transformation_technique.name, 'Property not matching expected value')
-        self.assertEqual(self.technique_config['hierarchy'], self.attribute.transformation_technique.hierarchy.root_node.value, 'Property not matching expected value')
+        self.assertEqual(BaseHierarchy.supression_node().value, self.attribute.transformation_technique.hierarchy.root_node.value, 'Property not matching expected value')
 
 
     def test_get_transformation_technique_representation(self):

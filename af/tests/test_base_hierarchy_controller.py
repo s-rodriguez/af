@@ -16,7 +16,7 @@ class TestBaseHierarchyController(unittest.TestCase):
         self.assertEqual(self.h, self.bh_controller.hierarchy, "Hierarchies do not match")
 
     def test_load_generalization_hierarchy_ok(self):
-        json_saved_hierarchy = {BaseHierarchy.supression_node().value: {1: {2: 3}}}
+        json_saved_hierarchy = {BaseHierarchy.supression_node().value: {1: {2: {3: None}}}}
 
         hierarchy_loaded = self.bh_controller.load_hierarchy(json_saved_hierarchy, attribute_type=int)
 
@@ -41,7 +41,7 @@ class TestBaseHierarchyController(unittest.TestCase):
         self.assertEqual(expected, bh_controller.get_hierarchy_representation())
 
     def test_get_json_representation_supression_hierarchy(self):
-        expected = BaseHierarchy.supression_node().value
+        expected = {BaseHierarchy.supression_node().value: None}
 
         self.assertEqual(expected, self.bh_controller.get_hierarchy_representation())
 
@@ -49,6 +49,17 @@ class TestBaseHierarchyController(unittest.TestCase):
         n = Node(1)
         self.h.add_node(self.h.root_node, n)
 
-        expected = {BaseHierarchy.supression_node().value: 1}
+        expected = {BaseHierarchy.supression_node().value: {1: None}}
 
         self.assertEqual(expected, self.bh_controller.get_hierarchy_representation())
+
+    def test_load_generalization_hierarchy_fails(self):
+        json_saved_hierarchy = {BaseHierarchy.supression_node().value: {1: {2: {3: None}, 4: None}}}
+
+        failed = False
+        try:
+            self.bh_controller.load_hierarchy(json_saved_hierarchy, attribute_type=int)
+        except Exception:
+            failed = True
+
+        self.assertTrue(failed, "The method should have failed. Hierarchy not leveled")
