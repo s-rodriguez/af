@@ -13,7 +13,7 @@ class SqliteController(DataController):
     def __init__(self, data_location):
         DataController.__init__(self, data_location)
 
-    def _execute_query(self, query):
+    def execute_query(self, query):
         with sqlite3.connect(self.data_location) as conn:
             cursor = conn.cursor()
 
@@ -27,7 +27,7 @@ class SqliteController(DataController):
         :return: list with all available tables
         """
         query = "SELECT name FROM sqlite_master WHERE type='table';"
-        tables = list(self._execute_query(query))
+        tables = list(self.execute_query(query))
         return tables
 
     def table_columns_info(self, table_name):
@@ -41,24 +41,24 @@ class SqliteController(DataController):
 
     def get_table_data(self, table_name):
         query = "SELECT * FROM {table}".format(table=table_name)
-        return list(self._execute_query(query))
+        return list(self.execute_query(query))
 
     def get_table_columns_type(self, table_name):
         query = "SELECT * FROM {table} LIMIT 1".format(table=table_name)
-        return [type(column) for column in list(self._execute_query(query))[0]]
+        return [type(column) for column in list(self.execute_query(query))[0]]
 
     def amount_of_rows(self, table_name):
         query = "SELECT COUNT(*) FROM {table}".format(table=table_name)
-        return list(self._execute_query(query))[0][0]
+        return list(self.execute_query(query))[0][0]
 
     def get_frequency_of_qi_attributes(self, table_name, qi_list):
         query = "SELECT COUNT(*) FROM {table} GROUP BY ".format(table=table_name)
         query += ','.join(qi_list)
-        return [freq[0] for freq in self._execute_query(query)]
+        return [freq[0] for freq in self.execute_query(query)]
 
     def get_count_of_distinct_qi_values(self, table_name, qi):
         query = "SELECT COUNT(distinct {qi}) FROM {table}".format(table=table_name, qi=qi)
-        return list(self._execute_query(query))[0][0]
+        return list(self.execute_query(query))[0][0]
 
     @staticmethod
     def create_db_copy(from_location, to_location):

@@ -1,15 +1,25 @@
 import os
 
 from af.controller.data.DataFactory import DataFactory
+from af.controller.data.SqliteController import SqliteController
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy
 from af.utils import ANONYMIZATION_DIRECTORY, COPY_OF_ORIGINAL_DB
 
 
 class PreProcessingStage(object):
 
-    def __init__(self, initial_db_location):
+    def __init__(self, initial_db_location, table):
         self.initial_db_location = initial_db_location
         self.db_location = os.path.join(ANONYMIZATION_DIRECTORY, COPY_OF_ORIGINAL_DB)
+        self.table = table
+        self.db_controller = None
+
+    def preprocess(self):
+        self.clean_previous_work()
+        self.create_db_copy()
+        self.db_controller = SqliteController(self.db_location)
+        self.remove_identifiable_attributes()
+        self.set_indexes_over_qi()
 
     def clean_previous_work(self):
         if os.path.isfile(self.db_location):
@@ -21,13 +31,11 @@ class PreProcessingStage(object):
         controller.create_db_copy(self.initial_db_location, self.db_location)
 
     def remove_identifiable_attributes(self, identifiable_list):
-        #supression_value = BaseHierarchy.supression_node()
-        #query = update set **** on attributes: asdasd
-        #sql_controller.execute_query(query)
-        pass
+        supression_value = BaseHierarchy.supression_node()
+        update_ident_list = ["{0}='{1}'".format(att, supression_value) for att in identifiable_list]
+        query = "UPDATE {0} SET {1};".format(self.table, ', '.join(update_ident_list))
+        self.db_controller.execute_query(query)
 
     def set_indexes_over_qi(self, qi_list):
-        # qi_list_str = ",".join(qi_list)
-        # query = create index qi_index over (qi_list_str)
-        # sql_controller.execute(query)
-        pass
+        query = "CREATE INDEX qi_index ON {0} ({1});".format(self.table, ', '.join(qi_list))
+        self.db_controller.execute_query(query)
