@@ -9,7 +9,7 @@ class TestTransformationTechnique(unittest.TestCase):
 
     def setUp(self):
         bh_controller = BaseHierarchyController(BaseHierarchy())
-        saved_hierarchy = {"**********": {1: {2: 3}}}
+        saved_hierarchy = {BaseHierarchy.supression_node().value: {1: {2: 3}}}
         self.hierarchy = bh_controller.load_hierarchy(saved_hierarchy, attribute_type=int)
 
     def test_creation_ok(self):
@@ -31,7 +31,7 @@ class TestTransformationTechnique(unittest.TestCase):
         self.assertEqual(3, result0, "Transformation gave an unexpected result")
         self.assertEqual(2, result1, "Transformation gave an unexpected result")
         self.assertEqual(1, result2, "Transformation gave an unexpected result")
-        self.assertEqual('*'*10, result3, "Transformation gave an unexpected result")
+        self.assertEqual(BaseHierarchy.supression_node().value, result3, "Transformation gave an unexpected result")
 
     def test_trasnformation_raises_exception(self):
         tt = TransformationTechnique('asdf', None)
@@ -61,7 +61,7 @@ class TestTransformationTechnique(unittest.TestCase):
     def test_load_technique_ok(self):
         config = {
             'name': 'asdf',
-            'hierarchy': '*'*10,
+            'hierarchy': BaseHierarchy.supression_node().value,
         }
         h = BaseHierarchy()
         tt = TransformationTechnique.load_technique(config, str)

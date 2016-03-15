@@ -12,13 +12,13 @@ class TestHierarchies(unittest.TestCase):
     def test_hierarchy_should_have_supression_node_by_default(self):
         self.assertTrue(self.h.root_node is not None, "Hierarchy base node should not be None")
         self.assertTrue(isinstance(self.h.root_node, Node), "Root node should be a Node")
-        self.assertTrue('*' in self.h.root_node.value, "Root node should have * as value")
+        self.assertEqual(BaseHierarchy.supression_node().value, self.h.root_node.value, "Root node should have * as value")
         self.assertTrue(len(self.h.leaf_nodes) == 1, "Root node should be added to the leaf nodes")
 
     def test_supression_node_ok(self):
         sup_node = self.h.create_supression_node()
 
-        self.assertEqual('*'*10, sup_node.value, "Root node should be * x 10")
+        self.assertEqual(BaseHierarchy.supression_node().value, sup_node.value, "Root node should be * x 10")
         self.assertEqual(None, sup_node.parent, "Root node should have no parent on creation")
         self.assertEqual(None, sup_node.nodes, "Root node should have no leaf nodes on creation")
 
@@ -173,7 +173,3 @@ class TestHierarchies(unittest.TestCase):
         self.h.add_node(node2, node4)
         self.h.add_node(node2, node5)
         self.assertFalse(self.h.validate_hierarchy_depth())
-
-
-
-

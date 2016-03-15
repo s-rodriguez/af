@@ -9,9 +9,14 @@ class BaseHierarchy(object):
         self.root_node = self.create_supression_node()
 
     def create_supression_node(self):
+        sup_node = self.supression_node()
+        self.maintain_leaf_nodes(sup_node, action='add')
+        return sup_node
+
+    @staticmethod
+    def supression_node():
         value = '*'*10
         sup_node = Node(value, None, None)
-        self.maintain_leaf_nodes(sup_node, action='add')
         return sup_node
 
     def get_leaf_node(self, leaf_node_value):

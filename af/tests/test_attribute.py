@@ -15,6 +15,11 @@ class TestAttribute(unittest.TestCase):
         self.transformation_technique = None
 
         self.attribute = Attribute(self.name, self.basic_type, self.privacy_type, self.transformation_technique, self.weight)
+        
+        self.technique_config = {
+            'name': 'SUPRESSION',
+            'hierarchy': BaseHierarchy.supression_node().value,
+        }
 
     def test_attribute_creation_ok(self):
         self.assertEqual(self.name, self.attribute.name, "Property not matching expected value")
@@ -60,24 +65,14 @@ class TestAttribute(unittest.TestCase):
         self.assertEqual(weight, self.attribute.weight, "Property not matching expected value")
 
     def test_set_transformation_technique_ok(self):
-        technique_config = {
-            'name': 'SUPRESSION',
-            'hierarchy': '*'*10,
-        }
+        self.attribute.set_transformation_technique(self.technique_config)
 
-        self.attribute.set_transformation_technique(technique_config)
-
-        self.assertEqual(technique_config['name'], self.attribute.transformation_technique.name, 'Property not matching expected value')
-        self.assertEqual(technique_config['hierarchy'], self.attribute.transformation_technique.hierarchy.root_node.value, 'Property not matching expected value')
+        self.assertEqual(self.technique_config['name'], self.attribute.transformation_technique.name, 'Property not matching expected value')
+        self.assertEqual(self.technique_config['hierarchy'], self.attribute.transformation_technique.hierarchy.root_node.value, 'Property not matching expected value')
 
 
     def test_get_transformation_technique_representation(self):
-        technique_config = {
-            'name': 'SUPRESSION',
-            'hierarchy': '*'*10,
-        }
-
-        self.attribute.set_transformation_technique(technique_config)
+        self.attribute.set_transformation_technique(self.technique_config)
         result = self.attribute.get_transformation_technique_representation()
 
-        self.assertEqual(technique_config, result)
+        self.assertEqual(self.technique_config, result)
