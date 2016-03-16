@@ -54,11 +54,13 @@ class SqliteController(DataController):
     def get_frequency_of_qi_attributes(self, table_name, qi_list):
         query = "SELECT COUNT(*) FROM {table} GROUP BY ".format(table=table_name)
         query += ','.join(qi_list)
-        return [freq[0] for freq in self.execute_query(query)]
+        for freq in self.execute_query(query):
+            yield freq[0]
 
     def get_count_of_distinct_qi_values(self, table_name, qi):
         query = "SELECT COUNT(distinct {qi}) FROM {table}".format(table=table_name, qi=qi)
-        return list(self.execute_query(query))[0][0]
+        for row in self.execute_query(query):
+            yield row[0]
 
     @staticmethod
     def create_db_copy(from_location, to_location):

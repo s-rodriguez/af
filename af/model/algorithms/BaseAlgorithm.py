@@ -28,4 +28,5 @@ class BaseAlgorithm(object):
         pass
 
     def obtain_quasi_identifier_frequencies(self, qi_list):
-        return self.db_controller.get_frequency_of_qi_attributes(self.anonymization_table, qi_list)
+        for value in self.db_controller.get_frequency_of_qi_attributes(self.anonymization_table, qi_list):
+            yield value

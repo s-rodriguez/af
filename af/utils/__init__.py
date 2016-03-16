@@ -27,8 +27,8 @@ BASIC_TYPE_STRING = 'string'
 BASIC_TYPE_INT = 'int'
 BASIC_TYPE_DATE = 'date'
 
-PRIVACY_TYPE_QI = 'Quasi-Identifier'
 PRIVACY_TYPE_IDENTIFIER = 'Identifier'
+PRIVACY_TYPE_QI = 'Quasi-Identifier'
 PRIVACY_TYPE_SENSITIVE = 'Sensitive'
 PRIVACY_TYPE_NON_SENSITIVE = 'Non-Sensitive'
 

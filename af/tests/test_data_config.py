@@ -3,8 +3,9 @@ import os
 import unittest
 
 from af.exceptions import ImportException
+from af.model.Attribute import Attribute
 from af.model.DataConfig import DataConfig
-
+import af.utils as utils
 
 class TestDataConfig(unittest.TestCase):
 
@@ -70,3 +71,22 @@ class TestDataConfig(unittest.TestCase):
             failed = True
 
         self.assertTrue(failed, "Method validating should fail")
+
+    def test_retrieve_qi_or_identifiable_attributes_ok(self):
+        attributes = [
+                        Attribute('Identifiable', privacy_type=utils.PRIVACY_TYPE_IDENTIFIER),
+                        Attribute('Quasi-Identifier 1', privacy_type=utils.PRIVACY_TYPE_QI),
+                        Attribute('Quasi-Identifier 2', privacy_type=utils.PRIVACY_TYPE_QI),
+        ]
+
+        dc = DataConfig(None, attributes_list=attributes)
+
+        result_identifiable = dc.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_IDENTIFIER)
+        result_qi = dc.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_QI)
+
+        self.assertTrue(len(result_identifiable) == 1, "The list of identifiables should have one element")
+        self.assertEqual(attributes[0], result_identifiable[0], "Retrieved an unexpected Identifiable attribute")
+
+        self.assertTrue(len(result_qi) == 2, "The list of identifiables should have two elements")
+        for i in range(1,3):
+            self.assertTrue(attributes[i] in result_qi, "A qi was not retrieved correctly")
