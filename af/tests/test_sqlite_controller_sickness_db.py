@@ -31,3 +31,14 @@ class TestSqliteControllerSicknessDb(unittest.TestCase):
         qi_list = ['Race', 'Birth', 'Gender', 'Zip']
         for result in self.controller.get_frequency_of_qi_attributes('sickness', qi_list):
             self.assertGreaterEqual(2, result)
+
+    def test_replace_qi_value_ok(self):
+        self.assertEqual(6, self.controller.get_count_of_qi_value('sickness', 'Race', 'white'))
+        self.assertEqual(0, self.controller.get_count_of_qi_value('sickness', 'Race', 'w'))
+        self.controller.replace_qi_value('sickness', 'Race', 'w', 'white')
+        self.assertEqual(0, self.controller.get_count_of_qi_value('sickness', 'Race', 'white'))
+        self.assertEqual(6, self.controller.get_count_of_qi_value('sickness', 'Race', 'w'))
+        self.controller.replace_qi_value('sickness', 'Race', 'white', 'w')
+        self.assertEqual(6, self.controller.get_count_of_qi_value('sickness', 'Race', 'white'))
+        self.assertEqual(0, self.controller.get_count_of_qi_value('sickness', 'Race', 'w'))
+

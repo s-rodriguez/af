@@ -35,3 +35,6 @@ class BaseAlgorithm(object):
                 qi_most_frequently = qi
                 qi_most_frequently_count = frequency
         return qi_most_frequently
+
+    def replace_value(self, qi, new_value, old_value):
+        self.db_controller.replace_qi_value(self.anonymization_table, qi, new_value, old_value)

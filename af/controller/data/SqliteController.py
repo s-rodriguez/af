@@ -67,3 +67,17 @@ class SqliteController(DataController):
         if os.path.isfile(to_location):
             os.remove(to_location)
         shutil.copy2(from_location, to_location)
+
+    def replace_qi_value(self, table_name, qi, new_value, old_value):
+        query = "UPDATE {table} SET {qi}=? WHERE {qi}= ?".format(table=table_name, qi=qi)
+        with sqlite3.connect(self.data_location) as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, (new_value, old_value))
+            conn.commit()
+
+    def get_count_of_qi_value(self, table_name, qi, value):
+        query = "SELECT COUNT(*) FROM {table} WHERE {qi}=?".format(table=table_name, qi=qi)
+        with sqlite3.connect(self.data_location) as conn:
+            cursor = conn.cursor()
+            return list(cursor.execute(query, (value,)))[0][0]
+
