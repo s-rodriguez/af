@@ -7,7 +7,7 @@ class BaseAlgorithm(object):
         self.data_config = data_config
 
         self.qi_attributes = data_config.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_QI)
-        self.id_attributes = data_config.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_IDENTIFIABLE)
+        self.id_attributes = data_config.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_IDENTIFIER)
 
         self.copy_original_db_controller = SqliteController(utils.get_db_location(utils.ANONYMIZATION_DB_NAME))
         self.anon_db_controller = SqliteController(utils.get_db_location(utils.COPY_OF_ORIGINAL_DB))

@@ -115,7 +115,7 @@ tt_year_of_birth = TransformationTechnique('generalization', year_of_birth_hiera
 
 
 # ATTRIBUTE INSTANCES FOR ALL ATTRIBUTES ON TABLE
-att_ssn = Attribute('ssn', privacy_type=utils.PRIVACY_TYPE_IDENTIFIER)
+att_ssn = Attribute('ssn', basic_type='int', privacy_type=utils.PRIVACY_TYPE_IDENTIFIER)
 att_ssn.transformation_technique = tt_ssn
 
 att_race = Attribute('race', privacy_type=utils.PRIVACY_TYPE_QI)
