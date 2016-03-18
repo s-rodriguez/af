@@ -101,6 +101,15 @@ class BaseHierarchy(object):
 
         raise InfoException("Couldnt find node with the value: %s" % data_value)
 
+    def transform_leaf_nodes(self, lvl=None):
+        anonymized_data = []
+        if lvl is None:
+            lvl = 1
+        for leaf in self.leaf_nodes:
+            transformed_node = self.get_generalization_level_representation(leaf, lvl)
+            anonymized_data[leaf.value] = transformed_node.value
+        return anonymized_data
+
     def validate_hierarchy_depth(self):
         hierarchy_depth = -1
         for node in self.leaf_nodes:

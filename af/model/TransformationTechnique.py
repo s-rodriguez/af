@@ -15,6 +15,11 @@ class TransformationTechnique(object):
             raise Exception('No hierarchy found')
         return self.hierarchy.transform(data, lvl)
 
+    def transform_leaf_nodes(self, lvl=None):
+        if self.hierarchy is None:
+            raise Exception('No hierarchy found')
+        return self.hierarchy.transform_leaf_nodes(lvl)
+
     def get_representation(self):
         """Returns the json representation of the techinque"""
         hierarchy_representation = self.hierarchy.hierarchy_representation() if self.hierarchy is not None else {}
