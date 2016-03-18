@@ -28,7 +28,7 @@ class TestBaseHierarchyController(unittest.TestCase):
         self.assertEqual(1, hierarchy_loaded.root_node.nodes[0].value, "The son of the root node should have value 1")
 
     def test_load_supression_hierarchy_ok(self):
-        json_saved_hierarchy = BaseHierarchy.supression_node().value
+        json_saved_hierarchy = {BaseHierarchy.supression_node().value: None}
 
         hierarchy_loaded = self.bh_controller.load_hierarchy(json_saved_hierarchy, attribute_type=int)
 

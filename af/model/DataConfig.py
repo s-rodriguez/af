@@ -8,7 +8,7 @@ import af.utils as utils
 class DataConfig:
     JSON_KEY = 'data_config'
 
-    def __init__(self, project, location=None, data_type=None, table=None, attributes_list=None):
+    def __init__(self, project=None, location=None, data_type=None, table=None, attributes_list=None):
         self.project = project
         self.location = location
         self.type = data_type
