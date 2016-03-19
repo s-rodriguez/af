@@ -36,7 +36,8 @@ class BaseAlgorithm(object):
         qi_most_frequently_count = 0
         for qi in self.qi_attributes:
             frequency = self.anon_db_controller.get_count_of_distinct_qi_values(qi)
-            if (qi_most_frequently is None) or (frequency > qi_most_frequently_count):
+            if (qi_most_frequently is None) or (frequency > qi_most_frequently_count) \
+               or ((frequency == qi_most_frequently_count) and (qi.weight > qi_most_frequently.weight)):
                 qi_most_frequently = qi
                 qi_most_frequently_count = frequency
         return qi_most_frequently
