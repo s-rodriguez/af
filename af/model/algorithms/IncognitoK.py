@@ -23,8 +23,12 @@ class IncognitoK(BaseKAlgorithm):
     def create_walking_bfs_hierarchy_levels_tree(self):
         pass
 
-    def create_table_hierarchies_star_schema(self):
-        pass
+#    def create_table_hierarchies_star_schema(self):
+#        for qi_attribute in self.qi_attributes:
+#            att_dimension_table_name = "{0}_dimensions".format(qi_attribute.name)
+#
+#
+#        pass
 
 
 

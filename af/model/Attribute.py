@@ -1,14 +1,14 @@
-from af.model.TransformationTechnique import TransformationTechnique
+from af.controller.hierarchies.BaseHierarchyController import BaseHierarchyController
 
 
 class Attribute(object):
 
-    def __init__(self, name=None, basic_type='string', privacy_type=None, transformation_technique=None, weight=0):
+    def __init__(self, name=None, basic_type='string', privacy_type=None, hierarchy_config=None, weight=0):
         self.name = name
         self.basic_type = basic_type
         self.privacy_type = privacy_type
         self.weight = weight
-        self.transformation_technique = self.set_transformation_technique(transformation_technique)
+        self.hierarchy = self.set_hierarchy(hierarchy_config)
 
     def get_representation(self):
         return {
@@ -16,7 +16,7 @@ class Attribute(object):
             'basic_type': self.basic_type,
             'privacy_type': self.privacy_type,
             'weight': self.weight,
-            'transformation_technique': self.get_transformation_technique_representation()
+            'hierarchy': self.get_hierarchy_representation()
         }
 
     def load_config(self, config_dict):
@@ -24,15 +24,28 @@ class Attribute(object):
         self.basic_type = config_dict['basic_type']
         self.privacy_type = config_dict['privacy_type']
         self.weight = config_dict['weight']
-        self.set_transformation_technique(config_dict['transformation_technique'])
+        self.set_hierarchy(config_dict['hierarchy'])
 
-    def get_transformation_technique_representation(self):
-        if self.transformation_technique is not None:
-            return self.transformation_technique.get_representation()
+    def get_hierarchy_representation(self):
+        if self.hierarchy is not None:
+            return self.hierarchy.hierarchy_representation()
         else:
             return None
 
-    def set_transformation_technique(self, technique):
-        self.transformation_technique = None
-        if technique is not None:
-            self.transformation_technique = TransformationTechnique.load_technique(technique, self.basic_type)
+    def set_hierarchy(self, hierarchy_config):
+        self.hierarchy = None
+        if hierarchy_config is not None:
+            self.hierarchy = BaseHierarchyController().load_hierarchy(hierarchy_config, self.basic_type)
+
+    def transform(self, data, lvl=None):
+        """Transform original data using its particular hierarchy
+        :param data: intended to be modified
+        """
+        if self.hierarchy is None:
+            raise Exception('No hierarchy found')
+        return self.hierarchy.transform(data, lvl)
+
+    def transform_leaf_nodes(self, lvl=None):
+        if self.hierarchy is None:
+            raise Exception('No hierarchy found')
+        return self.hierarchy.transform_leaf_nodes(lvl)
