@@ -79,12 +79,24 @@ class GeneralizationLatticeGraph():
         for upper_node in self.get_upper_level_nodes(node, current_lvl+1):
             self.mark_valid_subset(upper_node)
 
+    def get_processed_lvl_subsets(self, lvl):
+        lvl_subsets_raw = self.get_lvl_subsets(lvl)
+        if lvl_subsets_raw is None:
+            return None
+        lvl_subsets_processed = []
+        for subset_raw in lvl_subsets_raw['subsets']:
+            subset = {}
+            for k,v in zip(lvl_subsets_raw['qi_keys'], subset_raw['subset']):
+                subset[k] = v
+            lvl_subsets_processed.append(subset)
+        return lvl_subsets_processed
+
     @staticmethod
     def test():
         birth_info = ('birth', (0, 1))
         zip_info = ('zip', (0, 1, 2))
         sex_info = ('sex', (0, 1))
-        
+
         qi_info = (birth_info, zip_info, sex_info)
         glg = GeneralizationLatticeGraph(qi_info)
         print "Get qi keys"
@@ -97,7 +109,8 @@ class GeneralizationLatticeGraph():
         print "\nGet lvl subsets at request"
         for lvl in range(0, 6):
             print "Level: "+str(lvl)
-            print "Subsets: "+str(glg.get_lvl_subsets(lvl))
+            print "Subsets :  "+str(glg.get_lvl_subsets(lvl))
+            print "(w/keys):  "+str(glg.get_processed_lvl_subsets(lvl))
 
         print "\nMark all nodes as read"
         glg.mark_valid_subset(glg.bfs_level_nodes[1][1])
