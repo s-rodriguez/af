@@ -123,6 +123,36 @@ class TestHierarchies(unittest.TestCase):
         self.assertEqual(1, t2, 'Generalization value dont match')
         self.assertEqual(self.h.root_node.value, t3, 'Generalization value dont match')
 
+    def test_transform_leaf_nodes_ok(self):
+        node1 = Node('argentina')
+        self.h.add_node(self.h.root_node, node1)
+
+        node2 = Node('buenos aires')
+        self.h.add_node(node1, node2)
+
+        node3 = Node('capital federal')
+        node4 = Node('mar del plata')
+        self.h.add_node(node2, node3)
+        self.h.add_node(node2, node4)
+
+        node5 = Node('santa fe')
+        self.h.add_node(node1, node5)
+
+        node6 = Node('rosario')
+        self.h.add_node(node5, node6)
+
+        node7 = Node('entre rios')
+        self.h.add_node(node1, node7)
+
+        node8 = Node('gualeguay')
+        self.h.add_node(node7, node8)
+
+        leaf_nodes = self.h.transform_leaf_nodes()
+
+        for key, value in leaf_nodes.iteritems():
+            manual_transform = self.h.transform(key, 1)
+            self.assertEqual(value, manual_transform)
+
     def test_cannot_transform_inexistent_value_on_generalization_hierarchy(self):
         node1 = Node(1)
 
