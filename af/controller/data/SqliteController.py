@@ -52,9 +52,7 @@ class SqliteController(DataController):
         return list(self.execute_query(query))[0][0]
 
     def get_frequency_of_qi_attributes(self, table_name, qi_list):
-        query = "SELECT COUNT(*) ".format(table=table_name)
-        if len(qi_list) == 1:
-            query += ', '
+        query = "SELECT COUNT(*), "
         query += ','.join(qi_list) + ' '
         query += "FROM {table} GROUP BY ".format(table=table_name)
         query += ','.join(qi_list)
