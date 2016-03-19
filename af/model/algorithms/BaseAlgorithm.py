@@ -43,3 +43,7 @@ class BaseAlgorithm(object):
 
     def replace_value(self, qi, new_value, old_value):
         self.anon_db_controller.replace_qi_value(self.anonymization_table, qi, new_value, old_value)
+
+    def remove_rows(self, rows_to_remove):
+        for row in rows_to_remove:
+            self.anon_db_controller.remove_row(self.anonymization_table, self.qi_attributes, row)
