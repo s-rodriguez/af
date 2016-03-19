@@ -52,10 +52,14 @@ class SqliteController(DataController):
         return list(self.execute_query(query))[0][0]
 
     def get_frequency_of_qi_attributes(self, table_name, qi_list):
-        query = "SELECT COUNT(*) FROM {table} GROUP BY ".format(table=table_name)
+        query = "SELECT COUNT(*) ".format(table=table_name)
+        if len(qi_list) == 1:
+            query += ', '
+        query += ','.join(qi_list) + ' '
+        query += "FROM {table} GROUP BY ".format(table=table_name)
         query += ','.join(qi_list)
         for freq in self.execute_query(query):
-            yield freq[0]
+            yield freq
 
     def get_count_of_distinct_qi_values(self, table_name, qi):
         query = "SELECT COUNT(distinct {qi}) FROM {table}".format(table=table_name, qi=qi)
@@ -75,9 +79,25 @@ class SqliteController(DataController):
             cursor.execute(query, (new_value, old_value))
             conn.commit()
 
-    def get_count_of_qi_value(self, table_name, qi, value):
-        query = "SELECT COUNT(*) FROM {table} WHERE {qi}=?".format(table=table_name, qi=qi)
+    def get_count_of_qi_value(self, table_name, qi_list, values):
+        query = "SELECT COUNT(*) FROM {table} WHERE ".format(table=table_name)
+        for qi in qi_list:
+            query += "{qi} = ?".format(qi=qi)
+            if qi != qi_list[-1]:
+                query += ' AND '
+
         with sqlite3.connect(self.data_location) as conn:
             cursor = conn.cursor()
-            return list(cursor.execute(query, (value,)))[0][0]
+            return list(cursor.execute(query, tuple(values)))[0][0]
+
+    def remove_row(self, table_name, qi_list, values):
+        query = "DELETE FROM {table} WHERE ".format(table=table_name)
+        for qi in qi_list:
+            query += "{qi} = ?".format(qi=qi)
+            if qi != qi_list[-1]:
+                query += ' AND '
+        with sqlite3.connect(self.data_location) as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, tuple(values))
+            conn.commit()
 
