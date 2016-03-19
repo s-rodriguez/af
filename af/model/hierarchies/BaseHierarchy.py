@@ -124,7 +124,5 @@ class BaseHierarchy(object):
         else:
             return 0
 
-
-
-
-
+    def get_hierarchy_depth(self):
+        return self.get_node_depth(self.leaf_nodes[0])

@@ -7,32 +7,54 @@ class IncognitoK(BaseKAlgorithm):
 
     def __init__(self, data_config):
         BaseKAlgorithm.__init__(self, data_config)
-        self.db_original_copy_controller = SqliteController()
+        self.glg = None
 
     def anonymize(self):
         self.on_pre_process()
-        # while self.validate_anonymize_conditions(self.attributes) is not True:
-        #     qi_to_anonymize = self.obtain_qi_most_frequently()
-        #     # qi_to_anonymize.transformation_technique.transform(...
-        self.on_post_process()
 
+        #########################################################################
+        ########### CORE ALGORITHM. REVIEW. INTEGRATE. TEST #####################
+        #########################################################################
+        #lvl = 0
+        #glg_nodes = self.glg.get_nodes(lvl=lvl)
+        #while glg_nodes is not None:
+        #    for node in glg_nodes:
+        #        if node is not marked and self.node_checks_k_condition(node):
+        #            self.glg.mark_read(node)
+        #possible_generalizations = self.glg.get_all_marked_nodes()
+        #if possible_generalizations is not None:
+        #    generalization_to_use = self.choose_generalization(possible_generalizations)
+        #    self.create_anon_table(generalization_to_use)
+        #else:
+        #    no generalization available to make table anon with that k condition
+        #########################################################################
+        #########################################################################
+        #########################################################################
+
+        self.on_post_process()
 
     def validate_anonymize_conditions(self):
         pass
 
+    def create_table_hierarchies_star_schema(self):
+        for qi_attribute in self.qi_attributes:
+            att_dimension_table_name = "{0}_dimensions".format(qi_attribute.name)
+            dimensions_amount = qi_attribute.hierarchy.get_hierarchy_depth()
+            dimensions = ["{0}0 {1}".format(qi_attribute.name, qi_attribute.basic_type)]
+            column_names = ["{0}{1} STRING".format(qi_attribute.name, i) for i in range(1, dimensions_amount+1)]
+            dimensions.extend(column_names)
+
+            sql_query = "CREATE TABLE {table_name} ({dimensions});".format(att_dimension_table_name,
+                                                                           ','.join(dimensions))
+            self.db_original_copy_controller.execute_query(sql_query)
+
     def create_walking_bfs_hierarchy_levels_tree(self):
-        pass
+        qi_info = []
+        for att in self.qi_attributes:
+            dimensions_amount = att.hierarchy.get_hierarchy_depth()
+            qi_info.append((att.name, tuple(range(0, dimensions_amount+1))))
 
-#    def create_table_hierarchies_star_schema(self):
-#        for qi_attribute in self.qi_attributes:
-#            att_dimension_table_name = "{0}_dimensions".format(qi_attribute.name)
-#
-#
-#        pass
-
-
-
-
+        self.glg = GeneralizationLatticeGraph(qi_info)
 
 class GeneralizationLatticeGraph():
 
