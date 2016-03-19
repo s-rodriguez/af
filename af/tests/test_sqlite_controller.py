@@ -10,7 +10,6 @@ class TestSqliteController(unittest.TestCase):
         db_location = os.path.join(af_directory(), 'utils', 'test.db')
         self.controller = SqliteController(db_location)
 
-
     def test_available_tables_ok(self):
         tables_expected = [(u'Cars',)]
 
@@ -42,6 +41,5 @@ class TestSqliteController(unittest.TestCase):
 
     def test_amount_of_rows_ok(self):
         row_count = self.controller.amount_of_rows('Cars')
-
         self.assertTrue(row_count == 8, "There should be 8 rows in the table")
 

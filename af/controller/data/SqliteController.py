@@ -78,6 +78,7 @@ class SqliteController(DataController):
             conn.commit()
 
     def get_count_of_qi_value(self, table_name, qi_list, values):
+        self.validate_param_lengths(qi_list, values)
         query = "SELECT COUNT(*) FROM {table} WHERE ".format(table=table_name)
         for qi in qi_list:
             query += "{qi} = ?".format(qi=qi)
@@ -89,6 +90,7 @@ class SqliteController(DataController):
             return list(cursor.execute(query, tuple(values)))[0][0]
 
     def remove_row(self, table_name, qi_list, values):
+        self.validate_param_lengths(qi_list, values)
         query = "DELETE FROM {table} WHERE ".format(table=table_name)
         for qi in qi_list:
             query += "{qi} = ?".format(qi=qi)
@@ -99,3 +101,7 @@ class SqliteController(DataController):
             cursor.execute(query, tuple(values))
             conn.commit()
 
+    @staticmethod
+    def validate_param_lengths(qi_list, values):
+        if len(qi_list) != len(values):
+            raise Exception("The lenght of the attributes is different from the values")

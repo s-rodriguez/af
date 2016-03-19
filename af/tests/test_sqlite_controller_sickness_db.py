@@ -55,6 +55,15 @@ class TestSqliteControllerSicknessDb(unittest.TestCase):
         self.copy_controller.remove_row('sickness', ['Race', 'Gender'], ['black', 'male'])
         self.assertEqual(0, self.copy_controller.get_count_of_qi_value('sickness', ['Race', 'Gender'], ['black', 'male']))
 
+    def test_remove_row_invalid_length_of_values(self):
+        failed = False
+        try:
+            self.assertEqual(6, self.copy_controller.get_count_of_qi_value('sickness', ['Race'], ['white']))
+            self.copy_controller.remove_row('sickness', ['Race'], ['white', ['male']])
+        except Exception:
+            failed = True
+        self.assertTrue(failed, "Method should have failed")
+
     def create_db_copy(self, db_name):
         new_db_location = os.path.join(af_directory(), 'utils', db_name)
         self.controller.create_db_copy(self.controller.data_location, new_db_location)

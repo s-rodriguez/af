@@ -18,7 +18,7 @@ class BaseKAlgorithm(BaseAlgorithm):
                 if counter > self.k:
                     return False
                 else:
-                    #remove first item (the count) andd add row to the list of rows to remove
+                    #remove first item (the count) and add row to the list of rows to remove
                     row.pop(1)
                     rows_to_remove.append(row)
 
