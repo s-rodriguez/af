@@ -9,9 +9,7 @@ class IncognitoK(BaseKAlgorithm):
         BaseKAlgorithm.__init__(self, data_config)
         self.glg = None
 
-    def anonymize(self):
-        self.on_pre_process()
-
+    def process(self):
         #########################################################################
         ########### CORE ALGORITHM. REVIEW. INTEGRATE. TEST #####################
         #########################################################################
@@ -30,8 +28,7 @@ class IncognitoK(BaseKAlgorithm):
         #########################################################################
         #########################################################################
         #########################################################################
-
-        self.on_post_process()
+        pass
 
     def validate_anonymize_conditions(self):
         pass

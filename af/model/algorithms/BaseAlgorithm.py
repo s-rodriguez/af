@@ -1,5 +1,6 @@
 from af.controller.data.SqliteController import SqliteController
 from af import utils
+from af.controller.anonymization.PreProcessingStage import PreProcessingStage
 
 class BaseAlgorithm(object):
 
@@ -15,14 +16,15 @@ class BaseAlgorithm(object):
         self.anonymization_table = None
         self.input_table = None
 
-    def anonymize(self):
+    def process(self):
         pass
 
     def validate_anonymize_conditions(self):
         pass
 
     def on_pre_process(self):
-        pass
+        pre_processing_stage = PreProcessingStage(utils.COPY_OF_ORIGINAL_DB, self.data_config.table, self.id_attributes)
+        pre_processing_stage.preprocess()
 
     def on_post_process(self):
         pass
@@ -48,3 +50,8 @@ class BaseAlgorithm(object):
     def remove_rows(self, rows_to_remove):
         for row in rows_to_remove:
             self.anon_db_controller.remove_row(self.anonymization_table, self.qi_attributes, row)
+
+    def anonymize(self):
+        self.on_pre_process()
+        self.process()
+        self.on_post_process()

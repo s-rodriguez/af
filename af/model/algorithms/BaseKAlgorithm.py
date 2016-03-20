@@ -10,7 +10,7 @@ class BaseKAlgorithm(BaseAlgorithm):
     def validate_anonymize_conditions(self):
         counter = 0
         rows_to_remove = []
-        quasi_identifier_frequencies = self.db_controller.obtain_quasi_identifier_frequencies(self.anonymization_table, self.qi_attributes)
+        quasi_identifier_frequencies = self.anon_db_controller.obtain_quasi_identifier_frequencies(self.anonymization_table, self.qi_attributes)
 
         for row in quasi_identifier_frequencies:
             if row[0] < self.k:
