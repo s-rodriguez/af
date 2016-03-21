@@ -53,6 +53,7 @@ class IncognitoK(BaseKAlgorithm):
 
         self.glg = GeneralizationLatticeGraph(qi_info)
 
+
 class GeneralizationLatticeGraph():
 
     def __init__(self, qi_info):

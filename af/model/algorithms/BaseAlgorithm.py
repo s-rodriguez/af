@@ -10,8 +10,8 @@ class BaseAlgorithm(object):
         self.qi_attributes = data_config.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_QI)
         self.id_attributes = data_config.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_IDENTIFIER)
 
-        self.copy_original_db_controller = SqliteController(utils.get_db_location(utils.ANONYMIZATION_DB_NAME))
-        self.anon_db_controller = SqliteController(utils.get_db_location(utils.COPY_OF_ORIGINAL_DB))
+        self.copy_original_db_controller = SqliteController(utils.get_db_location(utils.COPY_OF_ORIGINAL_DB))
+        self.anon_db_controller = SqliteController(utils.get_db_location(utils.ANONYMIZATION_DB_NAME))
 
         self.anonymization_table = None
         self.input_table = None
@@ -23,7 +23,7 @@ class BaseAlgorithm(object):
         pass
 
     def on_pre_process(self):
-        pre_processing_stage = PreProcessingStage(utils.COPY_OF_ORIGINAL_DB, self.data_config.table, self.id_attributes)
+        pre_processing_stage = PreProcessingStage(self.data_config.location, self.data_config.table, self.id_attributes)
         pre_processing_stage.preprocess()
 
     def on_post_process(self):
