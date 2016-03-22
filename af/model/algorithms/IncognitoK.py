@@ -8,30 +8,22 @@ class IncognitoK(BaseKAlgorithm):
     def __init__(self, data_config, k=2):
         BaseKAlgorithm.__init__(self, data_config, k)
         self.glg = None
+        self.final_generalization = None
+        self.k_condition_query = None
+        self.replacement_tag = "###REPLACEME###"
 
     def process(self):
         self.create_table_hierarchies_star_schema()
         self.insert_values_on_dimension_tables()
         self.create_walking_bfs_hierarchy_levels_tree()
-        #########################################################################
-        ########### CORE ALGORITHM. REVIEW. INTEGRATE. TEST #####################
-        #########################################################################
-        #lvl = 0
-        #glg_nodes = self.glg.get_nodes(lvl=lvl)
-        #while glg_nodes is not None:
-        #    for node in glg_nodes:
-        #        if node is not marked and self.node_checks_k_condition(node):
-        #            self.glg.mark_read(node)
-        #possible_generalizations = self.glg.get_all_marked_nodes()
-        #if possible_generalizations is not None:
-        #    generalization_to_use = self.choose_generalization(possible_generalizations)
-        #    self.create_anon_table(generalization_to_use)
-        #else:
-        #    no generalization available to make table anon with that k condition
-        #########################################################################
-        #########################################################################
-        #########################################################################
-        pass
+        self.create_check_k_condition_query()
+        possible_generalizations = self.retrieve_possible_generalizations()
+        if len(possible_generalizations) > 0:
+            self.final_generalization = self.choose_generalization(possible_generalizations)
+            print self.final_generalization
+        #    self.create_final_anonymization_table(final_generalization)
+        else:
+            raise Exception("no generalization available to make table anon with that k condition")
 
     def validate_anonymize_conditions(self):
         pass
@@ -65,6 +57,71 @@ class IncognitoK(BaseKAlgorithm):
 
         self.glg = GeneralizationLatticeGraph(qi_info)
 
+    def create_check_k_condition_query(self):
+        table_name = self.data_config.table
+        table_initial = self.data_config.table[0:2]
+        group_by_clause = []
+        sql_query = "SELECT COUNT(*) FROM {0} {1}".format(table_name, table_initial)
+        for qi_attribute in self.qi_attributes:
+            qi_name = qi_attribute.name
+            qi_initial = qi_attribute.name[0:2]
+            sql_query += " INNER JOIN {0}_dimensions {1} on {2}.{3} = {4}.{5}0".format(qi_name,
+                                                                                          qi_initial,
+                                                                                          table_initial,
+                                                                                          qi_name,
+                                                                                          qi_initial,
+                                                                                          qi_name)
+
+            group_by_clause.append("{0}.{1}{2}".format(qi_initial, qi_name, self.replacement_tag))
+        sql_query += " GROUP BY {0}".format(', '.join(group_by_clause))
+
+        self.k_condition_query = sql_query
+
+    def retrieve_possible_generalizations(self):
+        finished = False
+        lvl = 0
+        while not finished:
+            glg_lvl_subnodes = self.glg.get_lvl_subnodes(lvl)
+            if glg_lvl_subnodes is None:
+                finished = True
+            else:
+                for node in glg_lvl_subnodes:
+                    if node.marked is False and self.subnode_checks_k_condition(node):
+                        self.glg.mark_valid_subnode(node)
+                lvl += 1
+
+        possible_generalizations = self.glg.get_marked_nodes()
+        return possible_generalizations
+
+    def subnode_checks_k_condition(self, node):
+        condition_query = self.k_condition_query.replace('','')
+        for key, dimension in zip(node.qi_keys, node.subset):
+            condition_query = condition_query.replace('.{0}{1}'.format(key, self.replacement_tag),
+                                                      '.{0}{1}'.format(key, dimension))
+        
+        for row in self.copy_original_db_controller.execute_query(condition_query):
+            if int(row[0]) < self.k:
+                return False
+        return True
+
+    def choose_generalization(self, possible_generalizations):
+        # TODO IMPLEMENTE LOGIC TO CHOOSE
+        return possible_generalizations[0]
+
+    def create_final_anonymization_table(self, final_generalization):
+        pass
+
+
+class GLGNode():
+    def __init__(self, subset, glg_lvl, qi_keys, marked=False):
+        self.subset = subset
+        self.glg_lvl = glg_lvl
+        self.qi_keys = qi_keys
+        self.marked = marked
+
+    def __repr__(self):
+        return str({'subset': self.subset, 'marked': self.marked})
+        
 
 class GeneralizationLatticeGraph():
 
@@ -90,42 +147,44 @@ class GeneralizationLatticeGraph():
             lvl = sum(subset)
             if lvl not in self.bfs_level_nodes.keys():
                 self.bfs_level_nodes[lvl] = []
-            self.bfs_level_nodes[lvl].append({'marked': False, 'subset': subset})
+            self.bfs_level_nodes[lvl].append(GLGNode(subset=subset, glg_lvl=lvl, qi_keys=self.qi_keys, marked=False))
 
-    def get_lvl_subsets(self, lvl):
+    def get_lvl_subnodes(self, lvl):
         # Reached the highest possible level
         if lvl not in self.bfs_level_nodes.keys():
             return None
-        return {'subsets': self.bfs_level_nodes[lvl], 'qi_keys': self.qi_keys}
+        return self.bfs_level_nodes[lvl]
 
     def get_upper_level_nodes(self, node, lvl):
         upper_level_nodes = []
-        possible_upper_nodes = self.get_lvl_subsets(lvl)
+        possible_upper_nodes = self.get_lvl_subnodes(lvl)
         if possible_upper_nodes:
-            for upper_node in possible_upper_nodes['subsets']:
-                condition1 = sum(upper_node['subset'])-sum(node['subset']) == 1
-                condition2 = all(0 <= t[1]-t[0] <= 1 for t in zip(node['subset'], upper_node['subset']))
+            for upper_node in possible_upper_nodes:
+                condition1 = sum(upper_node.subset)-sum(node.subset) == 1
+                condition2 = all(0 <= t[1]-t[0] <= 1 for t in zip(node.subset, upper_node.subset))
                 if all((condition1, condition2)):
                     upper_level_nodes.append(upper_node)
         return upper_level_nodes
 
-    def mark_valid_subset(self, node):
-        node['marked'] = True
-        current_lvl = sum(node['subset'])
+    def mark_valid_subnode(self, node):
+        node.marked = True
+        current_lvl = sum(node.subset)
         for upper_node in self.get_upper_level_nodes(node, current_lvl+1):
-            self.mark_valid_subset(upper_node)
+            self.mark_valid_subnode(upper_node)
 
-    def get_processed_lvl_subsets(self, lvl):
-        lvl_subsets_raw = self.get_lvl_subsets(lvl)
-        if lvl_subsets_raw is None:
-            return None
-        lvl_subsets_processed = []
-        for subset_raw in lvl_subsets_raw['subsets']:
-            subset = {}
-            for k,v in zip(lvl_subsets_raw['qi_keys'], subset_raw['subset']):
-                subset[k] = v
-            lvl_subsets_processed.append(subset)
-        return lvl_subsets_processed
+    def get_marked_nodes(self, marked=True):
+        marked_nodes = []
+        lvl = 0
+        finished = False
+        
+        while not finished:
+            nodes = self.get_lvl_subnodes(lvl)
+            if nodes is None:
+                finished = True
+            else:    
+                marked_nodes.extend([node for node in nodes if node.marked == marked])
+                lvl += 1
+        return marked_nodes
 
     @staticmethod
     def test():
@@ -145,13 +204,13 @@ class GeneralizationLatticeGraph():
         print "\nGet lvl subsets at request"
         for lvl in range(0, 6):
             print "Level: "+str(lvl)
-            print "Subsets :  "+str(glg.get_lvl_subsets(lvl))
-            print "(w/keys):  "+str(glg.get_processed_lvl_subsets(lvl))
+            print "Subsets :  "+str(glg.get_lvl_subnodes(lvl))
 
         print "\nMark all nodes as read"
-        glg.mark_valid_subset(glg.bfs_level_nodes[1][1])
-        for lvl, subsets in glg.bfs_level_nodes.iteritems():
-            print "Level: "+str(lvl)+": "+str(subsets)
+        glg.mark_valid_subnode(glg.bfs_level_nodes[1][1])
+        for lvl in range(0, 6):
+            print "Level: "+str(lvl)
+            print "Subsets :  "+str(glg.get_lvl_subnodes(lvl))
 
 if __name__ == "__main__":
     # GLG Test
