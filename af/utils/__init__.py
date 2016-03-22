@@ -38,12 +38,15 @@ ANONYMIZATION_DB_NAME = 'anonymizationDB.db'
 COPY_OF_ORIGINAL_DB = 'originalCopy.db'
 
 
-def create_anonymization_db(db_name):
+def create_db(db_name):
+    if not os.path.exists(ANONYMIZATION_DIRECTORY):
+        os.mkdir(ANONYMIZATION_DIRECTORY)
+
     with sqlite3.connect(os.path.join(ANONYMIZATION_DIRECTORY, db_name)) as conn:
         cursor = conn.cursor()
 
 
 def get_db_location(db_name, create_if_not_exists=True):
     if create_if_not_exists:
-        create_anonymization_db(db_name)
+        create_db(db_name)
     return os.path.join(ANONYMIZATION_DIRECTORY, db_name)
