@@ -105,3 +105,9 @@ class SqliteController(DataController):
     def validate_param_lengths(qi_list, values):
         if len(qi_list) != len(values):
             raise Exception("The lenght of the attributes is different from the values")
+
+    def execute_many(self, query, values_list):
+        with sqlite3.connect(self.data_location) as conn:
+            cursor = conn.cursor()
+            cursor.executemany(query, values_list)
+            conn.commit()

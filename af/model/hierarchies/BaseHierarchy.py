@@ -126,3 +126,14 @@ class BaseHierarchy(object):
 
     def get_hierarchy_depth(self):
         return self.get_node_depth(self.leaf_nodes[0])
+
+    def get_all_nodes_complete_transformation(self):
+        nodes_complete_transformation = []
+        hierarchy_depth = self.get_hierarchy_depth()
+        for node in self.leaf_nodes:
+            node_dimension_values = []
+            for lvl in range(0, hierarchy_depth+1):
+                gen_lvl = self.get_generalization_level_representation(node, lvl)
+                node_dimension_values.append(gen_lvl.value)
+            nodes_complete_transformation.append(tuple(node_dimension_values))
+        return nodes_complete_transformation

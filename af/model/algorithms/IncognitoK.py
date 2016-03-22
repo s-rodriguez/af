@@ -10,6 +10,9 @@ class IncognitoK(BaseKAlgorithm):
         self.glg = None
 
     def process(self):
+        self.create_table_hierarchies_star_schema()
+        self.insert_values_on_dimension_tables()
+        self.create_walking_bfs_hierarchy_levels_tree()
         #########################################################################
         ########### CORE ALGORITHM. REVIEW. INTEGRATE. TEST #####################
         #########################################################################
@@ -38,14 +41,21 @@ class IncognitoK(BaseKAlgorithm):
             att_dimension_table_name = "{0}_dimensions".format(qi_attribute.name)
             dimensions_amount = qi_attribute.hierarchy.get_hierarchy_depth()
             dimensions = ["{0}0 {1}".format(qi_attribute.name, qi_attribute.basic_type)]
-            column_names = ["{0}{1} STRING".format(qi_attribute.name, i) for i in range(1, dimensions_amount+1)]
-            dimensions.extend(column_names)
+            
+            if dimensions_amount > 0:
+                column_names = ["{0}{1} STRING".format(qi_attribute.name, i) for i in range(1, dimensions_amount+1)]
+                dimensions.extend(column_names)
 
             sql_query = "CREATE TABLE {0} ({1});".format(att_dimension_table_name, ','.join(dimensions))
             list(self.copy_original_db_controller.execute_query(sql_query))
 
     def insert_values_on_dimension_tables(self):
-        pass
+        for qi_attribute in self.qi_attributes:
+            att_dimension_table_name = "{0}_dimensions".format(qi_attribute.name)
+            amount_of_values = ['?'] * (qi_attribute.hierarchy.get_hierarchy_depth()+1)
+            query = "INSERT INTO {0}_dimensions VALUES ({1})".format(qi_attribute.name, ','.join(amount_of_values))
+            dimension_values = qi_attribute.hierarchy.get_all_nodes_complete_transformation()
+            self.copy_original_db_controller.execute_many(query, dimension_values)
 
     def create_walking_bfs_hierarchy_levels_tree(self):
         qi_info = []
