@@ -3,16 +3,20 @@ import os
 from af.controller.data.DataFactory import DataFactory
 from af.controller.data.SqliteController import SqliteController
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy
-from af.utils import ANONYMIZATION_DIRECTORY, COPY_OF_ORIGINAL_DB
+from af.utils import (
+    ANONYMIZATION_DIRECTORY,
+    COPY_OF_ORIGINAL_DB,
+    PRIVACY_TYPE_IDENTIFIER,
+)
 
 
 class PreProcessingStage(object):
 
-    def __init__(self, initial_db_location, table, identifiable_list):
-        self.initial_db_location = initial_db_location
+    def __init__(self, data_config):
+        self.data_config = data_config
+        self.initial_db_location = self.data_config.location
         self.db_location = os.path.join(ANONYMIZATION_DIRECTORY, COPY_OF_ORIGINAL_DB)
-        self.table = table
-        self.identifiable_list = identifiable_list
+        self.table = self.data_config.table
         self.db_controller = None
 
     def preprocess(self):
@@ -32,11 +36,13 @@ class PreProcessingStage(object):
         controller.create_db_copy(self.initial_db_location, self.db_location)
 
     def remove_identifiable_attributes(self):
+        identifiable_list = [att.name for att in self.data_config.get_privacy_type_attributes_list(PRIVACY_TYPE_IDENTIFIER)]
         supression_value = BaseHierarchy.supression_node()
-        update_ident_list = ["{0}='{1}'".format(att, supression_value) for att in self.identifiable_list]
+        update_ident_list = ["{0}='{1}'".format(att, supression_value) for att in identifiable_list]
         query = "UPDATE {0} SET {1};".format(self.table, ', '.join(update_ident_list))
-        self.db_controller.execute_query(query)
+        list(self.db_controller.execute_query(query))
 
-    def set_indexes_over_qi(self, qi_list):
+    def set_indexes_over_qi(self):
+        qi_list = [att.name for att in self.data_config.get_privacy_type_attributes_list()]
         query = "CREATE INDEX qi_index ON {0} ({1});".format(self.table, ', '.join(qi_list))
-        self.db_controller.execute_query(query)
+        list(self.db_controller.execute_query(query))

@@ -23,7 +23,7 @@ class BaseAlgorithm(object):
         pass
 
     def on_pre_process(self):
-        pre_processing_stage = PreProcessingStage(self.data_config.location, self.data_config.table, self.id_attributes)
+        pre_processing_stage = PreProcessingStage(self.data_config)
         pre_processing_stage.preprocess()
 
     def on_post_process(self):

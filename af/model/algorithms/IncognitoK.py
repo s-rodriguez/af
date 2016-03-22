@@ -5,8 +5,8 @@ from af.model.algorithms.BaseKAlgorithm import BaseKAlgorithm
 
 class IncognitoK(BaseKAlgorithm):
 
-    def __init__(self, data_config):
-        BaseKAlgorithm.__init__(self, data_config)
+    def __init__(self, data_config, k=2):
+        BaseKAlgorithm.__init__(self, data_config, k)
         self.glg = None
 
     def process(self):
