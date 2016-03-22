@@ -1,6 +1,7 @@
 import itertools
 
 from af.model.algorithms.BaseKAlgorithm import BaseKAlgorithm
+from af import utils
 
 
 class IncognitoK(BaseKAlgorithm):
@@ -20,8 +21,7 @@ class IncognitoK(BaseKAlgorithm):
         possible_generalizations = self.retrieve_possible_generalizations()
         if len(possible_generalizations) > 0:
             self.final_generalization = self.choose_generalization(possible_generalizations)
-            print self.final_generalization
-        #    self.create_final_anonymization_table(final_generalization)
+            self.create_final_anonymization_table()
         else:
             raise Exception("no generalization available to make table anon with that k condition")
 
@@ -39,7 +39,7 @@ class IncognitoK(BaseKAlgorithm):
                 dimensions.extend(column_names)
 
             sql_query = "CREATE TABLE {0} ({1});".format(att_dimension_table_name, ','.join(dimensions))
-            list(self.copy_original_db_controller.execute_query(sql_query))
+            list(self.anon_db_controller.execute_query(sql_query))
 
     def insert_values_on_dimension_tables(self):
         for qi_attribute in self.qi_attributes:
@@ -47,7 +47,7 @@ class IncognitoK(BaseKAlgorithm):
             amount_of_values = ['?'] * (qi_attribute.hierarchy.get_hierarchy_depth()+1)
             query = "INSERT INTO {0}_dimensions VALUES ({1})".format(qi_attribute.name, ','.join(amount_of_values))
             dimension_values = qi_attribute.hierarchy.get_all_nodes_complete_transformation()
-            self.copy_original_db_controller.execute_many(query, dimension_values)
+            self.anon_db_controller.execute_many(query, dimension_values)
 
     def create_walking_bfs_hierarchy_levels_tree(self):
         qi_info = []
@@ -99,7 +99,7 @@ class IncognitoK(BaseKAlgorithm):
             condition_query = condition_query.replace('.{0}{1}'.format(key, self.replacement_tag),
                                                       '.{0}{1}'.format(key, dimension))
         
-        for row in self.copy_original_db_controller.execute_query(condition_query):
+        for row in self.anon_db_controller.execute_query(condition_query):
             if int(row[0]) < self.k:
                 return False
         return True
@@ -108,8 +108,22 @@ class IncognitoK(BaseKAlgorithm):
         # TODO IMPLEMENTE LOGIC TO CHOOSE
         return possible_generalizations[0]
 
-    def create_final_anonymization_table(self, final_generalization):
-        pass
+    def create_final_anonymization_table(self):
+        print "Anonymizing table with dimensions: {0}".format(str(self.choose_generalization))
+        columns = [att.name for att in self.data_config.attributes_list]
+        create_table_query = "CREATE TABLE {0} ({1});".format(utils.ANONYMIZED_DATA_TABLE, ','.join(columns))
+        list(self.anon_db_controller.execute_query(create_table_query))
+
+        #dump_anonymized_data ="""
+        #INSERT INTO {0}
+        #(column_name(s))
+        #SELECT column_name(s)
+        #FROM {4};
+        #""".format(utils.ANONYMIZED_DATA_TABLE,
+        #           ,
+        #           ,
+        #           self.data_config.table,)
+        #list(self.anon_db_controller.execute_query(create_table_query))
 
 
 class GLGNode():

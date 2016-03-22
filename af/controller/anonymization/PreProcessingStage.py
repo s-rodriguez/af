@@ -5,7 +5,7 @@ from af.controller.data.SqliteController import SqliteController
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy
 from af.utils import (
     ANONYMIZATION_DIRECTORY,
-    COPY_OF_ORIGINAL_DB,
+    ANONYMIZATION_DB_NAME,
     PRIVACY_TYPE_IDENTIFIER,
 )
 
@@ -15,7 +15,7 @@ class PreProcessingStage(object):
     def __init__(self, data_config):
         self.data_config = data_config
         self.initial_db_location = self.data_config.location
-        self.db_location = os.path.join(ANONYMIZATION_DIRECTORY, COPY_OF_ORIGINAL_DB)
+        self.db_location = os.path.join(ANONYMIZATION_DIRECTORY, ANONYMIZATION_DB_NAME)
         self.table = self.data_config.table
         self.db_controller = None
 
