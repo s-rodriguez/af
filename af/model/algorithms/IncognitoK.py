@@ -41,9 +41,11 @@ class IncognitoK(BaseKAlgorithm):
             column_names = ["{0}{1} STRING".format(qi_attribute.name, i) for i in range(1, dimensions_amount+1)]
             dimensions.extend(column_names)
 
-            sql_query = "CREATE TABLE {table_name} ({dimensions});".format(att_dimension_table_name,
-                                                                           ','.join(dimensions))
-            self.db_original_copy_controller.execute_query(sql_query)
+            sql_query = "CREATE TABLE {0} ({1});".format(att_dimension_table_name, ','.join(dimensions))
+            list(self.copy_original_db_controller.execute_query(sql_query))
+
+    def insert_values_on_dimension_tables(self):
+        pass
 
     def create_walking_bfs_hierarchy_levels_tree(self):
         qi_info = []
@@ -142,4 +144,18 @@ class GeneralizationLatticeGraph():
             print "Level: "+str(lvl)+": "+str(subsets)
 
 if __name__ == "__main__":
+    # GLG Test
     GeneralizationLatticeGraph.test()
+
+    #Incognito Test
+    #from af.utils import create_full_data_config
+    #dc = create_full_data_config.data_config
+    #inc = IncognitoK(dc)
+
+    #inc.on_pre_process()
+    #inc.create_table_hierarchies_star_schema()
+    #inc.create_walking_bfs_hierarchy_levels_tree()
+
+    #for lvl in range(0, 11):
+    #    print "Level: "+str(lvl)
+    #    print "(w/keys):  "+str(inc.glg.get_processed_lvl_subsets(lvl))
