@@ -12,8 +12,12 @@ def random_letters():
     return ''.join([random.choice(string.ascii_lowercase) for x in range(0, random.randint(6, 10))])
 
 
+def random_ssn():
+    return int(''.join([str(random.randint(0,9)) for i in range(0, 8)]))
+
+
 def random_year_of_birth():
-    return random.randint(1930, 2000)
+    return random.randint(1930, 1999)
 
 
 def random_gender():
@@ -33,11 +37,13 @@ def random_diagnosis():
 
 
 def create_record():
-    name = random.choice(first_names)
-    last_name = random.choice(last_names)
-    year_of_birth = random_year_of_birth()
+    #name = random.choice(first_names)
+    #last_name = random.choice(last_names)
+    ssn = random_ssn()
+    race = random_ethnicity()
+    birth = random_year_of_birth()
     gender = random_gender()
-    ethnicity = random_ethnicity()
+    
     z = random_zip()
     diagnosis = random_diagnosis()
     return name, last_name, year_of_birth, gender, ethnicity, z, diagnosis

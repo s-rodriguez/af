@@ -1,7 +1,10 @@
 import itertools
 
 from af.model.algorithms.BaseKAlgorithm import BaseKAlgorithm
-from af import utils
+from af.utils import (
+    ANONYMIZED_DATA_TABLE,
+    timeit_decorator
+)
 
 
 class IncognitoK(BaseKAlgorithm):
@@ -13,6 +16,7 @@ class IncognitoK(BaseKAlgorithm):
         self.k_condition_query = None
         self.replacement_tag = "###REPLACEME###"
 
+    @timeit_decorator
     def process(self):
         self.create_table_hierarchies_star_schema()
         self.insert_values_on_dimension_tables()
@@ -28,7 +32,9 @@ class IncognitoK(BaseKAlgorithm):
     def validate_anonymize_conditions(self):
         pass
 
+    @timeit_decorator
     def create_table_hierarchies_star_schema(self):
+        print "[+] Creating table hierarchies star schema..."
         for qi_attribute in self.qi_attributes:
             att_dimension_table_name = "{0}_dimensions".format(qi_attribute.name)
             dimensions_amount = qi_attribute.hierarchy.get_hierarchy_depth()
@@ -41,7 +47,14 @@ class IncognitoK(BaseKAlgorithm):
             sql_query = "CREATE TABLE {0} ({1});".format(att_dimension_table_name, ','.join(dimensions))
             list(self.anon_db_controller.execute_query(sql_query))
 
+            index_query = "CREATE INDEX {0}_index ON {1} ({2}0);".format(qi_attribute.name[0:2], 
+                                                                        att_dimension_table_name, 
+                                                                        qi_attribute.name)
+            list(self.anon_db_controller.execute_query(index_query))
+
+    @timeit_decorator
     def insert_values_on_dimension_tables(self):
+        print "[+] Inserting values on dimension tables..."
         for qi_attribute in self.qi_attributes:
             att_dimension_table_name = "{0}_dimensions".format(qi_attribute.name)
             amount_of_values = ['?'] * (qi_attribute.hierarchy.get_hierarchy_depth()+1)
@@ -49,7 +62,9 @@ class IncognitoK(BaseKAlgorithm):
             dimension_values = qi_attribute.hierarchy.get_all_nodes_complete_transformation()
             self.anon_db_controller.execute_many(query, dimension_values)
 
+    @timeit_decorator
     def create_walking_bfs_hierarchy_levels_tree(self):
+        print "[+] Creating Generalization Lattice Graph..."
         qi_info = []
         for att in self.qi_attributes:
             dimensions_amount = att.hierarchy.get_hierarchy_depth()
@@ -57,7 +72,9 @@ class IncognitoK(BaseKAlgorithm):
 
         self.glg = GeneralizationLatticeGraph(qi_info)
 
+    @timeit_decorator
     def create_check_k_condition_query(self):
+        print "[+] Forming k condition query..."
         table_name = self.data_config.table
         table_initial = self.data_config.table[0:2]
         
@@ -70,6 +87,7 @@ class IncognitoK(BaseKAlgorithm):
 
         self.k_condition_query = sql_query
 
+    @timeit_decorator
     def _get_inner_join_and_group_by_query_parts(self, table_initial):
         inner_join_query = ""
         group_by_clause = []
@@ -90,7 +108,9 @@ class IncognitoK(BaseKAlgorithm):
 
         return (inner_join_query, group_by_query)
 
+    @timeit_decorator
     def retrieve_possible_generalizations(self):
+        print "[+] Retrieving all possible generalizations..."
         finished = False
         lvl = 0
         while not finished:
@@ -117,15 +137,18 @@ class IncognitoK(BaseKAlgorithm):
                 return False
         return True
 
+    @timeit_decorator
     def choose_generalization(self, possible_generalizations):
         # TODO IMPLEMENTE LOGIC TO CHOOSE
+        print "[+] Choosing the best generalization from the possible ones..."
         return possible_generalizations[0]
 
+    @timeit_decorator
     def dump_anonymized_data(self):
-        print "Anonymizing table with dimensions: {0}".format(str(self.final_generalization))
+        print "[+] Dumping anonymized data with dimensions: {0}...".format(str(self.final_generalization))
 
         # CREATE TABLE TO STORE ANONYMIZED DATA
-        table_name = utils.ANONYMIZED_DATA_TABLE
+        table_name = ANONYMIZED_DATA_TABLE
         columns = [att.name for att in self.id_attributes]
         columns += [att.name for att in self.qi_attributes]
         columns += [att.name for att in self.other_attributes]
@@ -263,16 +286,3 @@ class GeneralizationLatticeGraph():
 if __name__ == "__main__":
     # GLG Test
     GeneralizationLatticeGraph.test()
-
-    #Incognito Test
-    #from af.utils import create_full_data_config
-    #dc = create_full_data_config.data_config
-    #inc = IncognitoK(dc)
-
-    #inc.on_pre_process()
-    #inc.create_table_hierarchies_star_schema()
-    #inc.create_walking_bfs_hierarchy_levels_tree()
-
-    #for lvl in range(0, 11):
-    #    print "Level: "+str(lvl)
-    #    print "(w/keys):  "+str(inc.glg.get_processed_lvl_subsets(lvl))
