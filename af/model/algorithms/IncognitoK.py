@@ -119,12 +119,15 @@ class IncognitoK(BaseKAlgorithm):
                 finished = True
             else:
                 for node in glg_lvl_subnodes:
-                    if node.marked is False and self.subnode_checks_k_condition(node):
+                    if node.marked is False and self.checks_model_conditions(node):
                         self.glg.mark_valid_subnode(node)
                 lvl += 1
 
         possible_generalizations = self.glg.get_marked_nodes()
         return possible_generalizations
+
+    def checks_model_conditions(self, node):
+        return self.subnode_checks_k_condition(node)
 
     def subnode_checks_k_condition(self, node):
         condition_query = self.k_condition_query.replace('','')
