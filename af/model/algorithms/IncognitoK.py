@@ -21,7 +21,7 @@ class IncognitoK(BaseKAlgorithm):
         self.create_table_hierarchies_star_schema()
         self.insert_values_on_dimension_tables()
         self.create_walking_bfs_hierarchy_levels_tree()
-        self.create_check_k_condition_query()
+        self.create_condition_queries()
         possible_generalizations = self.retrieve_possible_generalizations()
         if len(possible_generalizations) > 0:
             self.final_generalization = self.choose_generalization(possible_generalizations)
@@ -71,6 +71,10 @@ class IncognitoK(BaseKAlgorithm):
             qi_info.append((att.name, tuple(range(0, dimensions_amount+1))))
 
         self.glg = GeneralizationLatticeGraph(qi_info)
+
+    @timeit_decorator
+    def create_condition_queries(self):
+        self.create_check_k_condition_query()
 
     @timeit_decorator
     def create_check_k_condition_query(self):
@@ -134,7 +138,7 @@ class IncognitoK(BaseKAlgorithm):
         for key, dimension in zip(node.qi_keys, node.subset):
             condition_query = condition_query.replace('.{0}{1}'.format(key, self.replacement_tag),
                                                       '.{0}{1}'.format(key, dimension))
-        
+
         for row in self.anon_db_controller.execute_query(condition_query):
             if int(row[0]) < self.k:
                 return False

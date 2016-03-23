@@ -15,6 +15,9 @@ class BaseAlgorithm(object):
 
         self.anonymization_table = None
 
+    def validate_arguments(self):
+        pass
+
     def process(self):
         pass
 

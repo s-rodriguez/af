@@ -3,9 +3,11 @@ class BaseKAlgorithm(BaseAlgorithm):
 
     def __init__(self, data_config, k):
         BaseAlgorithm.__init__(self, data_config)
+        self.k = k
+
+    def validate_arguments(self, k):
         if k < 1:
             raise Exception("Invalid k param")
-        self.k = k
 
     def validate_anonymize_conditions(self):
         counter = 0
