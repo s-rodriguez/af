@@ -131,4 +131,4 @@ db_location = os.path.join(af_directory(), 'utils', 'sickness.db')
 
 data_config = DataConfig(location=db_location, data_type='sqlite', table=table, attributes_list=attributes_list)
 
-print data_config.config_representation()
+#print data_config.config_representation()

@@ -21,7 +21,7 @@ class IncognitoK(BaseKAlgorithm):
         possible_generalizations = self.retrieve_possible_generalizations()
         if len(possible_generalizations) > 0:
             self.final_generalization = self.choose_generalization(possible_generalizations)
-            self.create_final_anonymization_table()
+            self.dump_anonymized_data()
         else:
             raise Exception("no generalization available to make table anon with that k condition")
 
@@ -60,12 +60,24 @@ class IncognitoK(BaseKAlgorithm):
     def create_check_k_condition_query(self):
         table_name = self.data_config.table
         table_initial = self.data_config.table[0:2]
-        group_by_clause = []
+        
         sql_query = "SELECT COUNT(*) FROM {0} {1}".format(table_name, table_initial)
+        
+        inner_join_query, group_by_query = self._get_inner_join_and_group_by_query_parts(table_initial)
+
+        sql_query += inner_join_query
+        sql_query += group_by_query
+
+        self.k_condition_query = sql_query
+
+    def _get_inner_join_and_group_by_query_parts(self, table_initial):
+        inner_join_query = ""
+        group_by_clause = []
+
         for qi_attribute in self.qi_attributes:
             qi_name = qi_attribute.name
             qi_initial = qi_attribute.name[0:2]
-            sql_query += " INNER JOIN {0}_dimensions {1} on {2}.{3} = {4}.{5}0".format(qi_name,
+            inner_join_query += " INNER JOIN {0}_dimensions {1} on {2}.{3} = {4}.{5}0".format(qi_name,
                                                                                           qi_initial,
                                                                                           table_initial,
                                                                                           qi_name,
@@ -73,9 +85,10 @@ class IncognitoK(BaseKAlgorithm):
                                                                                           qi_name)
 
             group_by_clause.append("{0}.{1}{2}".format(qi_initial, qi_name, self.replacement_tag))
-        sql_query += " GROUP BY {0}".format(', '.join(group_by_clause))
 
-        self.k_condition_query = sql_query
+        group_by_query = " GROUP BY {0}".format(', '.join(group_by_clause))
+
+        return (inner_join_query, group_by_query)
 
     def retrieve_possible_generalizations(self):
         finished = False
@@ -108,22 +121,40 @@ class IncognitoK(BaseKAlgorithm):
         # TODO IMPLEMENTE LOGIC TO CHOOSE
         return possible_generalizations[0]
 
-    def create_final_anonymization_table(self):
-        print "Anonymizing table with dimensions: {0}".format(str(self.choose_generalization))
-        columns = [att.name for att in self.data_config.attributes_list]
-        create_table_query = "CREATE TABLE {0} ({1});".format(utils.ANONYMIZED_DATA_TABLE, ','.join(columns))
+    def dump_anonymized_data(self):
+        print "Anonymizing table with dimensions: {0}".format(str(self.final_generalization))
+
+        # CREATE TABLE TO STORE ANONYMIZED DATA
+        table_name = utils.ANONYMIZED_DATA_TABLE
+        columns = [att.name for att in self.id_attributes]
+        columns += [att.name for att in self.qi_attributes]
+        columns += [att.name for att in self.other_attributes]
+
+        create_table_query = "CREATE TABLE {0} ({1});".format(table_name, ', '.join(columns))
         list(self.anon_db_controller.execute_query(create_table_query))
 
-        #dump_anonymized_data ="""
-        #INSERT INTO {0}
-        #(column_name(s))
-        #SELECT column_name(s)
-        #FROM {4};
-        #""".format(utils.ANONYMIZED_DATA_TABLE,
-        #           ,
-        #           ,
-        #           self.data_config.table,)
-        #list(self.anon_db_controller.execute_query(create_table_query))
+
+        # INSERT DATA INTO TABLE
+        original_table_name = self.data_config.table
+        original_table_initial = self.data_config.table[0:2]
+
+        select_attributes = []
+        for att in self.id_attributes:
+            select_attributes.append("{0}.{1}".format(original_table_initial, att.name))
+
+        for key, dimension in zip(self.final_generalization.qi_keys, self.final_generalization.subset):
+            select_attributes.append("{0}.{1}{2}".format(key[0:2], key, dimension))
+
+        for att in self.other_attributes:
+            select_attributes.append("{0}.{1}".format(original_table_initial, att.name))
+
+        insert_query = "INSERT INTO {0} ({1})".format(table_name, ', '.join(columns))
+        insert_query += " SELECT {0} FROM {1} {2}".format(', '.join(select_attributes), original_table_name, original_table_initial)
+
+        inner_join_query, _ = self._get_inner_join_and_group_by_query_parts(original_table_initial)
+        insert_query += inner_join_query
+
+        list(self.anon_db_controller.execute_query(insert_query))
 
 
 class GLGNode():
@@ -134,7 +165,10 @@ class GLGNode():
         self.marked = marked
 
     def __repr__(self):
-        return str({'subset': self.subset, 'marked': self.marked})
+        subset = {}
+        for key, dimension in zip(self.qi_keys, self.subset):
+            subset[key] = dimension
+        return str({'subset': subset, 'marked': self.marked})
         
 
 class GeneralizationLatticeGraph():

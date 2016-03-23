@@ -7,14 +7,13 @@ class BaseAlgorithm(object):
     def __init__(self, data_config):
         self.data_config = data_config
 
-        self.qi_attributes = data_config.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_QI)
         self.id_attributes = data_config.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_IDENTIFIER)
+        self.qi_attributes = data_config.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_QI)
+        self.other_attributes = data_config.get_normal_type_attributes_list()
 
-        self.copy_original_db_controller = SqliteController(utils.get_db_location(utils.COPY_OF_ORIGINAL_DB))
-        self.anon_db_controller = SqliteController(utils.get_db_location(utils.ANONYMIZATION_DB_NAME))
+        self.anon_db_controller = SqliteController(utils.get_anonymization_db_location())
 
         self.anonymization_table = None
-        self.input_table = None
 
     def process(self):
         pass

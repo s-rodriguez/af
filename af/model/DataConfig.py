@@ -43,3 +43,6 @@ class DataConfig:
 
     def get_privacy_type_attributes_list(self, privacy_type=utils.PRIVACY_TYPE_QI):
         return [attribute for attribute in self.attributes_list if attribute.privacy_type == privacy_type]
+
+    def get_normal_type_attributes_list(self):
+        return [attribute for attribute in self.attributes_list if attribute.privacy_type not in (utils.PRIVACY_TYPE_IDENTIFIER, utils.PRIVACY_TYPE_QI)]        
