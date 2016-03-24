@@ -64,6 +64,12 @@ class SqliteController(DataController):
         for row in self.execute_query(query):
             yield row[0]
 
+    def get_distinct_qi_values(self, table_name, qi):
+        query = "SELECT distinct {qi} FROM {table}".format(table=table_name, qi=qi)
+        # return self.execute_query(query)[0]
+        for row in self.execute_query(query):
+            yield row[0]
+
     @staticmethod
     def create_db_copy(from_location, to_location):
         if os.path.isfile(to_location):

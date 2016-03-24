@@ -45,7 +45,7 @@ class Attribute(object):
             raise Exception('No hierarchy found')
         return self.hierarchy.transform(data, lvl)
 
-    def transform_leaf_nodes(self, lvl=None):
+    def transform_leaf_nodes(self, lvl=1):
         if self.hierarchy is None:
             raise Exception('No hierarchy found')
         return self.hierarchy.transform_leaf_nodes(lvl)

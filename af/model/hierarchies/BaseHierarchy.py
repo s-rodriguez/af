@@ -44,7 +44,9 @@ class BaseHierarchy(object):
             return start
         elif start.nodes is not None and len(start.nodes) > 0:
             for n in start.nodes:
-                return self.find_node(node_value, n)
+                temp = self.find_node(node_value, n)
+                if temp is not None:
+                    return temp
         else:
             return None
 

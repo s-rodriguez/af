@@ -1,4 +1,8 @@
 from af.model.algorithms.BaseAlgorithm import BaseAlgorithm
+from af.utils import (
+    timeit_decorator
+)
+
 class BaseKAlgorithm(BaseAlgorithm):
 
     def __init__(self, data_config, k):
@@ -9,10 +13,11 @@ class BaseKAlgorithm(BaseAlgorithm):
         if k < 1:
             raise Exception("Invalid k param")
 
+    @timeit_decorator
     def validate_anonymize_conditions(self):
         counter = 0
         rows_to_remove = []
-        quasi_identifier_frequencies = self.anon_db_controller.obtain_quasi_identifier_frequencies(self.anonymization_table, self.qi_attributes)
+        quasi_identifier_frequencies = self.obtain_quasi_identifier_frequencies()
 
         for row in quasi_identifier_frequencies:
             if row[0] < self.k:
@@ -21,8 +26,9 @@ class BaseKAlgorithm(BaseAlgorithm):
                     return False
                 else:
                     #remove first item (the count) and add row to the list of rows to remove
-                    row.pop(1)
-                    rows_to_remove.append(row)
+                    row_item = list(row)
+                    row_item.pop(0)
+                    rows_to_remove.append(row_item)
 
         self.remove_rows(rows_to_remove)
         return True

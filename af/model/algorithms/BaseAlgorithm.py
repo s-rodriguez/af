@@ -1,6 +1,9 @@
 from af.controller.data.SqliteController import SqliteController
 from af import utils
 from af.controller.anonymization.PreProcessingStage import PreProcessingStage
+from af.utils import (
+    timeit_decorator
+)
 
 class BaseAlgorithm(object):
 
@@ -13,7 +16,7 @@ class BaseAlgorithm(object):
 
         self.anon_db_controller = SqliteController(utils.get_anonymization_db_location())
 
-        self.anonymization_table = None
+        self.anonymization_table = data_config.table
 
     def validate_arguments(self):
         pass
@@ -31,28 +34,39 @@ class BaseAlgorithm(object):
     def on_post_process(self):
         pass
 
+    @timeit_decorator
     def obtain_quasi_identifier_frequencies(self):
-        for value in self.anon_db_controller.get_frequency_of_qi_attributes(self.anonymization_table, self.qi_attributes):
+        qi_list = []
+        for qi in self.qi_attributes:
+            qi_list.append(qi.name)
+        for value in self.anon_db_controller.get_frequency_of_qi_attributes(self.anonymization_table, qi_list):
             yield value
 
+    @timeit_decorator
     def obtain_qi_most_frequently(self):
         qi_most_frequently = None
         qi_most_frequently_count = 0
         for qi in self.qi_attributes:
-            frequency = self.anon_db_controller.get_count_of_distinct_qi_values(qi)
+            frequency = list(self.anon_db_controller.get_count_of_distinct_qi_values(self.anonymization_table, qi.name))[0]
             if (qi_most_frequently is None) or (frequency > qi_most_frequently_count) \
                or ((frequency == qi_most_frequently_count) and (qi.weight > qi_most_frequently.weight)):
                 qi_most_frequently = qi
                 qi_most_frequently_count = frequency
         return qi_most_frequently
 
+    @timeit_decorator
     def replace_value(self, qi, new_value, old_value):
         self.anon_db_controller.replace_qi_value(self.anonymization_table, qi, new_value, old_value)
 
+    @timeit_decorator
     def remove_rows(self, rows_to_remove):
+        qi_list = []
+        for qi in self.qi_attributes:
+            qi_list.append(qi.name)
         for row in rows_to_remove:
-            self.anon_db_controller.remove_row(self.anonymization_table, self.qi_attributes, row)
+            self.anon_db_controller.remove_row(self.anonymization_table, qi_list, row)
 
+    @timeit_decorator
     def anonymize(self):
         self.on_pre_process()
         self.process()
