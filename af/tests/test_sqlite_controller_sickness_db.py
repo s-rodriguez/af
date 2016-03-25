@@ -48,11 +48,11 @@ class TestSqliteControllerSicknessDb(unittest.TestCase):
 
     def test_remove_row_ok(self):
         self.assertEqual(6, self.copy_controller.get_count_of_qi_value('sickness', ['Race'], ['white']))
-        self.copy_controller.remove_row('sickness', ['Race'], ['white'])
+        self.copy_controller.remove_rows('sickness', ['Race'], [['white']])
         self.assertEqual(0, self.copy_controller.get_count_of_qi_value('sickness', ['Race'], ['white']))
 
         self.assertEqual(2, self.copy_controller.get_count_of_qi_value('sickness', ['Race', 'Gender'], ['black', 'male']))
-        self.copy_controller.remove_row('sickness', ['Race', 'Gender'], ['black', 'male'])
+        self.copy_controller.remove_rows('sickness', ['Race', 'Gender'], [['black', 'male']])
         self.assertEqual(0, self.copy_controller.get_count_of_qi_value('sickness', ['Race', 'Gender'], ['black', 'male']))
 
     def test_remove_row_invalid_length_of_values(self):

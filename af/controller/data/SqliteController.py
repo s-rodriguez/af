@@ -111,17 +111,20 @@ class SqliteController(DataController):
             cursor = conn.cursor()
             return list(cursor.execute(query, tuple(values)))[0][0]
 
-    def remove_row(self, table_name, qi_list, values):
+    def remove_row(self, cursor, table_name, qi_list, values):
         self.validate_param_lengths(qi_list, values)
         query = "DELETE FROM {table} WHERE ".format(table=table_name)
         for qi in qi_list:
             query += "{qi} = ?".format(qi=qi)
             if qi != qi_list[-1]:
                 query += ' AND '
+        cursor.execute(query, tuple(values))
+
+    def remove_rows(self, table_name, qi_list, rows_to_remove):
         with sqlite3.connect(self.data_location) as conn:
             cursor = conn.cursor()
-            cursor.execute(query, tuple(values))
-            conn.commit()
+            for row in rows_to_remove:
+                self.remove_row(cursor, table_name, qi_list, row)
 
     @staticmethod
     def validate_param_lengths(qi_list, values):

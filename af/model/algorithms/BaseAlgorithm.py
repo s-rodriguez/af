@@ -63,8 +63,7 @@ class BaseAlgorithm(object):
         qi_list = []
         for qi in self.qi_attributes:
             qi_list.append(qi.name)
-        for row in rows_to_remove:
-            self.anon_db_controller.remove_row(self.anonymization_table, qi_list, row)
+        self.anon_db_controller.remove_rows(self.anonymization_table, qi_list, rows_to_remove)
 
     @timeit_decorator
     def anonymize(self):
