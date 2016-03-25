@@ -83,6 +83,19 @@ class SqliteController(DataController):
             cursor.execute(query, (new_value, old_value))
             conn.commit()
 
+    def replace_qi_value_in_range(self, table_name, qi, new_value, old_values):
+        query = "UPDATE {table} SET {qi}=? WHERE {qi} IN ( ".format(table=table_name, qi=qi)
+        for value in old_values:
+            query += '?'
+            if value != old_values[-1]:
+                query += ', '
+        query += ')'
+        old_values.insert(0, new_value)
+        with sqlite3.connect(self.data_location) as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, tuple(old_values))
+            conn.commit()
+
     def get_count_of_qi_value(self, table_name, qi_list, values):
         self.validate_param_lengths(qi_list, values)
         query = "SELECT COUNT(*) FROM {table} WHERE ".format(table=table_name)

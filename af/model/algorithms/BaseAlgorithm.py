@@ -55,8 +55,8 @@ class BaseAlgorithm(object):
         return qi_most_frequently
 
     @timeit_decorator
-    def replace_value(self, qi, new_value, old_value):
-        self.anon_db_controller.replace_qi_value(self.anonymization_table, qi, new_value, old_value)
+    def replace_value(self, qi, new_value, old_values):
+        self.anon_db_controller.replace_qi_value_in_range(self.anonymization_table, qi, new_value, old_values)
 
     @timeit_decorator
     def remove_rows(self, rows_to_remove):
