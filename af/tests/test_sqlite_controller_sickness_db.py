@@ -39,10 +39,10 @@ class TestSqliteControllerSicknessDb(unittest.TestCase):
     def test_replace_qi_value_ok(self):
         self.assertEqual(6, self.copy_controller.get_count_of_qi_value('sickness', ['Race'], ['white']))
         self.assertEqual(0, self.copy_controller.get_count_of_qi_value('sickness', ['Race'], ['w']))
-        self.copy_controller.replace_qi_value('sickness', 'Race', 'w', 'white')
+        self.copy_controller.update_qi_value('sickness', 'Race', 'w', 'white')
         self.assertEqual(0, self.copy_controller.get_count_of_qi_value('sickness', ['Race'], ['white']))
         self.assertEqual(6, self.copy_controller.get_count_of_qi_value('sickness', ['Race'], ['w']))
-        self.copy_controller.replace_qi_value('sickness', 'Race', 'white', 'w')
+        self.copy_controller.update_qi_value('sickness', 'Race', 'white', 'w')
         self.assertEqual(6, self.copy_controller.get_count_of_qi_value('sickness', ['Race'], ['white']))
         self.assertEqual(0, self.copy_controller.get_count_of_qi_value('sickness', ['Race'], ['w']))
 

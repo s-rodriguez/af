@@ -76,14 +76,14 @@ class SqliteController(DataController):
             os.remove(to_location)
         shutil.copy2(from_location, to_location)
 
-    def replace_qi_value(self, table_name, qi, new_value, old_value):
+    def update_qi_value(self, table_name, qi, new_value, old_value):
         query = "UPDATE {table} SET {qi}=? WHERE {qi}= ?".format(table=table_name, qi=qi)
         with sqlite3.connect(self.data_location) as conn:
             cursor = conn.cursor()
             cursor.execute(query, (new_value, old_value))
             conn.commit()
 
-    def replace_qi_value_in_range(self, table_name, qi, new_value, old_values):
+    def update_qi_values_in_range(self, cursor, table_name, qi, new_value, old_values):
         query = "UPDATE {table} SET {qi}=? WHERE {qi} IN ( ".format(table=table_name, qi=qi)
         for value in old_values:
             query += '?'
@@ -91,10 +91,13 @@ class SqliteController(DataController):
                 query += ', '
         query += ')'
         old_values.insert(0, new_value)
+        cursor.execute(query, tuple(old_values))
+
+    def update_qi_values(self, table_name, qi, dic):
         with sqlite3.connect(self.data_location) as conn:
             cursor = conn.cursor()
-            cursor.execute(query, tuple(old_values))
-            conn.commit()
+            for new_value, old_values in dic.iteritems():
+                self.update_qi_values_in_range(cursor,table_name,qi, new_value, old_values)
 
     def get_count_of_qi_value(self, table_name, qi_list, values):
         self.validate_param_lengths(qi_list, values)
