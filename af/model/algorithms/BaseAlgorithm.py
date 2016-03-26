@@ -36,14 +36,14 @@ class BaseAlgorithm(object):
 
     @timeit_decorator
     def obtain_quasi_identifier_frequencies(self):
-        qi_list = []
-        for qi in self.qi_attributes:
-            qi_list.append(qi.name)
+        qi_list = [att.name for att in self.qi_attributes]
         for value in self.anon_db_controller.get_frequency_of_qi_attributes(self.anonymization_table, qi_list):
             yield value
 
     @timeit_decorator
     def obtain_qi_most_frequently(self):
+        print "[+] Obtaining qi most frequently ..."
+
         qi_most_frequently = None
         qi_most_frequently_count = 0
         for qi in self.qi_attributes:
@@ -52,17 +52,20 @@ class BaseAlgorithm(object):
                or ((frequency == qi_most_frequently_count) and (qi.weight > qi_most_frequently.weight)):
                 qi_most_frequently = qi
                 qi_most_frequently_count = frequency
+
+        print "[+] The qi most frequently is {0} with {1} occurrences ".format(str(qi_most_frequently.name), str(qi_most_frequently_count))
+
         return qi_most_frequently
 
     @timeit_decorator
     def update_qi_values(self, qi, dic):
-        self.anon_db_controller.update_qi_values(self.anonymization_table, qi, dic)
+        print "[+] Updating qi {0} , {1} values to update...".format(str(qi.name), str(len(dic)))
+        self.anon_db_controller.update_qi_values(self.anonymization_table, qi.name, dic)
 
     @timeit_decorator
     def remove_rows(self, rows_to_remove):
-        qi_list = []
-        for qi in self.qi_attributes:
-            qi_list.append(qi.name)
+        print "[+] Removing {0} rows ...".format(str(len(rows_to_remove)))
+        qi_list = [att.name for att in self.qi_attributes]
         self.anon_db_controller.remove_rows(self.anonymization_table, qi_list, rows_to_remove)
 
     @timeit_decorator

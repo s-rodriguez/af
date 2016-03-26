@@ -66,7 +66,6 @@ class SqliteController(DataController):
 
     def get_distinct_qi_values(self, table_name, qi):
         query = "SELECT distinct {qi} FROM {table}".format(table=table_name, qi=qi)
-        # return self.execute_query(query)[0]
         for row in self.execute_query(query):
             yield row[0]
 
@@ -97,7 +96,7 @@ class SqliteController(DataController):
         with sqlite3.connect(self.data_location) as conn:
             cursor = conn.cursor()
             for new_value, old_values in dic.iteritems():
-                self.update_qi_values_in_range(cursor,table_name,qi, new_value, old_values)
+                self.update_qi_values_in_range(cursor, table_name, qi, new_value, old_values)
 
     def get_count_of_qi_value(self, table_name, qi_list, values):
         self.validate_param_lengths(qi_list, values)
