@@ -1,4 +1,5 @@
 import os
+import sqlite3
 
 from af import af_directory
 
@@ -9,6 +10,13 @@ from af.model.DataConfig import DataConfig
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy
 
 import af.utils as utils
+import af.utils.automatic_dimensions as automatic_dimensions
+import af.utils.create_sickness_db as create_sickness_db
+
+
+db_directory, db_name = create_sickness_db.get_directory_and_db_name()
+if not os.path.isfile(os.path.join(db_directory, db_name)):
+    create_sickness_db.create_db()
 
 
 supression_node = BaseHierarchy.supression_node().value
@@ -34,68 +42,18 @@ gender_hierarchy_dict = {
                     }
                 }
 
+with sqlite3.connect(os.path.join(db_directory, db_name)) as conn:
+    cursor = conn.cursor()
+    cursor.execute("SELECT DISTINCT(zip) FROM SICKNESS")
+    zip_results = [str(v[0]) for v in cursor.fetchall()]
+    zip_automatic = automatic_dimensions.IntPartialSupressionRightToLeft(zip_results, 1)
+    zip_hierarchy_dict = zip_automatic.create_dimensions()
 
-zip_hierarchy_dict = {
-                    supression_node: {
-                        '021**': {
-                            '0214*': {
-                                '02141': None,
-                            },
-                            '0213*': {
-                                '02138': None,
-                                '02139': None,
-                            },
-                        }
-                    }
-                }
-
-year_of_birth_hierarchy_dict = {
-                    supression_node: {
-                        '**/**/1964': {
-                            '5/**/1964': {
-                                '5/5/1964': None,
-                            },
-                            '8/**/1964': {
-                                '8/13/1964': None,
-                            },
-                            '10/**/1964': {
-                                '10/23/1964': None,
-                            },
-                            '11/**/1964': {
-                                '11/7/1964': None,
-                            },
-                            '12/**/1964': {
-                                '12/1/1964': None,
-                            },
-                        },
-                        '**/**/1965': {
-                            '2/**/1965': {
-                                '2/14/1965': None,
-                            },
-                            '3/**/1965': {
-                                '3/15/1965': None,
-                            },
-                            '8/**/1965': {
-                                '8/24/1965': None,
-                            },
-                            '9/**/1965': {
-                                '9/20/1965': None,
-                            },
-                            '10/**/1965': {
-                                '10/23/1965': None,
-                            },
-                        },
-                        '**/**/1967': {
-                            '2/**/1967': {
-                                '2/13/1967': None,
-                            },
-                            '3/**/1967': {
-                                '3/21/1967': None,
-                            },
-                        }
-                    }
-                }
-
+    cursor.execute("SELECT DISTINCT(birth) FROM SICKNESS")
+    birth_results = [str(v[0]) for v in cursor.fetchall()]
+    birth_automatic = automatic_dimensions.DatePartialSupressionDDMMYYYY(birth_results)
+    birth_dimensions = birth_automatic.create_dimensions()
+    year_of_birth_hierarchy_dict = {supression_node: birth_dimensions}
 
 # HIERARCHIES INSTANCES FOR EACH QI AND IDENTIFIABLE ATTRIBUTES
 ssn_hierarchy = BaseHierarchyController(BaseHierarchy()).load_hierarchy(ssn_hierarchy_dict, attribute_type=int)
