@@ -72,10 +72,29 @@ class IntRange(AutomaticDimension):
         pass
 
 
-class DatePartialSupression(AutomaticDimension):
+class DatePartialSupressionYYYYMMDD(AutomaticDimension):
 
     def __init__(self, list_of_values):
         AutomaticDimension.__init__(self, list_of_values)
 
     def get_parent(self, value):
-        pass
+        year, month, day = value.split('/')
+        if '*' not in day:
+            day = '**'
+        elif '*' not in month:
+            month = '**'
+        else:
+            year = '****'
+
+        result = "{0}/{1}/{2}".format(year, month, day)
+        return result
+
+class DatePartialSupressionDDMMYYYY(DatePartialSupressionYYYYMMDD):
+
+    def __init__(self, list_of_values):
+        DatePartialSupressionYYYYMMDD.__init__(self, list_of_values)
+
+    def get_parent(self, value):
+        aux = value[::-1]
+        result = DatePartialSupressionYYYYMMDD.get_parent(self, aux)
+        return result [::-1]
