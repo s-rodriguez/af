@@ -51,7 +51,7 @@ def get_anonymization_db_location(db_name=ANONYMIZATION_DB_NAME, create_if_not_e
     if create_if_not_exists:
         create_db(db_name)
     return os.path.join(ANONYMIZATION_DIRECTORY, db_name)
-                                          
+
 
 def timeit_decorator(method):
 

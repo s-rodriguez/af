@@ -1,9 +1,12 @@
+import logging
+
 from af.controller.data.SqliteController import SqliteController
 from af import utils
 from af.controller.anonymization.PreProcessingStage import PreProcessingStage
 from af.utils import (
     timeit_decorator
 )
+
 
 class BaseAlgorithm(object):
 
@@ -17,6 +20,7 @@ class BaseAlgorithm(object):
         self.anon_db_controller = SqliteController(utils.get_anonymization_db_location())
 
         self.anonymization_table = data_config.table
+        self.logger = "algorithms.BaseAlgorithm"
 
     def validate_arguments(self):
         pass
@@ -42,7 +46,7 @@ class BaseAlgorithm(object):
 
     @timeit_decorator
     def obtain_qi_most_frequently(self):
-        print "[+] Obtaining qi most frequently ..."
+        self.logger.info("Obtaining qi most frequently ...")
 
         qi_most_frequently = None
         qi_most_frequently_count = 0
@@ -53,18 +57,18 @@ class BaseAlgorithm(object):
                 qi_most_frequently = qi
                 qi_most_frequently_count = frequency
 
-        print "[+] The qi most frequently is {0} with {1} occurrences ".format(str(qi_most_frequently.name), str(qi_most_frequently_count))
+        self.logger.info("The qi most frequently is {0} with {1} occurrences ".format(str(qi_most_frequently.name), str(qi_most_frequently_count)))
 
         return qi_most_frequently
 
     @timeit_decorator
     def update_qi_values(self, qi, dic):
-        print "[+] Updating qi {0} , {1} values to update...".format(str(qi.name), str(len(dic)))
+        self.logger.info("Updating qi {0} , {1} values to update...".format(str(qi.name), str(len(dic))))
         self.anon_db_controller.update_qi_values(self.anonymization_table, qi.name, dic)
 
     @timeit_decorator
     def remove_rows(self, rows_to_remove):
-        print "[+] Removing {0} rows ...".format(str(len(rows_to_remove)))
+        self.logger.info("Removing {0} rows ...".format(str(len(rows_to_remove))))
         qi_list = [att.name for att in self.qi_attributes]
         self.anon_db_controller.remove_rows(self.anonymization_table, qi_list, rows_to_remove)
 

@@ -1,3 +1,4 @@
+import logging
 import os
 from ._version import get_versions
 __version__ = get_versions()['version']
@@ -6,6 +7,20 @@ del get_versions
 
 def af_directory():
     return os.path.dirname(os.path.abspath(__file__))
+
+
+log_dir = os.path.join(os.path.expanduser('~'), 'af', 'logs')
+if not os.path.isdir(log_dir):
+    os.makedirs(log_dir)
+
+LOG_FILENAME = os.path.join(log_dir, 'af_session.log')
+logging.basicConfig(filename=LOG_FILENAME,
+                    level=logging.DEBUG,
+                    filemode='a',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    datefmt='%m/%d/%Y %I:%M:%S %p',
+)
+
 
 def main(cls=None, method=None, resource=None):
     """
