@@ -16,7 +16,7 @@ import af.utils.create_sickness_db as create_sickness_db
 
 db_directory, db_name = create_sickness_db.get_directory_and_db_name()
 if not os.path.isfile(os.path.join(db_directory, db_name)):
-    create_sickness_db.create_db()
+    create_sickness_db.create_db(db_directory, db_name)
 
 
 supression_node = BaseHierarchy.supression_node().value
@@ -52,8 +52,7 @@ with sqlite3.connect(os.path.join(db_directory, db_name)) as conn:
     cursor.execute("SELECT DISTINCT(birth) FROM SICKNESS")
     birth_results = [str(v[0]) for v in cursor.fetchall()]
     birth_automatic = automatic_dimensions.DatePartialSupressionDDMMYYYY(birth_results)
-    birth_dimensions = birth_automatic.create_dimensions()
-    year_of_birth_hierarchy_dict = {supression_node: birth_dimensions}
+    year_of_birth_hierarchy_dict = birth_automatic.create_dimensions()
 
 # HIERARCHIES INSTANCES FOR EACH QI AND IDENTIFIABLE ATTRIBUTES
 ssn_hierarchy = BaseHierarchyController(BaseHierarchy()).load_hierarchy(ssn_hierarchy_dict, attribute_type=int)

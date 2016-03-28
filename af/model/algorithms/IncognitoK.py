@@ -133,7 +133,7 @@ class IncognitoK(BaseKAlgorithm):
                 lvl += 1
 
         possible_generalizations = self.glg.get_marked_nodes()
-        self.logger.info("Possible generalizations: "+str(possible_generalizations))
+        #self.logger.info("Possible generalizations: "+str(possible_generalizations))
         return possible_generalizations
 
     def checks_model_conditions(self, node):

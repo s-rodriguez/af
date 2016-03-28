@@ -33,11 +33,11 @@ class RandomRecord:
 
     @staticmethod
     def get_random_race():
-        return random.choice(['female', 'male'])
+        return random.choice(['black', 'white'])
 
     @staticmethod
     def get_random_gender():
-        return random.choice(['black', 'white'])
+        return random.choice(['female', 'male'])
 
     @staticmethod
     def get_random_problem():
@@ -68,16 +68,18 @@ def create_db(directory, db_name, number_of_records=100):
                ZIP         CHAR(6),
                PROBLEM        CHAR(20));''')
 
-        print "Table created successfully";
+        print "[+] Table created successfully"
 
+        print "[+] Inserting records into table ..."
         for i in range(0, number_of_records):
             new_record = RandomRecord.get_random_record()
             query = "INSERT INTO SICKNESS VALUES ( ?, ?, ?, ?, ?, ?)"
             conn.execute(query, new_record)
 
         conn.commit()
+        print "[+] Done!"
 
 if __name__ == "__main__":
     db_directory, db_name = get_directory_and_db_name()
-    args = (db_directory, db_name, 100)
+    args = (db_directory, db_name, 1000)
     create_db(*args)
