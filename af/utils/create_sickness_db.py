@@ -56,7 +56,7 @@ def create_db(directory, db_name, number_of_records=100):
 
     with sqlite3.connect(os.path.join(directory, db_name)) as conn:
         cursor = conn.cursor()
-        print "[+] Connection to database succesfull"
+        print "[+] Connection to database successfull"
 
         print "[+] Creating table sickness ..."
 
