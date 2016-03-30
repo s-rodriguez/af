@@ -1,6 +1,7 @@
 from af.model.algorithms.Datafly import Datafly
 from af.model.algorithms.IncognitoK import IncognitoK
 from af.model.algorithms.IncognitoL import IncognitoL
+from af.model.reports.TransformationMetrics import TransformationMetrics
 
 
 def create_sickness_db(number_of_records):
@@ -39,3 +40,9 @@ if __name__ == "__main__":
     print "\n{0} anonimizando ...".format(algorithm_instance.__class__.__name__)
     algorithm_instance.anonymize()
     print "\nDone!"
+
+    print "\nDoing some metrics..."
+    tm = TransformationMetrics(dc)
+    print "\nComparison between equivalence classes (original, anonymized)"
+    for att_name, eq_comp in tm.qi_eq_classes_differences().iteritems():
+        print "{0} - {1}".format(att_name, eq_comp)
