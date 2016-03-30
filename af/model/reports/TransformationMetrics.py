@@ -30,3 +30,11 @@ class TransformationMetrics(object):
             eq_classes[qi_att.name] = tuple(amounts)
 
         return eq_classes
+
+    def removed_outlier_rows(self):
+        dbs = (self.original_db, self.anonymized_db)
+        tables = (self.original_db_table, self.anonymized_db_table)
+        rows_amount = []
+        for db, table in zip(dbs, tables):
+            rows_amount.append(db.amount_of_rows(table))
+        return rows_amount[0] - rows_amount[1]

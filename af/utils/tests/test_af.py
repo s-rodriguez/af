@@ -46,3 +46,5 @@ if __name__ == "__main__":
     print "\nComparison between equivalence classes (original, anonymized)"
     for att_name, eq_comp in tm.qi_eq_classes_differences().iteritems():
         print "{0} - {1}".format(att_name, eq_comp)
+
+    print "\nOutliers rows removed: {0}".format(tm.removed_outlier_rows())
