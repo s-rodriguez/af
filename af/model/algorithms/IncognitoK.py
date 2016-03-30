@@ -139,7 +139,6 @@ class IncognitoK(BaseKAlgorithm):
     def checks_model_conditions(self, node):
         return self.subnode_checks_k_condition(node)
 
-    @timeit_decorator
     def subnode_checks_k_condition(self, node):
         condition_query = self.k_condition_query.replace('','')
         for key, dimension in zip(node.qi_keys, node.subset):
