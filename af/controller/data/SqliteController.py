@@ -59,6 +59,11 @@ class SqliteController(DataController):
         for freq in self.execute_query(query):
             yield freq
 
+    def get_frequency_of_eq_classes(self, table_name, qi_list):
+        query = "SELECT COUNT(*) FROM {table} GROUP BY ".format(table=table_name)
+        query += ','.join(qi_list)
+        return len(list(self.execute_query(query)))
+
     def get_count_of_distinct_qi_values(self, table_name, qi):
         query = "SELECT COUNT(distinct {qi}) FROM {table}".format(table=table_name, qi=qi)
         for row in self.execute_query(query):
@@ -124,6 +129,13 @@ class SqliteController(DataController):
             cursor = conn.cursor()
             for row in rows_to_remove:
                 self.remove_row(cursor, table_name, qi_list, row)
+
+    def rename_table(self, old_table_name, new_table_name):
+        query = "ALTER TABLE {old_table_name} RENAME TO {new_table_name}".format(old_table_name=old_table_name, new_table_name=new_table_name)
+        with sqlite3.connect(self.data_location) as conn:
+            cursor = conn.cursor()
+            cursor.execute(query)
+            conn.commit()
 
     @staticmethod
     def validate_param_lengths(qi_list, values):

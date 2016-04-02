@@ -26,7 +26,7 @@ class TransformationMetrics(object):
         for qi_att in self.qi_attributes:
             amounts = []
             for db, table in zip(dbs, tables):
-                amounts.extend(list(db.get_count_of_distinct_qi_values(table , qi_att.name)))
+                amounts.extend(list(db.get_count_of_distinct_qi_values(table, qi_att.name)))
             eq_classes[qi_att.name] = tuple(amounts)
 
         return eq_classes
@@ -38,3 +38,15 @@ class TransformationMetrics(object):
         for db, table in zip(dbs, tables):
             rows_amount.append(db.amount_of_rows(table))
         return rows_amount[0] - rows_amount[1]
+
+    def number_of_qi_eq_classes_generated(self):
+        qi_list = [att.name for att in self.qi_attributes]
+        return self.anonymized_db.get_frequency_of_eq_classes(self.anonymized_db_table, qi_list)
+
+    def qi_eq_classes_generated(self):
+        qi_list = [att.name for att in self.qi_attributes]
+        for value in self.anonymized_db.get_frequency_of_qi_attributes(self.anonymized_db_table, qi_list):
+            yield value
+
+
+
