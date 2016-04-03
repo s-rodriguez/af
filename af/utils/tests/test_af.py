@@ -51,17 +51,16 @@ if __name__ == "__main__":
 
     print '\nNumber of equivalence classes generated: {0}  '.format(tm.number_of_qi_eq_classes_generated())
 
-    print '\nEquivalence classes generated: '
-    k = 1
-    for eq_class in tm.qi_eq_classes_generated():
-        msg = '\nEq class number {0} with {1} occurrences: ('.format(k, eq_class[0])
-        k += 1
-        eq_class = list(eq_class)
-        eq_class.pop(0)
-        for i in range(len(eq_class)):
-            msg += ' {0} : {1}'.format(tm.qi_attributes[i].name, eq_class[i])
-        msg += ')'
-        print msg
-
-
-
+    see_classes = raw_input("\nVer clases de equivalencia generadas? [y/N]: ")
+    if see_classes.lower() == "y":
+        print '\nEquivalence classes generated: '
+        k = 1
+        for eq_class in tm.qi_eq_classes_generated():
+            msg = '\nEq class number {0} with {1} occurrences: ('.format(k, eq_class[0])
+            k += 1
+            eq_class = list(eq_class)
+            eq_class.pop(0)
+            for i in range(len(eq_class)):
+                msg += ' {0} : {1}'.format(tm.qi_attributes[i].name, eq_class[i])
+            msg += ')'
+            print msg

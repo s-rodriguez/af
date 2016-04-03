@@ -23,7 +23,7 @@ class RandomRecord:
         city = RandomRecord.get_random_city()
         profession = RandomRecord.get_random_profession()
         problem = RandomRecord.get_random_problem()
-        return ssn, race, birth, gender, zip_code, city, profession, problem
+        return ssn, gender, birth, race, zip_code, city, profession, problem
 
     @staticmethod
     def get_random_birth():

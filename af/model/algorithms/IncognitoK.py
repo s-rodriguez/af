@@ -10,13 +10,14 @@ from af.utils import (
 
 class IncognitoK(BaseKAlgorithm):
 
-    def __init__(self, data_config, k=2):
+    def __init__(self, data_config, k=2, stop_on_first=True):
         BaseKAlgorithm.__init__(self, data_config, k)
         self.logger = logging.getLogger('algorithms.IncognitoK')
 
         self.glg = None
         self.final_generalization = None
         self.k_condition_query = None
+        self.stop_on_first = True
         self.replacement_tag = "###REPLACEME###"
 
     @timeit_decorator
@@ -129,11 +130,15 @@ class IncognitoK(BaseKAlgorithm):
             else:
                 for node in glg_lvl_subnodes:
                     if node.marked is False and self.checks_model_conditions(node):
+                        if self.stop_on_first:
+                            possible_generalizations = [node]
+                            break
                         self.glg.mark_valid_subnode(node)
                 lvl += 1
 
-        possible_generalizations = self.glg.get_marked_nodes()
-        #self.logger.info("Possible generalizations: "+str(possible_generalizations))
+        if not self.stop_on_first:
+            possible_generalizations = self.glg.get_marked_nodes()
+
         return possible_generalizations
 
     def checks_model_conditions(self, node):

@@ -43,6 +43,16 @@ class PreProcessingStage(object):
         list(self.db_controller.execute_query(query))
 
     def set_indexes_over_qi(self):
-        qi_list = [att.name for att in self.data_config.get_privacy_type_attributes_list()]
+        qi_list = []
+
+        # Individual indexes
+        for att in self.data_config.get_privacy_type_attributes_list():
+            query = "CREATE INDEX {0}_index ON {1} ({2});".format(att.name,
+                                                                  self.table,
+                                                                  att.name)
+            list(self.db_controller.execute_query(query))
+            qi_list.append(att.name)
+
+        # Composite index
         query = "CREATE INDEX qi_index ON {0} ({1});".format(self.table, ', '.join(qi_list))
         list(self.db_controller.execute_query(query))
