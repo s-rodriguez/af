@@ -19,17 +19,11 @@ class RandomRecord:
         birth = RandomRecord.get_random_birth()
         race = RandomRecord.get_random_race()
         gender = RandomRecord.get_random_gender()
-<<<<<<< HEAD
-        zip_code = str(random.randrange(0000, 9999))
-        problem = RandomRecord.get_random_problem()
-        return ssn, race, birth, gender, zip_code, problem
-=======
         zip_code = str(random.randrange(1000, 9999))
         city = RandomRecord.get_random_city()
         profession = RandomRecord.get_random_profession()
         problem = RandomRecord.get_random_problem()
         return ssn, race, birth, gender, zip_code, city, profession, problem
->>>>>>> 9ce9fd48f596c49673462913e16f6ba91fed631d
 
     @staticmethod
     def get_random_birth():
@@ -41,28 +35,15 @@ class RandomRecord:
 
     @staticmethod
     def get_random_race():
-<<<<<<< HEAD
         return random.choice(['female', 'male'])
 
     @staticmethod
     def get_random_gender():
         return random.choice(['black', 'white'])
-=======
-        return random.choice(['black', 'white'])
-
-    @staticmethod
-    def get_random_gender():
-        return random.choice(['female', 'male'])
->>>>>>> 9ce9fd48f596c49673462913e16f6ba91fed631d
 
     @staticmethod
     def get_random_problem():
         problems_list = ['hiv', 'cancer', 'short of breath', 'chest pain', 'painful eye',
-<<<<<<< HEAD
-           'wheezing', 'obesity', 'hypertension', 'fever', 'vomiting', 'flu']
-        return random.choice(problems_list)
-
-=======
                          'wheezing', 'obesity', 'hypertension', 'fever', 'vomiting', 'flu', 'asthma',
                          'diabetes', 'depression', 'alzheimer', 'arthritis', 'epilepsy',
                          'epilepsy', 'lupus', 'migraine', 'scoliosis', 'ulcers']
@@ -87,7 +68,6 @@ class RandomRecord:
                          'Plumber', 'Electrician', 'Carpenter', 'Shoemaker', 'Blacksmith', 'Builder']
         return random.choice(profession_list)
 
->>>>>>> 9ce9fd48f596c49673462913e16f6ba91fed631d
 
 def create_db(directory, db_name, number_of_records=100):
     print "[+] Creating Database if not exists ..."
@@ -109,22 +89,6 @@ def create_db(directory, db_name, number_of_records=100):
                BIRTH           CHAR(12)    NOT NULL,
                GENDER        CHAR(12),
                ZIP         CHAR(6),
-<<<<<<< HEAD
-               PROBLEM        CHAR(20));''')
-
-        print "Table created successfully";
-
-        for i in range(0, number_of_records):
-            new_record = RandomRecord.get_random_record()
-            query = "INSERT INTO SICKNESS VALUES ( ?, ?, ?, ?, ?, ?)"
-            conn.execute(query, new_record)
-
-        conn.commit()
-
-if __name__ == "__main__":
-    db_directory, db_name = get_directory_and_db_name()
-    args = (db_directory, db_name, 22000)
-=======
                CITY        CHAR(32),
                PROFESSION CHAR(32),
                PROBLEM        CHAR(20));''')
@@ -143,5 +107,4 @@ if __name__ == "__main__":
 if __name__ == "__main__":
     db_directory, db_name = get_directory_and_db_name()
     args = (db_directory, db_name, 100)
->>>>>>> 9ce9fd48f596c49673462913e16f6ba91fed631d
     create_db(*args)
