@@ -1,4 +1,5 @@
 import logging
+import time
 
 from af.controller.data.SqliteController import SqliteController
 from af import utils
@@ -21,6 +22,8 @@ class BaseAlgorithm(object):
 
         self.anonymization_table = data_config.table
         self.logger = "algorithms.BaseAlgorithm"
+
+        self.additional_anonymization_info = {}
 
     def validate_arguments(self):
         pass
@@ -74,6 +77,12 @@ class BaseAlgorithm(object):
 
     @timeit_decorator
     def anonymize(self):
+        time_start = time.time()
         self.on_pre_process()
         self.process()
         self.on_post_process()
+        time_end = time.time()
+        elapsed_time = time_end - time_start
+        self.anonymization_duration = '%2.2f seconds' % elapsed_time
+        self.additional_anonymization_info['anonymization_duration'] = ('Anonymization Duration',
+                                                                        self.anonymization_duration)

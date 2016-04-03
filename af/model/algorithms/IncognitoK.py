@@ -10,14 +10,14 @@ from af.utils import (
 
 class IncognitoK(BaseKAlgorithm):
 
-    def __init__(self, data_config, k=2, stop_on_first=True):
+    def __init__(self, data_config, k=2, look_for_all=False):
         BaseKAlgorithm.__init__(self, data_config, k)
         self.logger = logging.getLogger('algorithms.IncognitoK')
 
         self.glg = None
         self.final_generalization = None
         self.k_condition_query = None
-        self.stop_on_first = True
+        self.look_for_all = look_for_all
         self.replacement_tag = "###REPLACEME###"
 
     @timeit_decorator
@@ -26,9 +26,9 @@ class IncognitoK(BaseKAlgorithm):
         self.insert_values_on_dimension_tables()
         self.create_walking_bfs_hierarchy_levels_tree()
         self.create_condition_queries()
-        possible_generalizations = self.retrieve_possible_generalizations()
-        if len(possible_generalizations) > 0:
-            self.final_generalization = self.choose_generalization(possible_generalizations)
+        self.possible_generalizations = self.retrieve_possible_generalizations()
+        if len(self.possible_generalizations) > 0:
+            self.final_generalization = self.choose_generalization(self.possible_generalizations)
             self.dump_anonymized_data()
         else:
             error_message = "No generalization available to make table anon with that k condition"
@@ -130,13 +130,13 @@ class IncognitoK(BaseKAlgorithm):
             else:
                 for node in glg_lvl_subnodes:
                     if node.marked is False and self.checks_model_conditions(node):
-                        if self.stop_on_first:
+                        if not self.look_for_all:
                             possible_generalizations = [node]
                             break
                         self.glg.mark_valid_subnode(node)
                 lvl += 1
 
-        if not self.stop_on_first:
+        if self.look_for_all:
             possible_generalizations = self.glg.get_marked_nodes()
 
         return possible_generalizations
@@ -196,6 +196,17 @@ class IncognitoK(BaseKAlgorithm):
 
         list(self.anon_db_controller.execute_query(insert_query))
 
+    def on_post_process(self):
+        selected_hierarchy_levels = dict((key, dimension) for key, dimension in zip(self.final_generalization.qi_keys, self.final_generalization.subset))
+
+        self.additional_anonymization_info['selected_hierarchy_levels'] = ('Selected Hierarchy Levels', selected_hierarchy_levels)
+
+        if len(self.possible_generalizations) > 1:
+            other_possible_generalizations = []
+            for possible_gen in self.possible_generalizations:
+                other_possible_generalizations.append(dict((key, dimension) for key, dimension in zip(possible_gen.qi_keys, possible_gen.subset)))
+
+            self.additional_anonymization_info['other_possible_generalizations'] = ('Other Possible Hierarchy Levels', other_possible_generalizations)
 
 class GLGNode():
     def __init__(self, subset, glg_lvl, qi_keys, marked=False):

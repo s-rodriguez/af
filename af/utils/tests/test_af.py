@@ -10,6 +10,11 @@ def create_sickness_db(number_of_records):
     create_sickness_db.create_db(db_directory, db_name, number_of_records)
 
 
+def look_for_all_ocurrences():
+    look_for_all = raw_input("Buscar todas las ocurrencias posibles? [y/N]: ")
+    return True if look_for_all.lower() == "y" else False
+
+
 if __name__ == "__main__":
     create_db = raw_input("Crear DB sickness? [y/N]: ")
     if create_db.lower() == "y":
@@ -27,11 +32,11 @@ if __name__ == "__main__":
         algorithm_instance = Datafly(dc, k=k_value)
 
     elif algorithm.lower() in ("2", "incognitok", "incognitok [2]"):
-        algorithm_instance = IncognitoK(dc, k=k_value)
+        algorithm_instance = IncognitoK(dc, k=k_value, look_for_all=look_for_all_ocurrences())
 
     elif algorithm.lower() in ("3", "incognitol", "incognitol [3]"):
         l_value = int(raw_input("Valor de L: "))
-        algorithm_instance = IncognitoL(dc, k=k_value, l=l_value)
+        algorithm_instance = IncognitoL(dc, k=k_value, l=l_value, look_for_all=look_for_all_ocurrences())
 
     else:
         print "\nAlgoritmo seleccionado incorrecto"
@@ -42,6 +47,11 @@ if __name__ == "__main__":
     print "\nDone!"
 
     print "\nDoing some metrics..."
+
+    for info_value in algorithm_instance.additional_anonymization_info.itervalues():
+        title, value = info_value
+        print "\n{0}: {1}".format(title, value)
+
     tm = TransformationMetrics(dc)
     print "\nComparison between equivalence classes (original, anonymized)"
     for att_name, eq_comp in tm.qi_eq_classes_differences().iteritems():
