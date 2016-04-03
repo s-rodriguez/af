@@ -1,4 +1,3 @@
-from datetime import datetime
 import logging
 import os
 from ._version import get_versions
@@ -14,11 +13,9 @@ log_dir = os.path.join(os.path.expanduser('~'), 'af', 'logs')
 if not os.path.isdir(log_dir):
     os.makedirs(log_dir)
 
-date_timestamp = str(datetime.now()).split('.')[0].replace(' ', '_').replace(':', '_')
-LOG_FILENAME = os.path.join(log_dir, 'af_session_{0}.log'.format(date_timestamp))
+LOG_FILENAME = os.path.join(log_dir, 'af_session.log')
 logging.basicConfig(filename=LOG_FILENAME,
                     level=logging.DEBUG,
-                    filemode='w',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p',
 )

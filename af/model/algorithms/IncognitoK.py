@@ -133,7 +133,7 @@ class IncognitoK(BaseKAlgorithm):
                 lvl += 1
 
         possible_generalizations = self.glg.get_marked_nodes()
-        self.logger.info("Possible generalizations: "+str(possible_generalizations))
+        #self.logger.info("Possible generalizations: "+str(possible_generalizations))
         return possible_generalizations
 
     def checks_model_conditions(self, node):
@@ -144,7 +144,6 @@ class IncognitoK(BaseKAlgorithm):
         for key, dimension in zip(node.qi_keys, node.subset):
             condition_query = condition_query.replace('.{0}{1}'.format(key, self.replacement_tag),
                                                       '.{0}{1}'.format(key, dimension))
-
         for row in self.anon_db_controller.execute_query(condition_query):
             if int(row[0]) < self.k:
                 return False

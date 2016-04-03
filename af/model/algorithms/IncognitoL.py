@@ -65,6 +65,7 @@ class IncognitoL(IncognitoK):
         else:
             return k_condition
 
+    @timeit_decorator
     def subnode_checks_l_condition(self, node):
         condition_query = self.l_condition_query.replace('','')
         for key, dimension in zip(node.qi_keys, node.subset):

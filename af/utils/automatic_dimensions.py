@@ -84,7 +84,9 @@ class DatePartialSupressionYYYYMMDD(AutomaticDimension):
         elif '*' not in month:
             month = '**'
         else:
-            year = '****'
+            #Full supression of value
+            result = BaseHierarchy.supression_node().value
+            return result
 
         result = "{0}/{1}/{2}".format(year, month, day)
         return result

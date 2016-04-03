@@ -24,3 +24,8 @@ class Datafly(BaseKAlgorithm):
                 else:
                     values_to_update_dic[new_value] = [current_value]
             self.update_qi_values(qi_to_anonymize, values_to_update_dic)
+
+    def on_post_process(self):
+        self.anon_db_controller.rename_table(self.anonymization_table, 'anonymizedData')
+
+
