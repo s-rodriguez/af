@@ -173,19 +173,19 @@ att_ssn.hierarchy = ssn_hierarchy
 att_race = Attribute('race', privacy_type=utils.PRIVACY_TYPE_QI)
 att_race.hierarchy = race_hierarchy
 
-att_year_of_birth = Attribute('birth', privacy_type=utils.PRIVACY_TYPE_QI)
+att_year_of_birth = Attribute('birth', privacy_type=utils.PRIVACY_TYPE_QI, weight=2)
 att_year_of_birth.hierarchy = year_of_birth_hierarchy
 
 att_gender = Attribute('gender', privacy_type=utils.PRIVACY_TYPE_QI)
 att_gender.hierarchy = gender_hierarchy
 
-att_zip = Attribute('zip', privacy_type=utils.PRIVACY_TYPE_QI)
+att_zip = Attribute('zip', privacy_type=utils.PRIVACY_TYPE_QI, weight=4)
 att_zip.hierarchy = zip_hierarchy
 
-att_city = Attribute('city', privacy_type=utils.PRIVACY_TYPE_QI)
+att_city = Attribute('city', privacy_type=utils.PRIVACY_TYPE_QI, weight=3)
 att_city.hierarchy = city_hierarchy
 
-att_profession = Attribute('profession', privacy_type=utils.PRIVACY_TYPE_QI)
+att_profession = Attribute('profession', privacy_type=utils.PRIVACY_TYPE_QI, weight=3)
 att_profession.hierarchy = profession_hierarchy
 
 att_problem = Attribute('problem', privacy_type=utils.PRIVACY_TYPE_SENSITIVE)

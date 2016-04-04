@@ -1,7 +1,9 @@
-import itertools
 import logging
+from numpy import median
+import random
 
 from af.model.algorithms.BaseKAlgorithm import BaseKAlgorithm
+from af.model.algorithms.GeneralizationLatticeGraph import  GeneralizationLatticeGraph
 from af.utils import (
     ANONYMIZED_DATA_TABLE,
     timeit_decorator
@@ -13,11 +15,12 @@ class IncognitoK(BaseKAlgorithm):
     def __init__(self, data_config, k=2, look_for_all=False):
         BaseKAlgorithm.__init__(self, data_config, k)
         self.logger = logging.getLogger('algorithms.IncognitoK')
-
-        self.glg = None
-        self.final_generalization = None
         self.k_condition_query = None
         self.look_for_all = look_for_all
+        self.glg = None
+        self.final_generalization = None
+        self.possible_generalizations = None
+        self.best_minimal_generalizations = None
         self.replacement_tag = "###REPLACEME###"
 
     @timeit_decorator
@@ -34,9 +37,6 @@ class IncognitoK(BaseKAlgorithm):
             error_message = "No generalization available to make table anon with that k condition"
             self.logger.error(error_message)
             raise Exception(error_message)
-
-    def validate_anonymize_conditions(self):
-        pass
 
     @timeit_decorator
     def create_table_hierarchies_star_schema(self):
@@ -62,7 +62,6 @@ class IncognitoK(BaseKAlgorithm):
     def insert_values_on_dimension_tables(self):
         self.logger.info("Inserting values on dimension tables...")
         for qi_attribute in self.qi_attributes:
-            att_dimension_table_name = "{0}_dimensions".format(qi_attribute.name)
             amount_of_values = ['?'] * (qi_attribute.hierarchy.get_hierarchy_depth()+1)
             query = "INSERT INTO {0}_dimensions VALUES ({1})".format(qi_attribute.name, ','.join(amount_of_values))
             dimension_values = qi_attribute.hierarchy.get_all_nodes_complete_transformation()
@@ -123,6 +122,7 @@ class IncognitoK(BaseKAlgorithm):
         self.logger.info("Retrieving all possible generalizations...")
         finished = False
         lvl = 0
+        possible_generalizations = None
         while not finished:
             glg_lvl_subnodes = self.glg.get_lvl_subnodes(lvl)
             if glg_lvl_subnodes is None:
@@ -154,11 +154,54 @@ class IncognitoK(BaseKAlgorithm):
                 return False
         return True
 
+    def normal_filter(self, list_to_filter, filter_method):
+        filtered_list = []
+        for item in list_to_filter:
+            if len(filtered_list) == 0 or filter_method(item.subset, filtered_list[0].subset) == -1:
+                filtered_list = [item]
+            elif filter_method(item.subset, filtered_list[0].subset) == 0:
+                filtered_list.append(item)
+        return filtered_list
+
+    def weighted_filter(self, list_to_filter):
+        filtered_list = []
+        weights = dict((att.name, att.weight) for att in self.qi_attributes)
+
+        def item_weight(item):
+            item_weight_sum = 0
+            for name, lvl in zip(item.keys, item.subset):
+                item_weight_sum += lvl/(weights[name]+0.0)
+            return item_weight_sum
+
+        for item in list_to_filter:
+            if len(filtered_list) == 0 or item_weight(item) < item_weight(filtered_list[0]):
+                filtered_list = [item]
+            elif item_weight(item) == item_weight(filtered_list[0]):
+                filtered_list.append(item)
+        return filtered_list
+
     @timeit_decorator
     def choose_generalization(self, possible_generalizations):
-        # TODO IMPLEMENTE LOGIC TO CHOOSE
         self.logger.info("Choosing the best generalization from the possible ones...")
-        return possible_generalizations[0]
+
+        filters = [
+            lambda x, y: -1 if sum(x) < sum(y) else (0 if sum(x) == sum(y) else 1),  # lower_levels
+            lambda x, y: -1 if median(x) < median(y) else (0 if median(x) == median(y) else 1)  # lowest_median
+        ]
+
+        self.best_minimal_generalizations = possible_generalizations
+        for f in filters:
+            self.best_minimal_generalizations = self.normal_filter(self.best_minimal_generalizations, f)
+            if len(self.best_minimal_generalizations) == 1:
+                break
+
+        if len(self.best_minimal_generalizations) > 1:
+            # try to filter using the attributes weights
+            self.best_minimal_generalizations = self.weighted_filter(self.best_minimal_generalizations)
+
+        best_minimal_generalization = random.choice(self.best_minimal_generalizations)
+
+        return best_minimal_generalization
 
     @timeit_decorator
     def dump_anonymized_data(self):
@@ -201,116 +244,14 @@ class IncognitoK(BaseKAlgorithm):
 
         self.additional_anonymization_info['selected_hierarchy_levels'] = ('Selected Hierarchy Levels', selected_hierarchy_levels)
 
+        def possible_generalizations_info(generalizations_list):
+            possible_generalizations = []
+            for possible_gen in generalizations_list:
+                possible_generalizations.append(dict((key, dimension) for key, dimension in zip(possible_gen.qi_keys, possible_gen.subset)))
+            return possible_generalizations
+
         if len(self.possible_generalizations) > 1:
-            other_possible_generalizations = []
-            for possible_gen in self.possible_generalizations:
-                other_possible_generalizations.append(dict((key, dimension) for key, dimension in zip(possible_gen.qi_keys, possible_gen.subset)))
+            self.additional_anonymization_info['other_possible_generalizations'] = ('Other Possible Hierarchy Levels', possible_generalizations_info(self.possible_generalizations))
 
-            self.additional_anonymization_info['other_possible_generalizations'] = ('Other Possible Hierarchy Levels', other_possible_generalizations)
-
-class GLGNode():
-    def __init__(self, subset, glg_lvl, qi_keys, marked=False):
-        self.subset = subset
-        self.glg_lvl = glg_lvl
-        self.qi_keys = qi_keys
-        self.marked = marked
-
-    def __repr__(self):
-        subset = {}
-        for key, dimension in zip(self.qi_keys, self.subset):
-            subset[key] = dimension
-        return str({'subset': subset, 'marked': self.marked})
-
-
-class GeneralizationLatticeGraph():
-
-    def __init__(self, qi_info):
-        # qi_info example: [('birth', (0, 1)) , ('zip', (0, 1, 2)), ('sex', (0, 1))]
-        self.qi_info = qi_info
-        self.qi_keys = None
-        self.bfs_level_nodes = None
-        self.create_bfs_structure()
-
-    def create_bfs_structure(self):
-        self.qi_keys = []
-        list_of_lvls = []
-
-        for qi_tuple in self.qi_info:
-            qi_key, qi_lvls = qi_tuple
-            self.qi_keys.append(qi_key)
-            list_of_lvls.append(qi_lvls)
-
-        self.bfs_level_nodes = {}
-
-        for subset in itertools.product(*list_of_lvls):
-            lvl = sum(subset)
-            if lvl not in self.bfs_level_nodes.keys():
-                self.bfs_level_nodes[lvl] = []
-            self.bfs_level_nodes[lvl].append(GLGNode(subset=subset, glg_lvl=lvl, qi_keys=self.qi_keys, marked=False))
-
-    def get_lvl_subnodes(self, lvl):
-        # Reached the highest possible level
-        if lvl not in self.bfs_level_nodes.keys():
-            return None
-        return self.bfs_level_nodes[lvl]
-
-    def get_upper_level_nodes(self, node, lvl):
-        upper_level_nodes = []
-        possible_upper_nodes = self.get_lvl_subnodes(lvl)
-        if possible_upper_nodes:
-            for upper_node in possible_upper_nodes:
-                condition1 = sum(upper_node.subset)-sum(node.subset) == 1
-                condition2 = all(0 <= t[1]-t[0] <= 1 for t in zip(node.subset, upper_node.subset))
-                if all((condition1, condition2)):
-                    upper_level_nodes.append(upper_node)
-        return upper_level_nodes
-
-    def mark_valid_subnode(self, node):
-        node.marked = True
-        current_lvl = sum(node.subset)
-        for upper_node in self.get_upper_level_nodes(node, current_lvl+1):
-            self.mark_valid_subnode(upper_node)
-
-    def get_marked_nodes(self, marked=True):
-        marked_nodes = []
-        lvl = 0
-        finished = False
-
-        while not finished:
-            nodes = self.get_lvl_subnodes(lvl)
-            if nodes is None:
-                finished = True
-            else:
-                marked_nodes.extend([node for node in nodes if node.marked == marked])
-                lvl += 1
-        return marked_nodes
-
-    @staticmethod
-    def test():
-        birth_info = ('birth', (0, 1))
-        zip_info = ('zip', (0, 1, 2))
-        sex_info = ('sex', (0, 1))
-
-        qi_info = (birth_info, zip_info, sex_info)
-        glg = GeneralizationLatticeGraph(qi_info)
-        print "Get qi keys"
-        print glg.qi_keys
-
-        print "\nGet glg representation"
-        for lvl, subsets in glg.bfs_level_nodes.iteritems():
-            print "Level: "+str(lvl)+": "+str(subsets)
-
-        print "\nGet lvl subsets at request"
-        for lvl in range(0, 6):
-            print "Level: "+str(lvl)
-            print "Subsets :  "+str(glg.get_lvl_subnodes(lvl))
-
-        print "\nMark all nodes as read"
-        glg.mark_valid_subnode(glg.bfs_level_nodes[1][1])
-        for lvl in range(0, 6):
-            print "Level: "+str(lvl)
-            print "Subsets :  "+str(glg.get_lvl_subnodes(lvl))
-
-if __name__ == "__main__":
-    # GLG Test
-    GeneralizationLatticeGraph.test()
+        if len(self.best_minimal_generalizations) > 1:
+            self.additional_anonymization_info['best_minimal_generalizations'] = ('Best Minimal Hierarchy Levels', possible_generalizations_info(self.best_minimal_generalizations))

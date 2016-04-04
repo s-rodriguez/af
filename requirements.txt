@@ -1,3 +1,4 @@
+numpy
 alabaster==0.7.6
 Babel==2.0
 coverage==3.7.1

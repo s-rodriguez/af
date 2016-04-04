@@ -15,7 +15,12 @@ class BaseAlgorithm(object):
         self.data_config = data_config
 
         self.id_attributes = data_config.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_IDENTIFIER)
-        self.qi_attributes = data_config.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_QI)
+
+        # qi attributes ordered by weight
+        self.qi_attributes = sorted(data_config.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_QI),
+                                    key=lambda x: x.weight,
+                                    reverse=True)
+
         self.other_attributes = data_config.get_normal_type_attributes_list()
 
         self.anon_db_controller = SqliteController(utils.get_anonymization_db_location())

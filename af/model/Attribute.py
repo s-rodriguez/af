@@ -3,12 +3,13 @@ from af.controller.hierarchies.BaseHierarchyController import BaseHierarchyContr
 
 class Attribute(object):
 
-    def __init__(self, name=None, basic_type='string', privacy_type=None, hierarchy_config=None, weight=0):
+    def __init__(self, name=None, basic_type='string', privacy_type=None, hierarchy_config=None, weight=1):
         self.name = name
         self.basic_type = basic_type
         self.privacy_type = privacy_type
         self.weight = weight
-        self.hierarchy = self.set_hierarchy(hierarchy_config)
+        self.hierarchy = None
+        self.set_hierarchy(hierarchy_config)
 
     def get_representation(self):
         return {
@@ -49,3 +50,6 @@ class Attribute(object):
         if self.hierarchy is None:
             raise Exception('No hierarchy found')
         return self.hierarchy.transform_leaf_nodes(lvl)
+
+    def __repr__(self):
+        return "{0} - [{1}-{2}] ({3})".format(self.name, self.basic_type, self.privacy_type, self.weight)
