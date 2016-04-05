@@ -169,7 +169,7 @@ class IncognitoK(BaseKAlgorithm):
 
         def item_weight(item):
             item_weight_sum = 0
-            for name, lvl in zip(item.keys, item.subset):
+            for name, lvl in zip(item.qi_keys, item.subset):
                 item_weight_sum += lvl/(weights[name]+0.0)
             return item_weight_sum
 
