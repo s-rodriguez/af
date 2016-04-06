@@ -65,7 +65,6 @@ class IncognitoL(IncognitoK):
         else:
             return k_condition
 
-    @timeit_decorator
     def subnode_checks_l_condition(self, node):
         condition_query = self.l_condition_query.replace('','')
         for key, dimension in zip(node.qi_keys, node.subset):
@@ -76,3 +75,7 @@ class IncognitoL(IncognitoK):
             if int(row[0]) < self.l:
                 return False
         return True
+
+    def on_post_process(self):
+        self.additional_anonymization_info[2] = ('Model Conditions', "K: {0}   L: {1}".format(self.k, self.l))
+        self.additional_anonymization_information()

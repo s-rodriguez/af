@@ -89,5 +89,4 @@ class BaseAlgorithm(object):
         time_end = time.time()
         elapsed_time = time_end - time_start
         self.anonymization_duration = '%2.2f seconds' % elapsed_time
-        self.additional_anonymization_info['anonymization_duration'] = ('Anonymization Duration',
-                                                                        self.anonymization_duration)
+        self.additional_anonymization_info[1] = ('Anonymization Duration', self.anonymization_duration)

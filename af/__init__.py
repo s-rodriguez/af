@@ -32,8 +32,8 @@ def main(cls=None, method=None, resource=None):
     :type resource: :class:`sandman.model.Model` or None
     :rtype: bool
     """
-    print "MAIN FUNCTION FOR THE AF"
-    return True
+    from af.utils.tests.af_test import af_test
+    af_test()
 
 if __name__ == "__main__":
     main()

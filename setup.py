@@ -26,10 +26,9 @@ setup(
         'testing': ['pytest'],
     },
     zip_safe=False,
-    # Para futuros entry points
-    # entry_points={
-    #    'console_scripts': [
-    #        'af = af:main'
-    #    ]
-    # },
+    entry_points={
+       'console_scripts': [
+           'af = af:main'
+       ]
+    },
 )

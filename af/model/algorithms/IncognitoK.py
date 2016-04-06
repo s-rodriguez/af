@@ -1,6 +1,6 @@
 import logging
-from numpy import median
 import random
+from statistics import median
 
 from af.model.algorithms.BaseKAlgorithm import BaseKAlgorithm
 from af.model.algorithms.GeneralizationLatticeGraph import  GeneralizationLatticeGraph
@@ -239,10 +239,10 @@ class IncognitoK(BaseKAlgorithm):
 
         list(self.anon_db_controller.execute_query(insert_query))
 
-    def on_post_process(self):
+    def additional_anonymization_information(self):
         selected_hierarchy_levels = dict((key, dimension) for key, dimension in zip(self.final_generalization.qi_keys, self.final_generalization.subset))
 
-        self.additional_anonymization_info['selected_hierarchy_levels'] = ('Selected Hierarchy Levels', selected_hierarchy_levels)
+        self.additional_anonymization_info[3] = ('Selected Hierarchy Levels', selected_hierarchy_levels)
 
         def possible_generalizations_info(generalizations_list):
             possible_generalizations = []
@@ -250,8 +250,13 @@ class IncognitoK(BaseKAlgorithm):
                 possible_generalizations.append(dict((key, dimension) for key, dimension in zip(possible_gen.qi_keys, possible_gen.subset)))
             return possible_generalizations
 
-        if len(self.possible_generalizations) > 1:
-            self.additional_anonymization_info['other_possible_generalizations'] = ('Other Possible Hierarchy Levels', possible_generalizations_info(self.possible_generalizations))
-
         if len(self.best_minimal_generalizations) > 1:
-            self.additional_anonymization_info['best_minimal_generalizations'] = ('Best Minimal Hierarchy Levels', possible_generalizations_info(self.best_minimal_generalizations))
+            self.additional_anonymization_info[4] = ('Best Minimal Hierarchy Levels', possible_generalizations_info(self.best_minimal_generalizations))
+
+        if len(self.possible_generalizations) > 1:
+            self.additional_anonymization_info[5] = ('Other Possible Hierarchy Levels', possible_generalizations_info(self.possible_generalizations))
+
+    def on_post_process(self):
+        self.additional_anonymization_info[2] = ('Model Conditions', "K: {0}".format(self.k))
+        self.additional_anonymization_information()
+
