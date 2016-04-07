@@ -9,11 +9,20 @@ def af_directory():
     return os.path.dirname(os.path.abspath(__file__))
 
 
-log_dir = os.path.join(os.path.expanduser('~'), 'af', 'logs')
-if not os.path.isdir(log_dir):
-    os.makedirs(log_dir)
+def af_user_directory():
+    return os.path.join(os.path.expanduser('~'), 'af')
 
-LOG_FILENAME = os.path.join(log_dir, 'af_session.log')
+
+def create_basic_directories():
+    directories = ['logs', 'reports']
+    for directory in directories:
+        dir_path = os.path.join(af_user_directory(), directory)
+        if not os.path.isdir(dir_path):
+            os.makedirs(dir_path)
+
+
+create_basic_directories()
+LOG_FILENAME = os.path.join(af_user_directory(), 'logs', 'af_session.log')
 logging.basicConfig(filename=LOG_FILENAME,
                     level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',

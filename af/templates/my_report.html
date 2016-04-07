@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Anonymization Report</title>
+</head>
+<body>
+    <h1>Anonymization Report</h2>
+    <h2>General Information</h2>
+
+
+    <div class="container">
+        <h2>Equivalence Classes Amount Comparison</h2>
+        <table id="eq_comparison_amount">
+        <tr>
+            <th>Name</th>
+            <th>Before</th>
+            <th>After</th>
+        </tr>
+        {% for att_name, values in eq_classes_differences.iteritems() %}
+            <tr>
+                <td>{{ att_name }}</td>
+                <td>{{ values[0] }}</td>
+                <td>{{ values[1] }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+
+</body>
+<style>
+table, th, td {
+    width: 50%;
+    table-layout: fixed;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: center;
+}
+table#eq_comparison_amount tr:nth-child(even) {
+    background-color: #eee;
+}
+table#eq_comparison_amount tr:nth-child(odd) {
+   background-color:#fff;
+}
+table#eq_comparison_amount th    {
+    background-color: black;
+    color: white;
+}
+</style>
+</html>
