@@ -147,3 +147,12 @@ class SqliteController(DataController):
             cursor = conn.cursor()
             cursor.executemany(query, values_list)
             conn.commit()
+
+    def get_groups_examples(self, table, qi_list):
+        query = "SELECT * from {0} GROUP BY {1} LIMIT 30;".format(table, ','.join(qi_list))
+        with sqlite3.connect(self.data_location) as conn:
+            cursor = conn.cursor()
+            cursor.execute(query)
+            columns_info = list(map(lambda x: x[0], cursor.description))
+            data = cursor.fetchall()
+            return {'columns': columns_info, 'data': data}

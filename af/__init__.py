@@ -41,7 +41,7 @@ def main(cls=None, method=None, resource=None):
     :type resource: :class:`sandman.model.Model` or None
     :rtype: bool
     """
-    from af.utils.for_tests.af_test import af_test
+    from af.utils.tests.af_test import af_test
     af_test()
 
 if __name__ == "__main__":
