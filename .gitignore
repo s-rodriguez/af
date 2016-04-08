@@ -8,6 +8,4 @@ docs/_build/
 *.edat
 af/utils/anonymization/
 .cache/
-af/utils/sickness.db
-af/utils/tests/sicknesslarge.db
-af/utils/tests/
+*.db

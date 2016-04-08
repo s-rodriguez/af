@@ -123,6 +123,7 @@ class IncognitoK(BaseKAlgorithm):
         finished = False
         lvl = 0
         possible_generalizations = None
+
         while not finished:
             glg_lvl_subnodes = self.glg.get_lvl_subnodes(lvl)
             if glg_lvl_subnodes is None:
@@ -132,6 +133,7 @@ class IncognitoK(BaseKAlgorithm):
                     if node.marked is False and self.checks_model_conditions(node):
                         if not self.look_for_all:
                             possible_generalizations = [node]
+                            finished = True
                             break
                         self.glg.mark_valid_subnode(node)
                 lvl += 1
