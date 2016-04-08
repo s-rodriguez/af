@@ -8,9 +8,8 @@
     <h1>Anonymization Report</h2>
     <h2>General Information</h2>
 
-
     <div class="container">
-        <h2>Equivalence Classes Amount Comparison</h2>
+        <h3>Equivalence Classes Amount Comparison</h3>
         <table id="eq_comparison_amount">
         <tr>
             <th>Name</th>
@@ -27,27 +26,50 @@
         </table>
     </div>
 
+    <div class="container">
+        <h3>Removed Outliers Amount: {{ removed_outliers }}</h3>
+        <h3>Final Equivalence Classes Amount: {{ eq_classes_amount }}</h3>
+    </div>
+
+    <div class="container">
+        <h2>Additional Information</h2>
+        {% for item in additional_information|dictsort %}
+            <p><b>{{ item[1][0] }}:</b> {{ item[1][1] }} </p>
+        {% endfor %}
+    </div>
 </body>
+
 <style>
+
 table, th, td {
     width: 50%;
     table-layout: fixed;
-    border: 1px solid black;
     border-collapse: collapse;
 }
+
 th, td {
-    padding: 5px;
-    text-align: center;
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
-table#eq_comparison_amount tr:nth-child(even) {
-    background-color: #eee;
-}
-table#eq_comparison_amount tr:nth-child(odd) {
-   background-color:#fff;
-}
-table#eq_comparison_amount th    {
-    background-color: black;
+
+th {
+    background-color: #0088cc;
     color: white;
 }
+
+table tr:hover {
+    background-color: #80d4ff;
+}
+
+tr:nth-child(even) {
+    background-color: #eee;
+}
+
+tr:nth-child(odd) {
+   background-color: #fff;
+}
+
 </style>
+
 </html>

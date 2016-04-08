@@ -8,8 +8,10 @@ from af.utils import (
 
 class TransformationMetrics(object):
 
-    def __init__(self, data_config):
+    def __init__(self, data_config, additional_information):
         self.data_config = data_config
+        self.additional_information = additional_information
+
         self.qi_attributes = data_config.get_privacy_type_attributes_list(PRIVACY_TYPE_QI)
 
         self.original_db = SqliteController(self.data_config.location)
