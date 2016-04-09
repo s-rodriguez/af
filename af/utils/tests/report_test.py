@@ -12,7 +12,7 @@ def report_test():
     }
     tm = TransformationMetrics(dc, additional_info)
     from af.model.reports import create_basic_report
-    location = create_basic_report(tm)
+    location = create_basic_report(tm, convert_to_pdf=True)
     print "Reporte creado en: %s" % location
 
 
