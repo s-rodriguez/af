@@ -18,6 +18,26 @@ def get_templates_location():
     return os.path.join(af_directory(), 'templates')
 
 
+def get_js_location(js_file_name):
+    return os.path.join(af_directory(), 'js', js_file_name)
+
+
+def get_processed_eq_classes_differences_for_chart(eq_classes_differences):
+    categories = []
+    before_data = []
+    after_data = []
+
+    for att_name, values in eq_classes_differences.iteritems():
+        categories.append(att_name)
+        before_data.append(values[0])
+        after_data.append(values[1])
+
+    return {
+        'categories': categories,
+        'before': before_data,
+        'after': after_data
+    }
+
 def get_anonymized_sample(data_config):
     anon_db_controller = SqliteController(utils.get_anonymization_db_location())
     anonymization_table = utils.ANONYMIZED_DATA_TABLE
@@ -29,13 +49,18 @@ def create_basic_report(transformation_metrics, template_name='my_report.html'):
     env = Environment(loader=FileSystemLoader(get_templates_location()))
     template = env.get_template(template_name)
     anonymized_sample = get_anonymized_sample(transformation_metrics.data_config)
+    eq_classes_differences = transformation_metrics.qi_eq_classes_differences()
+    eq_classes_differences_chart = get_processed_eq_classes_differences_for_chart(eq_classes_differences)
 
     template_vars = {
-        "eq_classes_differences" : transformation_metrics.qi_eq_classes_differences(),
+        "eq_classes_differences" : eq_classes_differences,
+        "eq_classes_differences_chart": eq_classes_differences_chart,
         "removed_outliers": transformation_metrics.removed_outlier_rows(),
         "eq_classes_amount": transformation_metrics.number_of_qi_eq_classes_generated(),
         "additional_information": transformation_metrics.additional_information,
         "anonymized_sample": anonymized_sample,
+        "highcharts_location": get_js_location('highcharts.js'),
+        "jquery_location": get_js_location('jquery-1.12.3.min.js')
     }
 
     html_out = template.render(template_vars)

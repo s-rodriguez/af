@@ -15,7 +15,7 @@ def look_for_all_ocurrences():
     return True if look_for_all.lower() == "y" else False
 
 
-if __name__ == "__main__":
+def af_test():
     create_db = raw_input("Crear DB sickness? [y/N]: ")
     if create_db.lower() == "y":
         number_of_records = int(raw_input("Cantidad de registros random: "))
@@ -81,3 +81,7 @@ if __name__ == "__main__":
         from af.model.reports import create_basic_report
         location = create_basic_report(tm)
         print "Reporte creado en: %s" % location
+
+
+if __name__ == "__main__":
+    af_test()

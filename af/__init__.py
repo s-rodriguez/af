@@ -10,7 +10,7 @@ def af_directory():
 
 
 def af_user_directory():
-    return os.path.join(os.path.expanduser('~'), 'af')
+    return os.path.abspath(os.path.join(os.path.expanduser('~'), 'af'))
 
 
 def create_basic_directories():

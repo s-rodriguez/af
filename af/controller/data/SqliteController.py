@@ -153,6 +153,6 @@ class SqliteController(DataController):
         with sqlite3.connect(self.data_location) as conn:
             cursor = conn.cursor()
             cursor.execute(query)
-            columns_info = list(map(lambda x: x[0], cursor.description))
+            columns_info = list(map(lambda x: x[0].title(), cursor.description))
             data = cursor.fetchall()
             return {'columns': columns_info, 'data': data}
