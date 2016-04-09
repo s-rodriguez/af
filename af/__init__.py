@@ -30,6 +30,11 @@ logging.basicConfig(filename=LOG_FILENAME,
 )
 
 
+def report():
+    from af.utils.tests.report_test import report_test
+    report_test()
+
+
 def main(cls=None, method=None, resource=None):
     from af.utils.tests.af_test import af_test
     af_test()

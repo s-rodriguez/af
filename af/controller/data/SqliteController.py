@@ -149,7 +149,7 @@ class SqliteController(DataController):
             conn.commit()
 
     def get_groups_examples(self, table, qi_list):
-        query = "SELECT count(*) as amount, * from {0} GROUP BY {1} LIMIT 30;".format(table, ','.join(qi_list))
+        query = "SELECT count(*) as amount, * from {0} GROUP BY {1} LIMIT 10;".format(table, ','.join(qi_list))
         with sqlite3.connect(self.data_location) as conn:
             cursor = conn.cursor()
             cursor.execute(query)

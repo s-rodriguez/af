@@ -8,12 +8,13 @@
     <h1><center>Anonymization Report</center></h1>
     <h2>General Information</h2>
 
-    <div id="highcharts_test" style="width:100%; height:400px;"></div>
+     <!--<div id="highcharts_test" style="width:100%; height:400px;"></div>-->
 
     <div class="container">
-        <p><b>Removed Outliers Amount: {{ removed_outliers }}</b></p>
-        <p><b>Final Equivalence Classes Amount: {{ eq_classes_amount }}</b></p>
+        <p><b>Removed Outliers Amount:</b> {{ removed_outliers }}</p>
+        <p><b>Final Equivalence Classes Amount:</b> {{ eq_classes_amount }}</p>
         <br>
+        <p><b>Equivalence Classes Amount Comparison:</b></p>
         <table id="eq_comparison_amount">
         <tr>
             <th>Name</th>
@@ -28,7 +29,7 @@
             </tr>
         {% endfor %}
         </table>
-        <p><center><em><b>Equivalence Classes Amount Comparison</b></em></center></p>
+        <br>
     </div>
 
     <div class="container">
@@ -41,23 +42,28 @@
     <div class="container">
         <h2>Anonymized Sample</h2>
         <table id="anonymized_sample">
-        <tr>
-            {% for column_name in anonymized_sample['columns'] %}
-                <th> {{ column_name }}</th>
-            {% endfor %}
-        </tr>
-        {% for row in anonymized_sample['data'] %}
             <tr>
-                {% for item in row %}
-                    <td>{{ item }}</td>
+                {% for column_name in anonymized_sample['columns'] %}
+                    <th> {{ column_name }}</th>
                 {% endfor %}
             </tr>
-        {% endfor %}
-
+            {% for row in anonymized_sample['data'] %}
+                <tr>
+                    {% for item in row %}
+                        <td>{{ item }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+        <br><br><br>
     </div>
 </body>
 
 <style>
+
+h1, h2, p, th, td {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
 
 h1 {
     color: #0066ff;
@@ -67,15 +73,10 @@ h2 {
     color: #4d94ff;
 }
 
-p {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-}
-
 table, th, td {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
 th, td {

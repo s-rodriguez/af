@@ -28,7 +28,8 @@ setup(
     zip_safe=False,
     entry_points={
        'console_scripts': [
-           'af = af:main'
+           'af = af:main',
+           'af_report = af:report',
        ]
     },
 )
