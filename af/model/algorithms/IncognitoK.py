@@ -1,16 +1,20 @@
 import logging
 import random
+
 from statistics import median
 
 from af.model.algorithms.BaseKAlgorithm import BaseKAlgorithm
 from af.model.algorithms.GeneralizationLatticeGraph import  GeneralizationLatticeGraph
 from af.utils import (
     ANONYMIZED_DATA_TABLE,
-    timeit_decorator
-)
+    timeit_decorator,
+    K_PRIVACY_MODEL)
 
 
 class IncognitoK(BaseKAlgorithm):
+
+    PRIVACY_MODEL = K_PRIVACY_MODEL
+    ALGORITHM_NAME = 'Incognito K'
 
     def __init__(self, data_config, k=2, look_for_all=False):
         BaseKAlgorithm.__init__(self, data_config, k)
@@ -261,4 +265,3 @@ class IncognitoK(BaseKAlgorithm):
     def on_post_process(self):
         self.additional_anonymization_info[2] = ('Model Conditions', "K: {0}".format(self.k))
         self.additional_anonymization_information()
-

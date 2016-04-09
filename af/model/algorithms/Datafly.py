@@ -1,9 +1,13 @@
 import logging
 
 from af.model.algorithms.BaseKAlgorithm import BaseKAlgorithm
+from af.utils import K_PRIVACY_MODEL
 
 
 class Datafly(BaseKAlgorithm):
+
+    PRIVACY_MODEL = K_PRIVACY_MODEL
+    ALGORITHM_NAME = 'Datafly'
 
     def __init__(self, data_config, k):
         BaseKAlgorithm.__init__(self, data_config, k)
@@ -27,5 +31,6 @@ class Datafly(BaseKAlgorithm):
 
     def on_post_process(self):
         self.anon_db_controller.rename_table(self.anonymization_table, 'anonymizedData')
+
 
 

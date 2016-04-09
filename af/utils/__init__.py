@@ -23,11 +23,16 @@ def load_json_file(json_file):
 def load_json(json_string):
     return json.loads(json_string)
 
+# Privacy Models
+K_PRIVACY_MODEL = 'k'
+L_PRIVACY_MODEL = 'l'
 
+# Date types
 BASIC_TYPE_STRING = 'string'
 BASIC_TYPE_INT = 'int'
 BASIC_TYPE_DATE = 'date'
 
+# Privacy Types
 PRIVACY_TYPE_IDENTIFIER = 'Identifier'
 PRIVACY_TYPE_QI = 'Quasi-Identifier'
 PRIVACY_TYPE_SENSITIVE = 'Sensitive'

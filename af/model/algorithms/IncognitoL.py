@@ -4,10 +4,13 @@ from af.model.algorithms.IncognitoK import IncognitoK
 from af.utils import (
     timeit_decorator,
     PRIVACY_TYPE_SENSITIVE,
-)
+    L_PRIVACY_MODEL)
 
 
 class IncognitoL(IncognitoK):
+
+    PRIVACY_MODEL = L_PRIVACY_MODEL
+    ALGORITHM_NAME = 'Incognito L'
 
     def __init__(self, data_config, k=3, l=2, look_for_all=False):
         IncognitoK.__init__(self, data_config, k, look_for_all)
