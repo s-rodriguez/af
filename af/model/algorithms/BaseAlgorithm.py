@@ -1,8 +1,10 @@
 import time
 
 from af.controller.data.SqliteController import SqliteController
-from af import utils
+
 from af.controller.anonymization.PreProcessingStage import PreProcessingStage
+
+from af import utils
 from af.utils import (
     timeit_decorator
 )

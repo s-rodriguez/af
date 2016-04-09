@@ -1,6 +1,16 @@
-from af.utils import PRIVACY_TYPE_IDENTIFIER, PRIVACY_TYPE_QI, PRIVACY_TYPE_NON_SENSITIVE, PRIVACY_TYPE_SENSITIVE, \
-    K_PRIVACY_MODEL, L_PRIVACY_MODEL, BASIC_TYPE_STRING, BASIC_TYPE_DATE, BASIC_TYPE_INT
-from af.model.algorithms import BaseAlgorithm
+from af.utils import (
+    PRIVACY_TYPE_IDENTIFIER,
+    PRIVACY_TYPE_QI,
+    PRIVACY_TYPE_NON_SENSITIVE,
+    PRIVACY_TYPE_SENSITIVE,
+    K_PRIVACY_MODEL,
+    L_PRIVACY_MODEL,
+    BASIC_TYPE_STRING,
+    BASIC_TYPE_DATE,
+    BASIC_TYPE_INT
+)
+
+from af.model.algorithms.BaseAlgorithm import BaseAlgorithm
 
 
 class AfController:
