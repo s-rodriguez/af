@@ -1,9 +1,12 @@
 from af.controller.hierarchies.BaseHierarchyController import BaseHierarchyController
-
+from af.utils import (
+    BASIC_TYPE_STRING,
+    PRIVACY_TYPE_NON_SENSITIVE
+)
 
 class Attribute(object):
 
-    def __init__(self, name=None, basic_type='string', privacy_type=None, hierarchy_config=None, weight=1):
+    def __init__(self, name=None, basic_type=BASIC_TYPE_STRING, privacy_type=PRIVACY_TYPE_NON_SENSITIVE, hierarchy_config=None, weight=1):
         self.name = name
         self.basic_type = basic_type
         self.privacy_type = privacy_type
