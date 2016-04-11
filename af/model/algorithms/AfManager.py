@@ -31,7 +31,7 @@ class AfManager:
     def get_algorithms(self, privacy_model):
         algorithms = []
         for algorithm in self.get_all_algorithms():
-            if algorithm.PRIVACY_MODEL is privacy_model:
+            if algorithm.PRIVACY_MODEL == privacy_model:
                 algorithms.append(algorithm.ALGORITHM_NAME)
         return algorithms
 
