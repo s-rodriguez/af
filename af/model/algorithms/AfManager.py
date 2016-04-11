@@ -21,6 +21,7 @@ class AfManager:
         self.privacy_types = {PRIVACY_TYPE_IDENTIFIER, PRIVACY_TYPE_QI, PRIVACY_TYPE_SENSITIVE, PRIVACY_TYPE_NON_SENSITIVE}
         self.privacy_models = {K_PRIVACY_MODEL, L_PRIVACY_MODEL}
         self.data_types = {BASIC_TYPE_STRING, BASIC_TYPE_INT, BASIC_TYPE_DATE}
+        self.load_modules()
 
     @staticmethod
     def load_modules():
@@ -42,7 +43,6 @@ class AfManager:
         return a
 
     def get_all_subclasses(self, cls):
-        self.load_modules()
         all_subclasses = []
 
         for subclass in cls.__subclasses__():
