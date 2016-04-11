@@ -8,26 +8,24 @@
     <h1><center>Anonymization Report</center></h1>
     <h2>General Information</h2>
 
-     <!--<div id="highcharts_test" style="width:100%; height:400px;"></div>-->
-
     <div class="container">
         <p><b>Removed Outliers Amount:</b> {{ removed_outliers }}</p>
         <p><b>Final Equivalence Classes Amount:</b> {{ eq_classes_amount }}</p>
         <br>
         <p><b>Equivalence Classes Amount Comparison:</b></p>
         <table id="eq_comparison_amount">
-        <tr>
-            <th>Name</th>
-            <th>Before</th>
-            <th>After</th>
-        </tr>
-        {% for att_name, values in eq_classes_differences.iteritems() %}
             <tr>
-                <td>{{ att_name }}</td>
-                <td>{{ values[0] }}</td>
-                <td>{{ values[1] }}</td>
+                <th>Name</th>
+                <th>Before</th>
+                <th>After</th>
             </tr>
-        {% endfor %}
+            {% for att_name, values in eq_classes_differences.iteritems() %}
+                <tr>
+                    <td>{{ att_name }}</td>
+                    <td>{{ values[0] }}</td>
+                    <td>{{ values[1] }}</td>
+                </tr>
+            {% endfor %}
         </table>
         <br>
     </div>
@@ -113,35 +111,5 @@ div {
 }
 
 </style>
-
-<script src="{{ jquery_location }}"></script>
-<script src="{{ highcharts_location }}"></script>
-<script>
-    $(function () {
-        $('#highcharts_test').highcharts({
-            chart: {
-                type: 'bar'
-            },
-            title: {
-                text: 'Equivalence Classes Differences'
-            },
-            xAxis: {
-                categories: {{ eq_classes_differences_chart.categories }}
-            },
-            yAxis: {
-                title: {
-                    text: 'Amount of equivalence classes'
-                }
-            },
-            series: [{
-                name: 'Before',
-                data: {{ eq_classes_differences_chart.before }}
-            }, {
-                name: 'After',
-                data: {{ eq_classes_differences_chart.after }}
-            }]
-        });
-    });
-</script>
 
 </html>

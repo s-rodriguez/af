@@ -9,17 +9,12 @@ from af import (
 from af.controller.data.SqliteController import SqliteController
 
 
-
 def get_report_location_output(report_name):
     return os.path.join(af_user_directory(), 'reports', report_name)
 
 
 def get_templates_location():
     return os.path.join(af_directory(), 'templates')
-
-
-def get_js_location(js_file_name):
-    return os.path.join(af_directory(), 'js', js_file_name)
 
 
 def get_processed_eq_classes_differences_for_chart(eq_classes_differences):
@@ -59,8 +54,6 @@ def create_basic_report(transformation_metrics, template_name='my_report.html', 
         "eq_classes_amount": transformation_metrics.number_of_qi_eq_classes_generated(),
         "additional_information": transformation_metrics.additional_information,
         "anonymized_sample": anonymized_sample,
-        "highcharts_location": get_js_location('highcharts.js'),
-        "jquery_location": get_js_location('jquery-1.12.3.min.js')
     }
 
     html_out = template.render(template_vars)
