@@ -15,8 +15,9 @@ class BaseAlgorithm(object):
     PRIVACY_MODEL = None
     ALGORITHM_NAME = None
 
-    def __init__(self, data_config):
+    def __init__(self, data_config, optimized_processing=False):
         self.data_config = data_config
+        self.optimized_processing = optimized_processing
 
         self.id_attributes = data_config.get_privacy_type_attributes_list(utils.PRIVACY_TYPE_IDENTIFIER)
 

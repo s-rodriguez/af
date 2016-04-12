@@ -32,11 +32,11 @@ def af_test():
         algorithm_instance = Datafly(dc, k=k_value)
 
     elif algorithm.lower() in ("2", "incognitok", "incognitok [2]"):
-        algorithm_instance = IncognitoK(dc, k=k_value, look_for_all=look_for_all_ocurrences())
+        algorithm_instance = IncognitoK(dc, k=k_value, optimized_processing=look_for_all_ocurrences())
 
     elif algorithm.lower() in ("3", "incognitol", "incognitol [3]"):
         l_value = int(raw_input("Valor de L: "))
-        algorithm_instance = IncognitoL(dc, k=k_value, l=l_value, look_for_all=look_for_all_ocurrences())
+        algorithm_instance = IncognitoL(dc, k=k_value, l=l_value, optimized_processing=look_for_all_ocurrences())
 
     else:
         print "\nAlgoritmo seleccionado incorrecto"

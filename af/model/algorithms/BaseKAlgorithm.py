@@ -6,8 +6,8 @@ from af.utils import (
 
 class BaseKAlgorithm(BaseAlgorithm):
 
-    def __init__(self, data_config, k):
-        BaseAlgorithm.__init__(self, data_config)
+    def __init__(self, data_config, k, optimized_processing=False):
+        BaseAlgorithm.__init__(self, data_config, optimized_processing)
         self.k = k
         self.logger = "algorithms.BaseKAlgorithm"
 

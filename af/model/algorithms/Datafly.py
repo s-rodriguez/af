@@ -9,8 +9,8 @@ class Datafly(BaseKAlgorithm):
     PRIVACY_MODEL = K_PRIVACY_MODEL
     ALGORITHM_NAME = 'Datafly'
 
-    def __init__(self, data_config, k):
-        BaseKAlgorithm.__init__(self, data_config, k)
+    def __init__(self, data_config, k, optimized_processing=False):
+        BaseKAlgorithm.__init__(self, data_config, k, optimized_processing)
         self.logger = logging.getLogger('algorithms.Datafly')
         self.iteration = 0
 

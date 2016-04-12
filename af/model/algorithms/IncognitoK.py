@@ -16,11 +16,10 @@ class IncognitoK(BaseKAlgorithm):
     PRIVACY_MODEL = K_PRIVACY_MODEL
     ALGORITHM_NAME = 'Incognito K'
 
-    def __init__(self, data_config, k=2, look_for_all=False):
-        BaseKAlgorithm.__init__(self, data_config, k)
+    def __init__(self, data_config, k=2, optimized_processing=False):
+        BaseKAlgorithm.__init__(self, data_config, k, optimized_processing)
         self.logger = logging.getLogger('algorithms.IncognitoK')
         self.k_condition_query = None
-        self.look_for_all = look_for_all
         self.glg = None
         self.final_generalization = None
         self.possible_generalizations = None
@@ -135,14 +134,14 @@ class IncognitoK(BaseKAlgorithm):
             else:
                 for node in glg_lvl_subnodes:
                     if node.marked is False and self.checks_model_conditions(node):
-                        if not self.look_for_all:
+                        if not self.optimized_processing:
                             possible_generalizations = [node]
                             finished = True
                             break
                         self.glg.mark_valid_subnode(node)
                 lvl += 1
 
-        if self.look_for_all:
+        if self.optimized_processing:
             possible_generalizations = self.glg.get_marked_nodes()
 
         return possible_generalizations

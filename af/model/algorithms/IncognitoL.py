@@ -12,8 +12,8 @@ class IncognitoL(IncognitoK):
     PRIVACY_MODEL = L_PRIVACY_MODEL
     ALGORITHM_NAME = 'Incognito L'
 
-    def __init__(self, data_config, k=3, l=2, look_for_all=False):
-        IncognitoK.__init__(self, data_config, k, look_for_all)
+    def __init__(self, data_config, k=3, l=2, optimized_processing=False):
+        IncognitoK.__init__(self, data_config, k, optimized_processing)
         self.logger = logging.getLogger('algorithms.IncognitoL')
 
         self.validate_arguments(k, l)
