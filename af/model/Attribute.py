@@ -4,15 +4,16 @@ from af.utils import (
     PRIVACY_TYPE_NON_SENSITIVE
 )
 
+
 class Attribute(object):
 
-    def __init__(self, name=None, basic_type=BASIC_TYPE_STRING, privacy_type=PRIVACY_TYPE_NON_SENSITIVE, hierarchy_config=None, weight=1):
+    def __init__(self, name=None, basic_type=BASIC_TYPE_STRING, privacy_type=PRIVACY_TYPE_NON_SENSITIVE, hierarchy=None, weight=1):
         self.name = name
         self.basic_type = basic_type
         self.privacy_type = privacy_type
         self.weight = weight
         self.hierarchy = None
-        self.set_hierarchy(hierarchy_config)
+        self.set_hierarchy(hierarchy)
 
     def get_representation(self):
         return {
