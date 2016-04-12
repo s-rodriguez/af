@@ -2,15 +2,15 @@ from af.controller.data.SqliteController import SqliteController
 from af.utils import (
     get_anonymization_db_location,
     ANONYMIZED_DATA_TABLE,
+    ADDITIONAL_INFO_TABLE,
     PRIVACY_TYPE_QI,
 )
 
 
 class TransformationMetrics(object):
 
-    def __init__(self, data_config, additional_information):
+    def __init__(self, data_config):
         self.data_config = data_config
-        self.additional_information = additional_information
 
         self.qi_attributes = data_config.get_privacy_type_attributes_list(PRIVACY_TYPE_QI)
 
@@ -19,6 +19,16 @@ class TransformationMetrics(object):
 
         self.anonymized_db = SqliteController(get_anonymization_db_location())
         self.anonymized_db_table = ANONYMIZED_DATA_TABLE
+
+        self.additional_information = self.get_additional_information()
+
+    def get_additional_information(self):
+        additional_information = {}
+        query = '''SELECT * FROM {0} ORDER BY id;'''.format(ADDITIONAL_INFO_TABLE)
+        for row in self.anonymized_db.execute_query(query):
+            info_id, key, value = row
+            additional_information[info_id] = (key, value)
+        return additional_information
 
     def qi_eq_classes_differences(self):
         eq_classes = {}
@@ -49,6 +59,3 @@ class TransformationMetrics(object):
         qi_list = [att.name for att in self.qi_attributes]
         for value in self.anonymized_db.get_frequency_of_qi_attributes(self.anonymized_db_table, qi_list):
             yield value
-
-
-

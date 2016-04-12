@@ -42,6 +42,7 @@ PRIVACY_TYPE_NON_SENSITIVE = 'Non-Sensitive'
 ANONYMIZATION_DIRECTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'anonymization')
 ANONYMIZATION_DB_NAME = 'anonymizationDB.db'
 ANONYMIZED_DATA_TABLE = 'anonymizedData'
+ADDITIONAL_INFO_TABLE = 'additionalInformation'
 
 
 def create_db(db_name):

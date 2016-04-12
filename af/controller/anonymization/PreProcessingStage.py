@@ -6,6 +6,7 @@ from af.model.hierarchies.BaseHierarchy import BaseHierarchy
 from af.utils import (
     ANONYMIZATION_DIRECTORY,
     ANONYMIZATION_DB_NAME,
+    ADDITIONAL_INFO_TABLE,
     PRIVACY_TYPE_IDENTIFIER,
 )
 
@@ -25,6 +26,7 @@ class PreProcessingStage(object):
         self.db_controller = SqliteController(self.db_location)
         self.remove_identifiable_attributes()
         self.set_indexes_over_qi()
+        self.create_additional_information_table()
 
     def clean_previous_work(self):
         if os.path.isfile(self.db_location):
@@ -56,3 +58,7 @@ class PreProcessingStage(object):
         # Composite index
         query = "CREATE INDEX qi_index ON {0} ({1});".format(self.table, ', '.join(qi_list))
         list(self.db_controller.execute_query(query))
+
+    def create_additional_information_table(self):
+        create_table_query = "CREATE TABLE {0} (id INTEGER PRIMARY KEY, key TEXT, value TEXT);".format(ADDITIONAL_INFO_TABLE)
+        list(self.db_controller.execute_query(create_table_query))

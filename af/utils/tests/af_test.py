@@ -53,7 +53,7 @@ def af_test():
         title, value = info_value
         print "\n{0}: {1}".format(title, value)
 
-    tm = TransformationMetrics(dc, additional_info)
+    tm = TransformationMetrics(dc)
     print "\nComparison between equivalence classes (original, anonymized)"
     for att_name, eq_comp in tm.qi_eq_classes_differences().iteritems():
         print "{0} - {1}".format(att_name, eq_comp)

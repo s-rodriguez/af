@@ -6,7 +6,8 @@ from af.controller.anonymization.PreProcessingStage import PreProcessingStage
 
 from af import utils
 from af.utils import (
-    timeit_decorator
+    timeit_decorator,
+    ADDITIONAL_INFO_TABLE,
 )
 
 
@@ -86,6 +87,15 @@ class BaseAlgorithm(object):
         self.anon_db_controller.remove_rows(self.anonymization_table, qi_list, rows_to_remove)
 
     @timeit_decorator
+    def insert_additional_information(self):
+        values = []
+        for k in sorted(self.additional_anonymization_info):
+            v = self.additional_anonymization_info[k]
+            values.append((str(v[0]), str(v[1])))
+        query = "INSERT INTO {0} (key, value) VALUES (?, ?);".format(ADDITIONAL_INFO_TABLE)
+        self.anon_db_controller.execute_many(query, values)
+
+    @timeit_decorator
     def anonymize(self):
         time_start = time.time()
         self.on_pre_process()
@@ -95,3 +105,4 @@ class BaseAlgorithm(object):
         elapsed_time = time_end - time_start
         self.anonymization_duration = '%2.2f seconds' % elapsed_time
         self.additional_anonymization_info[1] = ('Anonymization Duration', self.anonymization_duration)
+        self.insert_additional_information()
