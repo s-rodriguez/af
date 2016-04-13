@@ -18,7 +18,7 @@ class DataConfig:
         self.anonymized_table = anonymized_table
         self.metrics_table = metrics_table
 
-    def config_representation(self):
+    def config_representation(self, json_repr=True):
         config = {
             'location': self.location,
             'data_type': self.type,
@@ -28,10 +28,16 @@ class DataConfig:
             'anonymized_table': self.anonymized_table,
             'metrics_table': self.metrics_table
         }
-        return utils.get_json_representation(config)
+        if json_repr:
+            return utils.get_json_representation(config)
+        return config
 
-    def load_config(self, json_string):
-        config_dict = utils.load_json(json_string)
+    def load_config(self, data_configuration, from_json=True):
+        if from_json:
+            config_dict = utils.load_json(data_configuration)
+        else:
+            config_dict = data_configuration
+
         self.validate_config_to_load(config_dict)
         self.location = config_dict['location']
         self.type = config_dict['data_type']
