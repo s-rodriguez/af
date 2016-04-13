@@ -8,7 +8,8 @@ from af.model.algorithms.GeneralizationLatticeGraph import  GeneralizationLattic
 from af.utils import (
     ANONYMIZED_DATA_TABLE,
     timeit_decorator,
-    K_PRIVACY_MODEL)
+    K_PRIVACY_MODEL
+)
 
 
 class IncognitoK(BaseKAlgorithm):
