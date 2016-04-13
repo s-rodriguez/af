@@ -20,6 +20,7 @@ class IncognitoK(BaseKAlgorithm):
         BaseKAlgorithm.__init__(self, data_config, k, optimized_processing)
         self.logger = logging.getLogger('algorithms.IncognitoK')
         self.k_condition_query = None
+        self.anonymization_table = ANONYMIZED_DATA_TABLE
         self.glg = None
         self.final_generalization = None
         self.possible_generalizations = None

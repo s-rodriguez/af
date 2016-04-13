@@ -29,9 +29,11 @@ class BaseAlgorithm(object):
 
         self.other_attributes = data_config.get_normal_type_attributes_list()
 
-        self.anon_db_controller = SqliteController(utils.get_anonymization_db_location())
+        self.anon_db_location = utils.get_anonymization_db_location()
+        self.anon_db_controller = SqliteController(self.anon_db_location)
 
         self.anonymization_table = data_config.table
+        self.metrics_table = ADDITIONAL_INFO_TABLE
         self.logger = "algorithms.BaseAlgorithm"
 
         self.additional_anonymization_info = {}
@@ -92,8 +94,13 @@ class BaseAlgorithm(object):
         for k in sorted(self.additional_anonymization_info):
             v = self.additional_anonymization_info[k]
             values.append((str(v[0]), str(v[1])))
-        query = "INSERT INTO {0} (key, value) VALUES (?, ?);".format(ADDITIONAL_INFO_TABLE)
+        query = "INSERT INTO {0} (key, value) VALUES (?, ?);".format(self.metrics_table)
         self.anon_db_controller.execute_many(query, values)
+
+    def save_anonymization_info_on_data_config(self):
+        self.data_config.anonymized_db_location = self.anon_db_location
+        self.data_config.anonymized_table = self.anonymization_table
+        self.data_config.metrics_table = self.metrics_table
 
     @timeit_decorator
     def anonymize(self):
@@ -106,3 +113,4 @@ class BaseAlgorithm(object):
         self.anonymization_duration = '%2.2f seconds' % elapsed_time
         self.additional_anonymization_info[1] = ('Anonymization Duration', self.anonymization_duration)
         self.insert_additional_information()
+        self.save_anonymization_info_on_data_config()

@@ -1,7 +1,10 @@
 import logging
 
 from af.model.algorithms.BaseKAlgorithm import BaseKAlgorithm
-from af.utils import K_PRIVACY_MODEL
+from af.utils import (
+    K_PRIVACY_MODEL,
+    ANONYMIZED_DATA_TABLE,
+)
 
 
 class Datafly(BaseKAlgorithm):
@@ -30,7 +33,8 @@ class Datafly(BaseKAlgorithm):
             self.update_qi_values(qi_to_anonymize, values_to_update_dic)
 
     def on_post_process(self):
-        self.anon_db_controller.rename_table(self.anonymization_table, 'anonymizedData')
+        self.anon_db_controller.rename_table(self.anonymization_table, ANONYMIZED_DATA_TABLE)
+        self.anonymization_table = ANONYMIZED_DATA_TABLE
 
 
 

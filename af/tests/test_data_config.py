@@ -29,6 +29,9 @@ class TestDataConfig(unittest.TestCase):
             'data_type': None,
             'table': None,
             'attributes': [],
+            'anonymized_db_location': None,
+            'anonymized_table': None,
+            'metrics_table': None,
         })
 
         result = dc.config_representation()
@@ -43,6 +46,9 @@ class TestDataConfig(unittest.TestCase):
             'data_type': None,
             'table': None,
             'attributes': [{'name': 'xxx'}],
+            'anonymized_db_location': None,
+            'anonymized_table': None,
+            'metrics_table': None,
         })
 
         dc = DataConfig(None)
