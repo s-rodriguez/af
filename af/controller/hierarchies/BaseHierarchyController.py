@@ -1,4 +1,5 @@
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy, Node
+from af.utils import mapping_types
 
 
 class BaseHierarchyController(object):
@@ -6,8 +7,8 @@ class BaseHierarchyController(object):
     def __init__(self, hierarchy=None):
         self.hierarchy = hierarchy
 
-    def load_hierarchy(self, config, attribute_type=str):
-
+    def load_hierarchy(self, config, attribute_type='string'):
+        attribute_type = mapping_types(attribute_type)
         new_hierarchy = BaseHierarchy()
         if isinstance(config, dict):
             new_hierarchy.populate_nodes(new_hierarchy.root_node, config.values()[0], attribute_type)

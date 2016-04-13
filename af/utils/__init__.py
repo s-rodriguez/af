@@ -21,7 +21,33 @@ def load_json_file(json_file):
 
 
 def load_json(json_string):
-    return json.loads(json_string)
+    return json_loads_byteified(json_string)
+
+
+def json_loads_byteified(json_text):
+    return _byteify(
+        json.loads(json_text, object_hook=_byteify),
+        ignore_dicts=True
+    )
+
+
+def _byteify(data, ignore_dicts = False):
+    # if this is a unicode string, return its string representation
+    if isinstance(data, unicode):
+        return data.encode('utf-8')
+    # if this is a list of values, return list of byteified values
+    if isinstance(data, list):
+        return [ _byteify(item, ignore_dicts=True) for item in data ]
+    # if this is a dictionary, return dictionary of byteified keys and values
+    # but only if we haven't already byteified it
+    if isinstance(data, dict) and not ignore_dicts:
+        return {
+            _byteify(key, ignore_dicts=True): _byteify(value, ignore_dicts=True)
+            for key, value in data.iteritems()
+        }
+    # if it's anything else, return it in its original form
+    return data
+
 
 # Privacy Models
 K_PRIVACY_MODEL = 'k'
@@ -31,6 +57,18 @@ L_PRIVACY_MODEL = 'l'
 BASIC_TYPE_STRING = 'string'
 BASIC_TYPE_INT = 'int'
 BASIC_TYPE_DATE = 'date'
+
+
+def mapping_types(str_type):
+    type_d = {
+        BASIC_TYPE_STRING: str,
+        BASIC_TYPE_INT: int,
+        BASIC_TYPE_DATE: str,
+    }
+    if str_type in type_d.keys():
+        return type_d[str_type]
+    return str_type
+
 
 # Privacy Types
 PRIVACY_TYPE_IDENTIFIER = 'Identifier'
