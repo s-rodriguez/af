@@ -1,6 +1,8 @@
 import importlib
+import inspect
 import os
 import pkgutil
+
 from af.model.algorithms.BaseAlgorithm import BaseAlgorithm
 from af.utils import (
     PRIVACY_TYPE_IDENTIFIER,
@@ -54,5 +56,7 @@ class AfManager:
     def get_algoritm_parameters(self, algorithm_selected):
         for algorithm in self.get_all_algorithms():
             if algorithm.ALGORITHM_NAME == algorithm_selected:
-                return algorithm.required_parameters()
+                common_args = ('self', 'data_config', 'optimized_processing')
+                particular_arguments = [i for i in inspect.getargspec(algorithm.__init__).args if i not in common_args]
+                return particular_arguments
         return None
