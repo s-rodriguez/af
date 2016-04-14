@@ -39,3 +39,7 @@ class BaseKAlgorithm(BaseAlgorithm):
         self.logger.info("K condition accomplished with {0} rows to remove".format(str(len(rows_to_remove))))
         self.remove_rows(rows_to_remove)
         return True
+
+    @staticmethod
+    def required_parameters():
+        return ['k']

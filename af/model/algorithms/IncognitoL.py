@@ -82,3 +82,7 @@ class IncognitoL(IncognitoK):
     def on_post_process(self):
         self.additional_anonymization_info[2] = ('Model Conditions', "K: {0}   L: {1}".format(self.k, self.l))
         self.additional_anonymization_information()
+
+    @staticmethod
+    def required_parameters():
+        return ['k', 'l']

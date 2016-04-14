@@ -114,5 +114,5 @@ class BaseAlgorithm(object):
         self.additional_anonymization_info[1] = ('Anonymization Duration', self.anonymization_duration)
         self.insert_additional_information()
         self.save_anonymization_info_on_data_config()
-        with open('/home/ubuntu/data_config.txt', 'w+') as f:
+        with open('data_config.txt', 'w+') as f:
             f.write(self.data_config.config_representation())

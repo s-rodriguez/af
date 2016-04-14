@@ -50,3 +50,9 @@ class AfManager:
             all_subclasses.extend(self.get_all_subclasses(subclass))
 
         return all_subclasses
+
+    def get_algoritm_parameters(self, algorithm_selected):
+        for algorithm in self.get_all_algorithms():
+            if algorithm.ALGORITHM_NAME == algorithm_selected:
+                return algorithm.required_parameters()
+        return None
