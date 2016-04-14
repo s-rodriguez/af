@@ -1,3 +1,4 @@
+import logging
 import os
 
 from af.exceptions import ImportException
@@ -17,6 +18,7 @@ class DataConfig:
         self.anonymized_db_location = anonymized_db_location
         self.anonymized_table = anonymized_table
         self.metrics_table = metrics_table
+        self.logger = logging.getLogger('model.DataConfig')
 
     def config_representation(self, json_repr=True):
         config = {
@@ -61,3 +63,31 @@ class DataConfig:
 
     def get_normal_type_attributes_list(self):
         return [attribute for attribute in self.attributes_list if attribute.privacy_type not in (utils.PRIVACY_TYPE_IDENTIFIER, utils.PRIVACY_TYPE_QI)]
+
+    def validate_for_anonymization(self):
+        error_message = ""
+        basic_config_not_none = all(att is not None for att in (self.project, self.location, self.type, self.table))
+        if basic_config_not_none:
+
+            attributes_existance = len(self.attributes_list) > 0
+            if attributes_existance:
+
+                all_attributes_with_hierarchy = True
+                for att in self.attributes_list:
+                    if att.privacy_type in (utils.PRIVACY_TYPE_IDENTIFIER, utils.PRIVACY_TYPE_QI):
+                        # must have a hierarchy
+                        if att.hierarchy is None:
+                            all_attributes_with_hierarchy = False
+                            break
+
+                if all_attributes_with_hierarchy:
+                    return True
+                else:
+                    error_message = "All identifier and quasi-identifier attributes must have a hierarchy`"
+            else:
+                error_message = "No attributes defined."
+        else:
+            error_message = "Basic configuration missing."
+
+        self.logger.error(error_message)
+        raise Exception(error_message)

@@ -1,3 +1,4 @@
+import logging
 import time
 
 from af.controller.data.SqliteController import SqliteController
@@ -34,12 +35,12 @@ class BaseAlgorithm(object):
 
         self.anonymization_table = data_config.table
         self.metrics_table = ADDITIONAL_INFO_TABLE
-        self.logger = "algorithms.BaseAlgorithm"
+        self.logger = logging.getLogger('algorithms.BaseAlgorithm')
 
         self.additional_anonymization_info = {}
 
     def validate_arguments(self):
-        pass
+        return self.data_config.validate_for_anonymization()
 
     def process(self):
         pass
@@ -48,6 +49,7 @@ class BaseAlgorithm(object):
         pass
 
     def on_pre_process(self):
+        self.validate_arguments()
         pre_processing_stage = PreProcessingStage(self.data_config)
         pre_processing_stage.preprocess()
 

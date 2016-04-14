@@ -196,6 +196,6 @@ attributes_list = [att_ssn, att_race, att_gender, att_zip, att_year_of_birth, at
 table = 'sickness'
 db_location = os.path.join(db_directory, db_name)
 
-data_config = DataConfig(location=db_location, data_type='sqlite', table=table, attributes_list=attributes_list)
+data_config = DataConfig(project='sickness_project', location=db_location, data_type='sqlite', table=table, attributes_list=attributes_list)
 
 #print data_config.config_representation()

@@ -1,3 +1,5 @@
+import logging
+
 from af.model.algorithms.BaseAlgorithm import BaseAlgorithm
 from af.utils import (
     timeit_decorator
@@ -9,13 +11,23 @@ class BaseKAlgorithm(BaseAlgorithm):
     def __init__(self, data_config, k, optimized_processing=False):
         BaseAlgorithm.__init__(self, data_config, optimized_processing)
         self.k = k
-        self.logger = "algorithms.BaseKAlgorithm"
+        self.logger = logging.getLogger('algorithms.BaseKAlgorithm')
 
-    def validate_arguments(self, k):
-        if k < 1:
+    def validate_arguments(self):
+        BaseAlgorithm.validate_arguments(self)
+        try:
+            self.k = int(self.k)
+        except:
+            error_message = "K param must be an int"
+            self.logger.error(error_message)
+            raise Exception(error_message)
+
+        if self.k < 1:
             error_message = "Invalid k param"
             self.logger.error(error_message)
             raise Exception(error_message)
+
+        return True
 
     @timeit_decorator
     def validate_anonymize_conditions(self):

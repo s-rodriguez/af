@@ -16,16 +16,15 @@ class IncognitoL(IncognitoK):
         IncognitoK.__init__(self, data_config, k, optimized_processing)
         self.logger = logging.getLogger('algorithms.IncognitoL')
 
-        self.validate_arguments(k, l)
-
         self.l = l
         self.l_condition_query = None
         self.sensitive_att_name = None
 
         self.load_sensitive_attribute()
 
-    def validate_arguments(self, k, l):
-        if l < 2 or l > k:
+    def validate_arguments(self):
+        IncognitoK.validate_arguments(self)
+        if self.l < 2 or self.l > self.k:
             error_message = "Invalid l param"
             self.logger.error(error_message)
             raise Exception(error_message)
@@ -82,7 +81,3 @@ class IncognitoL(IncognitoK):
     def on_post_process(self):
         self.additional_anonymization_info[2] = ('Model Conditions', "K: {0}   L: {1}".format(self.k, self.l))
         self.additional_anonymization_information()
-
-    @staticmethod
-    def required_parameters():
-        return ['k', 'l']

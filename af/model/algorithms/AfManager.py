@@ -60,3 +60,16 @@ class AfManager:
                 particular_arguments = [i for i in inspect.getargspec(algorithm.__init__).args if i not in common_args]
                 return particular_arguments
         return None
+
+    def validate_anonymization_input(self, data_config, algorithm_name, algorithm_arguments, optimize_if_possible):
+        if data_config.ready_for_anonymization():
+
+            for algorithm in self.get_all_algorithms():
+                if algorithm.ALGORITHM_NAME == algorithm_name:
+                    algorithm_instance = algorithm(data_config=data_config,
+                                                   optimize_if_possible=optimize_if_possible,
+                                                   **algorithm_arguments)
+
+                    algorithm_instance.validate_configuration()
+
+        pass
