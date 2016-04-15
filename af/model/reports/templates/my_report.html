@@ -128,13 +128,12 @@ div {
 <script type='text/javascript' src="{{ jquery_location }}"></script>
 <script type='text/javascript'>
 
-$(function(){
-  $('#PlusMinus').click(function() {
-      if($(this).val() == "+") {$(this).val("-");}
-      else {$(this).val("+");}
-      $(".additional-info-container").slideToggle();
-    });
+$('#PlusMinus').click(function() {
+    if($(this).val() == "+") {$(this).val("-");}
+    else {$(this).val("+");}
+    $(".additional-info-container").slideToggle();
 });
+
 
 </script
 
