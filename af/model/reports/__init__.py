@@ -19,10 +19,6 @@ def get_templates_location():
     return os.path.join(af_directory(), 'model', 'reports', 'templates')
 
 
-def get_js_location(js_file_name):
-    return os.path.join(af_directory(), 'model', 'reports', 'js', js_file_name)
-
-
 def get_list_of_deletable_attributes_for_pdf():
     return (
         "<input type='button' value='-' id='PlusMinus'/>",
@@ -66,7 +62,6 @@ def create_basic_report(transformation_metrics, template_name='my_report.html', 
         "eq_classes_amount": transformation_metrics.number_of_qi_eq_classes_generated(),
         "additional_information": transformation_metrics.additional_information,
         "anonymized_sample": anonymized_sample,
-        "jquery_location": get_js_location('jquery-1.12.3.min.js'),
     }
 
     html_out = template.render(template_vars)
