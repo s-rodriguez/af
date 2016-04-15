@@ -32,9 +32,12 @@
 
     <div class="container">
         <h2>Additional Information</h2>
-        {% for item in additional_information|dictsort %}
-            <p><b>{{ item[1][0] }}:</b> {{ item[1][1] }} </p>
-        {% endfor %}
+        <input type='button' value='-' id='PlusMinus'/>
+        <div class="additional-info-container">
+            {% for item in additional_information|dictsort %}
+                <p><b>{{ item[1][0] }}:</b> {{ item[1][1] }} </p>
+            {% endfor %}
+        </div>
     </div>
 
     <div class="container">
@@ -69,6 +72,7 @@ h1 {
 
 h2 {
     color: #4d94ff;
+    display: inline-block;
 }
 
 table, th, td {
@@ -110,6 +114,28 @@ div {
     page-break-inside: avoid;
 }
 
+.btn-minimize {
+    width: 10px;
+    height: 10px;
+    background-color: #F00;
+}
+.btn-minimize.btn-plus {
+    background-color: #0F0;
+}
+
 </style>
+
+<script type='text/javascript' src="{{ jquery_location }}"></script>
+<script type='text/javascript'>
+
+$(function(){
+  $('#PlusMinus').click(function() {
+      if($(this).val() == "+") {$(this).val("-");}
+      else {$(this).val("+");}
+      $(".additional-info-container").slideToggle();
+    });
+});
+
+</script
 
 </html>

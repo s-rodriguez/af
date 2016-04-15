@@ -1,5 +1,7 @@
 from jinja2 import Environment, FileSystemLoader
 import os
+import pdfkit
+
 
 from af import (
     af_directory,
@@ -14,7 +16,17 @@ def get_report_location_output(report_name):
 
 
 def get_templates_location():
-    return os.path.join(af_directory(), 'templates')
+    return os.path.join(af_directory(), 'model', 'reports', 'templates')
+
+
+def get_js_location(js_file_name):
+    return os.path.join(af_directory(), 'model', 'reports', 'js', js_file_name)
+
+
+def get_list_of_deletable_attributes_for_pdf():
+    return (
+        "<input type='button' value='-' id='PlusMinus'/>",
+    )
 
 
 def get_processed_eq_classes_differences_for_chart(eq_classes_differences):
@@ -54,6 +66,7 @@ def create_basic_report(transformation_metrics, template_name='my_report.html', 
         "eq_classes_amount": transformation_metrics.number_of_qi_eq_classes_generated(),
         "additional_information": transformation_metrics.additional_information,
         "anonymized_sample": anonymized_sample,
+        "jquery_location": get_js_location('jquery-1.12.3.min.js'),
     }
 
     html_out = template.render(template_vars)
@@ -62,8 +75,13 @@ def create_basic_report(transformation_metrics, template_name='my_report.html', 
         f.write(html_out)
 
     if convert_to_pdf:
-        import pdfkit
-        pdf_output = get_report_location_output(report_name+'.pdf')
-        pdfkit.from_file(report_location, pdf_output)
+        convert_report_to_pdf(html_out, report_name)
 
     return report_location
+
+
+def convert_report_to_pdf(html_string, report_name):
+    for deletable in get_list_of_deletable_attributes_for_pdf():
+        html_string = html_string.replace(deletable, '')
+    pdf_output = get_report_location_output(report_name+'.pdf')
+    pdfkit.from_string(html_string, pdf_output)
