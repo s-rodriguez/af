@@ -61,15 +61,9 @@ class AfManager:
                 return particular_arguments
         return None
 
-    def validate_anonymization_input(self, data_config, algorithm_name, algorithm_arguments, optimize_if_possible):
-        if data_config.ready_for_anonymization():
-
-            for algorithm in self.get_all_algorithms():
-                if algorithm.ALGORITHM_NAME == algorithm_name:
-                    algorithm_instance = algorithm(data_config=data_config,
-                                                   optimize_if_possible=optimize_if_possible,
-                                                   **algorithm_arguments)
-
-                    algorithm_instance.validate_configuration()
-
-        pass
+    def get_algorithm_instance(self, data_config, algorithm_name, algorithm_arguments, optimized_processing):
+        for algorithm in self.get_all_algorithms():
+            if algorithm.ALGORITHM_NAME == algorithm_name:
+                algorithm_instance = algorithm(data_config=data_config, optimized_processing=optimized_processing, **algorithm_arguments)
+                return algorithm_instance
+        return None

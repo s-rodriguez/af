@@ -24,6 +24,13 @@ class IncognitoL(IncognitoK):
 
     def validate_arguments(self):
         IncognitoK.validate_arguments(self)
+        try:
+            self.l = int(self.l)
+        except:
+            error_message = "L param must be an int"
+            self.logger.error(error_message)
+            raise Exception(error_message)
+
         if self.l < 2 or self.l > self.k:
             error_message = "Invalid l param"
             self.logger.error(error_message)
