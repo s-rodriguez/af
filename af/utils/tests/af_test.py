@@ -15,7 +15,7 @@ def look_for_all_ocurrences():
     return True if look_for_all.lower() == "y" else False
 
 
-def af_test():
+def create_db_and_data_config_associated():
     create_db = raw_input("Crear DB sickness? [y/N]: ")
     if create_db.lower() == "y":
         number_of_records = int(raw_input("Cantidad de registros random: "))
@@ -24,6 +24,11 @@ def af_test():
     print "\nCreando Data Config a partir de la base sicknesslarge.db"
     from af.utils import create_full_data_config
     dc = create_full_data_config.data_config
+    return dc
+
+
+def af_test():
+    dc = create_db_and_data_config_associated()
 
     algorithm = raw_input("\nAlgoritmo a usar (Datafly [1] / IncognitoK [2] / IncognitoL [3]): ")
     k_value = int(raw_input("Valor de K: "))
