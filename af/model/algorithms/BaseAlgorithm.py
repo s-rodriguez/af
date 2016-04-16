@@ -106,15 +106,22 @@ class BaseAlgorithm(object):
 
     @timeit_decorator
     def anonymize(self):
-        time_start = time.time()
-        self.on_pre_process()
-        self.process()
-        self.on_post_process()
-        time_end = time.time()
-        elapsed_time = time_end - time_start
-        self.anonymization_duration = '%2.2f seconds' % elapsed_time
-        self.additional_anonymization_info[1] = ('Anonymization Duration', self.anonymization_duration)
-        self.insert_additional_information()
-        self.save_anonymization_info_on_data_config()
-        with open('data_config.txt', 'w+') as f:
-            f.write(self.data_config.config_representation())
+        try:
+            time_start = time.time()
+
+            self.on_pre_process()
+            self.process()
+            self.on_post_process()
+
+            time_end = time.time()
+            elapsed_time = time_end - time_start
+
+            self.anonymization_duration = '%2.2f seconds' % elapsed_time
+            self.additional_anonymization_info[1] = ('Anonymization Duration', self.anonymization_duration)
+            self.insert_additional_information()
+            self.save_anonymization_info_on_data_config()
+
+        except Exception, e:
+            return e.message
+
+        return None
