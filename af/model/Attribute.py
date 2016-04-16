@@ -1,7 +1,8 @@
 from af.controller.hierarchies.BaseHierarchyController import BaseHierarchyController
 from af.utils import (
     BASIC_TYPE_STRING,
-    PRIVACY_TYPE_NON_SENSITIVE
+    PRIVACY_TYPE_NON_SENSITIVE,
+    PRIVACY_TYPE_QI,
 )
 
 
@@ -57,3 +58,6 @@ class Attribute(object):
 
     def __repr__(self):
         return "{0} - [{1}-{2}] ({3})".format(self.name, self.basic_type, self.privacy_type, self.weight)
+
+    def is_qi_attribute(self):
+        return self.privacy_type == PRIVACY_TYPE_QI
