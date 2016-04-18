@@ -117,6 +117,7 @@ class BaseAlgorithm(object):
             elapsed_time = time_end - time_start
 
             self.anonymization_duration = '%2.2f seconds' % elapsed_time
+            self.additional_anonymization_info[0] = ('Algorithm Name', self.ALGORITHM_NAME)
             self.additional_anonymization_info[1] = ('Anonymization Duration', self.anonymization_duration)
             self.insert_additional_information()
             self.save_anonymization_info_on_data_config()

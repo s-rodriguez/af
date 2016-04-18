@@ -136,14 +136,14 @@ class IncognitoK(BaseKAlgorithm):
             else:
                 for node in glg_lvl_subnodes:
                     if node.marked is False and self.checks_model_conditions(node):
-                        if not self.optimized_processing:
+                        if self.optimized_processing:
                             possible_generalizations = [node]
                             finished = True
                             break
                         self.glg.mark_valid_subnode(node)
                 lvl += 1
 
-        if self.optimized_processing:
+        if not self.optimized_processing:
             possible_generalizations = self.glg.get_marked_nodes()
 
         return possible_generalizations
@@ -254,8 +254,8 @@ class IncognitoK(BaseKAlgorithm):
         def possible_generalizations_info(generalizations_list):
             possible_generalizations = []
             for possible_gen in generalizations_list:
-                possible_generalizations.append(dict((key, dimension) for key, dimension in zip(possible_gen.qi_keys, possible_gen.subset)))
-            return possible_generalizations
+                possible_generalizations.append(str(dict((key, dimension) for key, dimension in zip(possible_gen.qi_keys, possible_gen.subset))))
+            return '\n'.join(possible_generalizations)
 
         if len(self.best_minimal_generalizations) > 1:
             self.additional_anonymization_info[4] = ('Best Minimal Hierarchy Levels', possible_generalizations_info(self.best_minimal_generalizations))
