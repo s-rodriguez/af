@@ -216,27 +216,24 @@ class IncognitoK(BaseKAlgorithm):
 
         # CREATE TABLE TO STORE ANONYMIZED DATA
         table_name = ANONYMIZED_DATA_TABLE
-        columns = [att.name for att in self.id_attributes]
-        columns += [att.name for att in self.qi_attributes]
-        columns += [att.name for att in self.other_attributes]
+        columns = self.anon_db_controller.table_columns_info(self.data_config.table)
 
         create_table_query = "CREATE TABLE {0} ({1});".format(table_name, ', '.join(columns))
         list(self.anon_db_controller.execute_query(create_table_query))
-
 
         # INSERT DATA INTO TABLE
         original_table_name = self.data_config.table
         original_table_initial = self.data_config.table[0:2]
 
+        qi_dimensions = dict((att_name, att_dimension) for att_name, att_dimension in zip(self.final_generalization.qi_keys, self.final_generalization.subset))
+
         select_attributes = []
-        for att in self.id_attributes:
-            select_attributes.append("{0}.{1}".format(original_table_initial, att.name))
-
-        for key, dimension in zip(self.final_generalization.qi_keys, self.final_generalization.subset):
-            select_attributes.append("{0}.{1}{2}".format(key[0:2], key, dimension))
-
-        for att in self.other_attributes:
-            select_attributes.append("{0}.{1}".format(original_table_initial, att.name))
+        for att_name in columns:
+            if att_name not in qi_dimensions.keys():
+                select_attributes.append("{0}.{1}".format(original_table_initial, att_name))
+            else:
+                dimension = qi_dimensions[att_name]
+                select_attributes.append("{0}.{1}{2}".format(att_name[0:2], att_name, dimension))
 
         insert_query = "INSERT INTO {0} ({1})".format(table_name, ', '.join(columns))
         insert_query += " SELECT {0} FROM {1} {2}".format(', '.join(select_attributes), original_table_name, original_table_initial)
