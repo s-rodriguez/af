@@ -48,7 +48,7 @@ def get_anonymized_sample(data_config):
     return anon_db_controller.get_groups_examples(anonymization_table, qi_list)
 
 
-def create_basic_report(transformation_metrics, template_name='my_report.html', report_name='my_report', convert_to_pdf=False):
+def create_basic_report(transformation_metrics, template_name='my_report.html', report_location_path=None, convert_to_format='html'):
     env = Environment(loader=FileSystemLoader(get_templates_location()))
     template = env.get_template(template_name)
     anonymized_sample = get_anonymized_sample(transformation_metrics.data_config)
@@ -65,14 +65,20 @@ def create_basic_report(transformation_metrics, template_name='my_report.html', 
     }
 
     html_out = template.render(template_vars)
-    report_location = get_report_location_output(report_name+'.html')
-    with open(report_location, 'w+') as f:
+
+    if report_location_path is None:
+        report_location_path = get_report_location_output('my_report')
+
+    report_location_path_html = report_location_path + '.html'
+    with open(report_location_path_html, 'w+') as f:
         f.write(html_out)
 
-    if convert_to_pdf:
-        convert_report_to_pdf(html_out, report_name)
+    if convert_to_format.lower() == 'pdf':
+        convert_report_to_pdf(html_out, report_location_path)
+        os.remove(report_location_path_html)
+        return report_location_path + '.pdf'
 
-    return report_location
+    return report_location_path_html
 
 
 def convert_report_to_pdf(html_string, report_name):
