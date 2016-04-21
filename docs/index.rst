@@ -21,6 +21,7 @@ You can download **af** from the github repository: https://github.com/s-rodrigu
 Installation
 ============
 The installation process is pretty forward.
+
 .. code-block:: python
    :linenos:
 
