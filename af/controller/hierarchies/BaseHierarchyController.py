@@ -8,6 +8,12 @@ class BaseHierarchyController(object):
         self.hierarchy = hierarchy
 
     def load_hierarchy(self, config, attribute_type='string'):
+        """Given a configuration, it loads the hierarchy that was saved.
+
+        :param config: Configuration in the form of a dictionary that associates values with its parent level values. If its a string, then it is assumed that the hierarchy was a suprression hierarchy.
+        :param string attribute_type: The specific type of the attribute.
+
+        """
         attribute_type = mapping_types(attribute_type)
         new_hierarchy = BaseHierarchy()
         if isinstance(config, dict):
@@ -20,6 +26,11 @@ class BaseHierarchyController(object):
         return self.hierarchy
 
     def get_hierarchy_representation(self):
+        """Returns the representation of the hierarchy (If it exists)
+
+        :rtype: dict
+
+        """
         if self.hierarchy is None:
             return None
         else:
