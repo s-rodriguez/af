@@ -8,7 +8,10 @@ from af.utils import (
 
 
 class IncognitoL(IncognitoK):
+    """Incognito-L Algorithm implementation.
+    Extends the IncognitoK algorithm implementation
 
+    """
     PRIVACY_MODEL = L_PRIVACY_MODEL
     ALGORITHM_NAME = 'Incognito L'
 
@@ -23,6 +26,9 @@ class IncognitoL(IncognitoK):
         self.load_sensitive_attribute()
 
     def validate_arguments(self):
+        """Validates the general arguments, like the data config and the k value (Using the parent classes), and also validates the L value
+
+        """
         IncognitoK.validate_arguments(self)
         try:
             self.l = int(self.l)
@@ -37,6 +43,9 @@ class IncognitoL(IncognitoK):
             raise Exception(error_message)
 
     def load_sensitive_attribute(self):
+        """The L-diversity model is based on a sensitive attribute. Select from the data configuration, which is the sensitive attribute to be taken into account.
+
+        """
         sensitive_att = self.data_config.get_privacy_type_attributes_list(PRIVACY_TYPE_SENSITIVE)
         if len(sensitive_att) != 1:
             error_message = "IncognitoL handles ony 1 sensitive attribute"
@@ -46,11 +55,17 @@ class IncognitoL(IncognitoK):
 
     @timeit_decorator
     def create_condition_queries(self):
+        """Create the K and L condition queries to use during the anonymization process
+
+        """
         self.create_check_k_condition_query()
         self.create_check_l_condition_query()
 
     @timeit_decorator
     def create_check_l_condition_query(self):
+        """Create the L condition query, which is based on the sensitive attribute and the amount of appearances on a table_name
+
+        """
         self.logger.info("Forming l condition query...")
         table_name = self.data_config.table
         table_initial = self.data_config.table[0:2]
@@ -68,6 +83,12 @@ class IncognitoL(IncognitoK):
         self.l_condition_query = sql_query
 
     def checks_model_conditions(self, node):
+        """Check all the model conditions to determine if the node given accomplishes the requirements necessary to be considered a possible generalization
+
+        :param node: GLGNode instance to be used
+        :rtype: Boolean indicating if the node can be used a generalization for the anonymization process
+
+        """
         k_condition = self.subnode_checks_k_condition(node)
         if k_condition:
             return self.subnode_checks_l_condition(node)
@@ -75,6 +96,12 @@ class IncognitoL(IncognitoK):
             return k_condition
 
     def subnode_checks_l_condition(self, node):
+        """Specific method that checks the L condition given a node
+
+        :param node: GLGNode instance to be used
+        :rtype: Boolean indicating if the L condition has been met or not.
+
+        """
         condition_query = self.l_condition_query.replace('','')
         for key, dimension in zip(node.qi_keys, node.subset):
             condition_query = condition_query.replace('.{0}{1}'.format(key, self.replacement_tag),
@@ -86,5 +113,8 @@ class IncognitoL(IncognitoK):
         return True
 
     def on_post_process(self):
+        """After the anonymization process has ended, save particular information of it
+
+        """
         self.additional_anonymization_info[2] = ('Model Conditions', "K: {0}   L: {1}".format(self.k, self.l))
         self.additional_anonymization_information()

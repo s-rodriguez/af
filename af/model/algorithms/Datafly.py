@@ -8,7 +8,9 @@ from af.utils import (
 
 
 class Datafly(BaseKAlgorithm):
+    """Datafly Algorithm implementation
 
+    """
     PRIVACY_MODEL = K_PRIVACY_MODEL
     ALGORITHM_NAME = 'Datafly'
 
@@ -18,6 +20,9 @@ class Datafly(BaseKAlgorithm):
         self.iteration = 0
 
     def process(self):
+        """The main core algorithm to anonymize using the Datafly implementation
+
+        """
         while self.validate_anonymize_conditions() is not True:
             self.iteration += 1
             self.logger.info("Datafly {0} iteration...".format(str(self.iteration)))
@@ -33,6 +38,9 @@ class Datafly(BaseKAlgorithm):
             self.update_qi_values(qi_to_anonymize, values_to_update_dic)
 
     def on_post_process(self):
+        """After anonymizing, rename table to the common Anonymization Table Name defined.
+
+        """
         self.anon_db_controller.rename_table(self.anonymization_table, ANONYMIZED_DATA_TABLE)
         self.anonymization_table = ANONYMIZED_DATA_TABLE
 

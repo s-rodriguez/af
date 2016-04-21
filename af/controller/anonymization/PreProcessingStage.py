@@ -12,7 +12,9 @@ from af.utils import (
 
 
 class PreProcessingStage(object):
+    """Class used by the BaseAlgorithm to prepare the complete scenario before anonymizing.
 
+    """
     def __init__(self, data_config):
         self.data_config = data_config
         self.initial_db_location = self.data_config.location

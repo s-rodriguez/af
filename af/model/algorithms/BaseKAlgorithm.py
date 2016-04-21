@@ -7,13 +7,20 @@ from af.utils import (
 
 
 class BaseKAlgorithm(BaseAlgorithm):
+    """Class extending from the BaseAlgorithm class. It is intended to be a model for those algoritm implementations that have the k-anonymization as a model.
 
+    """
     def __init__(self, data_config, k, optimized_processing=False):
         BaseAlgorithm.__init__(self, data_config, optimized_processing)
         self.k = k
         self.logger = logging.getLogger('algorithms.BaseKAlgorithm')
 
     def validate_arguments(self):
+        """Validates all the arguments that are used during the anonymization process. If an error occurs, it throws an exception
+
+        :rtype: True if arguments are valid.
+
+        """
         BaseAlgorithm.validate_arguments(self)
         try:
             self.k = int(self.k)
@@ -31,6 +38,11 @@ class BaseKAlgorithm(BaseAlgorithm):
 
     @timeit_decorator
     def validate_anonymize_conditions(self):
+        """Validates the K anonymization condition
+
+        :rtype: Boolean indicating if condition has been met or not.
+
+        """
         self.logger.info("Validating anonymize conditions k = {0}...".format(str(self.k)))
 
         counter = 0

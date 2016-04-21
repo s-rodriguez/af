@@ -6,6 +6,9 @@ from af.controller.data.DataController import DataController
 
 
 class DataFactory:
+    """Factory class for all DB controllers created in the module directory
+
+    """
     @staticmethod
     def load_modules():
         """Loads all modules contained on the data module directory

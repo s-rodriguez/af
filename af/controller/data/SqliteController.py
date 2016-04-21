@@ -6,7 +6,9 @@ from af.controller.data.DataController import DataController
 
 
 class SqliteController(DataController):
+    """Class that implements a way to connecting to sqlite dbs
 
+    """
     CONTROLLER_TYPE = 'sqlite'
     CONTROLLER_EXTENSION = 'SQLite (*.sqlite3 *.db *.sqlite)'
 

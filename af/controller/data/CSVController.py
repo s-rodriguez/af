@@ -4,7 +4,9 @@ from af.controller.data.DataController import DataController
 
 
 class CSVController(DataController):
+    """Class that can handles csv data files
 
+    """
     CONTROLLER_TYPE = 'csv'
     CONTROLLER_EXTENSION = 'CSV (*.csv)'
 

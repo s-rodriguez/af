@@ -1,7 +1,9 @@
 import abc
 
 class DataController(object):
+    """Base class for all controllers that are intended to retrieve data from any type of db form
 
+    """
     CONTROLLER_TYPE = None
     CONTROLLER_EXTENSION = None
 

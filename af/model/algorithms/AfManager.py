@@ -18,7 +18,9 @@ from af.utils import (
 
 
 class AfManager:
+    """This class is to be used as a proxy against external applications that want to integrate with the AF
 
+    """
     def __init__(self):
         self.privacy_types = {PRIVACY_TYPE_IDENTIFIER, PRIVACY_TYPE_QI, PRIVACY_TYPE_SENSITIVE, PRIVACY_TYPE_NON_SENSITIVE}
         self.privacy_models = {K_PRIVACY_MODEL, L_PRIVACY_MODEL}
@@ -27,11 +29,19 @@ class AfManager:
 
     @staticmethod
     def load_modules():
+        """Load every module contained inside the algorithms module directory.
+
+        """
         pkg_dir = os.path.dirname(__file__)
         for (module_loader, name, ispkg) in pkgutil.iter_modules([pkg_dir]):
             importlib.import_module('.' + name, __package__)
 
     def get_algorithms(self, privacy_model):
+        """Return a list of all the available algoritms.
+
+        :rtype: List of algorithm names
+
+        """
         algorithms = []
         for algorithm in self.get_all_algorithms():
             if algorithm.PRIVACY_MODEL == privacy_model:
@@ -39,12 +49,23 @@ class AfManager:
         return algorithms
 
     def get_all_algorithms(self):
+        """Retrieve all the algorithms that are subclass of BaseAlgorithm
+
+        :rtype: List of algoritm classes
+
+        """
         a = []
         for algorithm in BaseAlgorithm.__subclasses__():
             a += (self.get_all_subclasses(algorithm))
         return a
 
     def get_all_subclasses(self, cls):
+        """Given a class, retrieve all the subclasses (From root to leaves)
+
+        :param cls: A class
+        :rtype: list of all subclasses of cls
+
+        """
         all_subclasses = []
 
         for subclass in cls.__subclasses__():
@@ -54,6 +75,13 @@ class AfManager:
         return all_subclasses
 
     def get_algoritm_parameters(self, algorithm_selected):
+        """Return all the particular parameters an algorithm needs to be used.
+        The common arguments are: self, data_config and optimized_processing
+
+        :param string algorithm_selected: Name of the algorithm
+        :rtype: List of arguments
+
+        """
         for algorithm in self.get_all_algorithms():
             if algorithm.ALGORITHM_NAME == algorithm_selected:
                 common_args = ('self', 'data_config', 'optimized_processing')
@@ -62,6 +90,16 @@ class AfManager:
         return None
 
     def get_algorithm_instance(self, data_config, algorithm_name, algorithm_arguments, optimized_processing):
+        """Create an instance of a certain algorithm and return it. It receives all the arguments necessary for the instance creation.
+
+        :param data_config: Data configuration object
+        :type data_config: class:`af.model.DataConfig` instance
+        :param string algorithm_name: Name of the algorithm intended to create the instance
+        :param list algorithm_arguments: List of particular arguments the algorithm needs
+        :param bool optimized_processing: Indicates if the algorithm should try to optimize the processing while transforming
+        :rtype: class:`af.model.algorithms.BaseAlgorithm` instance
+
+        """
         for algorithm in self.get_all_algorithms():
             if algorithm.ALGORITHM_NAME == algorithm_name:
                 algorithm_instance = algorithm(data_config=data_config, optimized_processing=optimized_processing, **algorithm_arguments)

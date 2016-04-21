@@ -3,7 +3,9 @@ from af.utils import mapping_types
 
 
 class BaseHierarchyController(object):
+    """Class that is intended to be used for the load and save of BaseHierarchy instances
 
+    """
     def __init__(self, hierarchy=None):
         self.hierarchy = hierarchy
 
