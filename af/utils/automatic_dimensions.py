@@ -2,7 +2,9 @@ from af.model.hierarchies.BaseHierarchy import BaseHierarchy
 
 
 class AutomaticDimension(object):
+    """Class to create automatic dimensions for the hierarchies
 
+    """
     def __init__(self, list_of_values):
         self.set_of_values = set([str(val) for val in list_of_values])
 
