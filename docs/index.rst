@@ -22,8 +22,9 @@ Installation
 ============
 The installation process is pretty forward.
 
-.. code-block:: python
+.. highlight:: python
    :linenos:
+
 
    sudo apt-get install wkhtmltopdf  # Need it to export reports in pdf
    mkvirtualenv <venv_name> --system-site-packages  # Creation of virtualenv with system site packages to use the wkhtmltopdf
