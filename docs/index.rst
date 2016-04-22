@@ -10,7 +10,7 @@ The **af** is a Python library developed with the goal to provide an open source
 
 It was built with an extensibility design in mind, so anyone can adapt it according to his needs and to the context where it is going to be used:
 
- * Base DB controller generic class, so to achieve the extension for different new types of DB's. (Currently supporting sqlite)
+ * :class:`af.controller.data.DataController` generic class, so to achieve the extension for different new types of DB's. (Currently supporting sqlite)
  * Base Algorithm generic class, so to be able to implement new anonymization algorithms for existing or new privacy models. (3 algorithms provided with the library: Datafly, Incognito-K and Incognito-L)
  * Hierarchy class built with the idea of being able to generalize/supress any type of attribute (string, int, etc...).
 
@@ -23,6 +23,9 @@ Installation
 The installation process is pretty forward.
 
 .. highlight:: python
+
+::
+
    :linenos:
 
 
