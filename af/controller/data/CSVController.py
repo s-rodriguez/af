@@ -88,12 +88,14 @@ class CSVController(DataController):
         return NotImplementedError
 
     def get_distinct_qi_values(self, table_name, qi):
-        # TODO: implementar
         """Returns all the distinct values of a certain qi attribute
 
         :param string table_name: name of the table which is queried
         :param string qi: Quasi Identifier attribute name
-        :rtype: list<generator>
+        :rtype: tuple of values
 
         """
-        return NotImplementedError
+        if self.rows is None:
+            self._load_csv()
+        index_on_list = self.rows[0].index(qi)
+        return tuple(set([row[index_on_list] for row in self.rows[1:]]))
