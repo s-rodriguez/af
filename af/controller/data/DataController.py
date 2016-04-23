@@ -76,3 +76,14 @@ class DataController(object):
 
         """
         return
+
+    @abc.abstractmethod
+    def get_distinct_qi_values(self, table_name, qi):
+        """Returns all the distinct values of a certain qi attribute
+
+        :param string table_name: name of the table which is queried
+        :param string qi: Quasi Identifier attribute name
+        :rtype: list<generator>
+
+        """
+        return

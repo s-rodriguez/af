@@ -86,3 +86,14 @@ class CSVController(DataController):
     @staticmethod
     def create_db_copy(from_location, to_location):
         return NotImplementedError
+
+    def get_distinct_qi_values(self, table_name, qi):
+        # TODO: implementar
+        """Returns all the distinct values of a certain qi attribute
+
+        :param string table_name: name of the table which is queried
+        :param string qi: Quasi Identifier attribute name
+        :rtype: list<generator>
+
+        """
+        return NotImplementedError
