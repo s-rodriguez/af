@@ -45,5 +45,19 @@ class Node(object):
         if len(self.nodes) == 0:
             self.nodes = None
 
+    def get_leaf_node(self, value):
+        """Given a value, look for the node associated with it
+        among the leaf nodes.
+
+        :param value: value of the node being looked for
+        :rtype: Node with value looked
+
+        """
+        if self.nodes is not None:
+            for node in self.nodes:
+                if node.value == value:
+                    return node
+        return None
+
     def __repr__(self):
         return str(self.value)

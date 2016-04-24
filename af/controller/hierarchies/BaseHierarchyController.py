@@ -1,4 +1,5 @@
-from af.model.hierarchies.BaseHierarchy import BaseHierarchy, Node
+from af.model.hierarchies.BaseHierarchy import BaseHierarchy
+from af.model.hierarchies.Node import Node
 from af.utils import mapping_types
 
 
@@ -38,3 +39,30 @@ class BaseHierarchyController(object):
         else:
             hierarchy_config = self.hierarchy.hierarchy_representation()
             return hierarchy_config
+
+    @staticmethod
+    def create_hierarchy_from_list_of_values(list_of_values):
+        """Given a list of lists, containing the information about a hierarchy,
+        create the hierarchy, and return it
+
+        :param list_of_values: List containing all the values of the hierarchies, per rows
+        :rtype: BaseHierarchy instance
+
+        """
+        new_hierarchy = BaseHierarchy()
+
+        for row in list_of_values:
+            BaseHierarchyController._add_new_node(new_hierarchy, new_hierarchy.root_node, row)
+
+        return new_hierarchy
+
+    @staticmethod
+    def _add_new_node(hierarchy, parent_node, values):
+        if len(values) > 0:
+            value = values.pop()
+            node = parent_node.get_leaf_node(value)
+            if node is None:
+                node = Node(value)
+                hierarchy.add_node(parent_node, node)
+
+            BaseHierarchyController._add_new_node(hierarchy, node, values)
