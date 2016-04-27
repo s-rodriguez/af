@@ -3,6 +3,7 @@ from af.utils import (
     BASIC_TYPE_STRING,
     PRIVACY_TYPE_NON_SENSITIVE,
     PRIVACY_TYPE_QI,
+    PRIVACY_TYPE_IDENTIFIER
 )
 
 
@@ -98,3 +99,11 @@ class Attribute(object):
 
         """
         return self.privacy_type == PRIVACY_TYPE_QI
+
+    def is_identifier_attribute(self):
+        """Checks if it is a identifier attribute
+
+        :rtype: True if it is a Identifier attribute, False if not
+
+        """
+        return self.privacy_type == PRIVACY_TYPE_IDENTIFIER

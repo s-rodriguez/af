@@ -57,6 +57,18 @@ class BaseHierarchyController(object):
         return new_hierarchy
 
     @staticmethod
+    def create_suppression_hierarchy():
+        """Create a suppression hierarchy and return it
+
+        :rtype: BaseHierarchy instance
+
+        """
+        new_hierarchy = BaseHierarchy()
+        new_hierarchy.create_supression_node()
+
+        return new_hierarchy
+
+    @staticmethod
     def _add_new_node(hierarchy, parent_node, values):
         if len(values) > 0:
             value = values.pop()
