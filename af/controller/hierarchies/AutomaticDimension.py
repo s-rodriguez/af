@@ -27,7 +27,7 @@ class AutomaticDimension(object):
             return self.create_dimensions([{key: value} for key, value in new_dimensions_queue.iteritems()])
 
 
-class IntPartialSupressionLeftToRight(AutomaticDimension):
+class PartialSupressionLeftToRight(AutomaticDimension):
 
     def __init__(self, list_of_values, amount_to_supress=2):
         AutomaticDimension.__init__(self, list_of_values)
@@ -53,25 +53,15 @@ class IntPartialSupressionLeftToRight(AutomaticDimension):
         return parent
 
 
-class IntPartialSupressionRightToLeft(IntPartialSupressionLeftToRight):
+class PartialSupressionRightToLeft(PartialSupressionLeftToRight):
 
     def __init__(self, list_of_values, amount_to_supress=2):
-        IntPartialSupressionLeftToRight.__init__(self, list_of_values, amount_to_supress)
+        PartialSupressionLeftToRight.__init__(self, list_of_values, amount_to_supress)
 
     def get_parent(self, value):
         aux = value[::-1]
-        result = IntPartialSupressionLeftToRight.get_parent(self, aux)
+        result = PartialSupressionLeftToRight.get_parent(self, aux)
         return result [::-1]
-
-
-class IntRange(AutomaticDimension):
-
-    def __init__(self, list_of_values, amount_range=10):
-        AutomaticDimension.__init__(self, list_of_values)
-        self.amount_range = amount_range
-
-    def get_parent(self, value):
-        pass
 
 
 class DatePartialSupressionYYYYMMDD(AutomaticDimension):
@@ -102,3 +92,13 @@ class DatePartialSupressionDDMMYYYY(DatePartialSupressionYYYYMMDD):
         aux = value[::-1]
         result = DatePartialSupressionYYYYMMDD.get_parent(self, aux)
         return result [::-1]
+
+
+class IntRange(AutomaticDimension):
+
+    def __init__(self, list_of_values, amount_range=10):
+        AutomaticDimension.__init__(self, list_of_values)
+        self.amount_range = amount_range
+
+    def get_parent(self, value):
+        pass

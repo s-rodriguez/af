@@ -32,9 +32,9 @@ class AfManager:
         """Load every module contained inside the algorithms module directory.
 
         """
-        pkg_dir = os.path.dirname(__file__)
+        pkg_dir = os.path.join(os.path.dirname(__file__), 'algorithms')
         for (module_loader, name, ispkg) in pkgutil.iter_modules([pkg_dir]):
-            importlib.import_module('.' + name, __package__)
+            importlib.import_module('.' + name, __package__+'.algorithms')
 
     def get_algorithms(self, privacy_model):
         """Return a list of all the available algoritms.
