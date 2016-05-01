@@ -97,7 +97,7 @@ class AfManager:
                 return algorithm_instance
         return None
 
-    def get_automatic_dimensions(self, attribute_type):
+    def get_automatic_dimensions_names(self, attribute_type):
         """Return a list of all the available automatic dimensios for a given type.
 
         :rtype: List of automatic dimensions
@@ -106,5 +106,17 @@ class AfManager:
         automatic_dimensions = []
         for automatic_dimension in self.get_all_subclasses(AutomaticDimension):
             if attribute_type in automatic_dimension.VALID_FOR_TYPE:
-                automatic_dimensions.append((automatic_dimension.AD_NAME, automatic_dimension.AD_DESCRIPTION))
+                automatic_dimensions.append(automatic_dimension.AD_NAME)
         return automatic_dimensions
+
+    def get_automatic_dimension_description(self, automatic_dimension_name):
+        """Return the description of the automatic dimension
+
+        :rtype: Automatic dimension description
+
+        """
+
+        for automatic_dimension in self.get_all_subclasses(AutomaticDimension):
+            if automatic_dimension_name == automatic_dimension.AD_NAME:
+                return automatic_dimension.AD_DESCRIPTION
+        return None
