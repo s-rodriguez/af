@@ -1,5 +1,9 @@
 from af.exceptions import InfoException
 from af.model.hierarchies.Node import Node
+from af.utils import (
+    HIERARCHY_TYPE_GENERALIZATION,
+    HIERARCHY_TYPE_SUPPRESSION,
+)
 
 
 class BaseHierarchy(object):
@@ -7,7 +11,8 @@ class BaseHierarchy(object):
     A hierarchy can be of a supression or generalization kind. The only difference between both kinds, is that the supression hierarchy transforms every value into the same supression value, and the generalization hierarchy transforms a value into the value that is one level up.
 
     """
-    def __init__(self):
+    def __init__(self, hierarchy_type=HIERARCHY_TYPE_GENERALIZATION):
+        self.hierarchy_type = hierarchy_type
         self.leaf_nodes = []
         self.root_node = self.create_supression_node()
 
@@ -232,3 +237,9 @@ class BaseHierarchy(object):
                 node_dimension_values.append(gen_lvl.value)
             nodes_complete_transformation.append(tuple(node_dimension_values))
         return nodes_complete_transformation
+
+    def is_suppression_hierarchy(self):
+        return self.hierarchy_type == HIERARCHY_TYPE_SUPPRESSION
+
+    def is_generalization_hierarchy(self):
+        return self.hierarchy_type == HIERARCHY_TYPE_GENERALIZATION

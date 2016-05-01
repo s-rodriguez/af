@@ -76,6 +76,9 @@ PRIVACY_TYPE_QI = 'Quasi-Identifier'
 PRIVACY_TYPE_SENSITIVE = 'Sensitive'
 PRIVACY_TYPE_NON_SENSITIVE = 'Non-Sensitive'
 
+# Hierarchy Types
+HIERARCHY_TYPE_GENERALIZATION = 'Generalizaton'
+HIERARCHY_TYPE_SUPPRESSION = 'Suppression'
 
 ANONYMIZATION_DIRECTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'anonymization')
 ANONYMIZATION_DB_NAME = 'anonymizationDB.db'

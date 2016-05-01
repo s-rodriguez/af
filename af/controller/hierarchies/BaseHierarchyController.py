@@ -1,6 +1,10 @@
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy
 from af.model.hierarchies.Node import Node
 from af.utils import mapping_types
+from af.utils import (
+    HIERARCHY_TYPE_GENERALIZATION,
+    HIERARCHY_TYPE_SUPPRESSION,
+)
 
 
 class BaseHierarchyController(object):
@@ -49,7 +53,7 @@ class BaseHierarchyController(object):
         :rtype: BaseHierarchy instance
 
         """
-        new_hierarchy = BaseHierarchy()
+        new_hierarchy = BaseHierarchy(HIERARCHY_TYPE_GENERALIZATION)
 
         for row in list_of_values:
             BaseHierarchyController._add_new_node(new_hierarchy, new_hierarchy.root_node, row)
@@ -63,8 +67,7 @@ class BaseHierarchyController(object):
         :rtype: BaseHierarchy instance
 
         """
-        new_hierarchy = BaseHierarchy()
-        new_hierarchy.create_supression_node()
+        new_hierarchy = BaseHierarchy(HIERARCHY_TYPE_SUPPRESSION)
 
         return new_hierarchy
 
