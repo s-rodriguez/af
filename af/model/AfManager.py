@@ -4,6 +4,8 @@ import os
 import pkgutil
 
 from af.model.algorithms.BaseAlgorithm import BaseAlgorithm
+from af.controller.hierarchies.AutomaticDimension import AutomaticDimension
+
 from af.utils import (
     PRIVACY_TYPE_IDENTIFIER,
     PRIVACY_TYPE_QI,
@@ -36,29 +38,6 @@ class AfManager:
         for (module_loader, name, ispkg) in pkgutil.iter_modules([pkg_dir]):
             importlib.import_module('.' + name, __package__+'.algorithms')
 
-    def get_algorithms(self, privacy_model):
-        """Return a list of all the available algoritms.
-
-        :rtype: List of algorithm names
-
-        """
-        algorithms = []
-        for algorithm in self.get_all_algorithms():
-            if algorithm.PRIVACY_MODEL == privacy_model:
-                algorithms.append(algorithm.ALGORITHM_NAME)
-        return algorithms
-
-    def get_all_algorithms(self):
-        """Retrieve all the algorithms that are subclass of BaseAlgorithm
-
-        :rtype: List of algoritm classes
-
-        """
-        a = []
-        for algorithm in BaseAlgorithm.__subclasses__():
-            a += (self.get_all_subclasses(algorithm))
-        return a
-
     def get_all_subclasses(self, cls):
         """Given a class, retrieve all the subclasses (From root to leaves)
 
@@ -74,6 +53,18 @@ class AfManager:
 
         return all_subclasses
 
+    def get_algorithms(self, privacy_model):
+        """Return a list of all the available algoritms.
+
+        :rtype: List of algorithm names
+
+        """
+        algorithms = []
+        for algorithm in self.get_all_subclasses(BaseAlgorithm):
+            if algorithm.PRIVACY_MODEL == privacy_model:
+                algorithms.append(algorithm.ALGORITHM_NAME)
+        return algorithms
+
     def get_algoritm_parameters(self, algorithm_selected):
         """Return all the particular parameters an algorithm needs to be used.
         The common arguments are: self, data_config and optimized_processing
@@ -82,7 +73,7 @@ class AfManager:
         :rtype: List of arguments
 
         """
-        for algorithm in self.get_all_algorithms():
+        for algorithm in self.get_all_subclasses(BaseAlgorithm):
             if algorithm.ALGORITHM_NAME == algorithm_selected:
                 common_args = ('self', 'data_config', 'optimized_processing')
                 particular_arguments = [i for i in inspect.getargspec(algorithm.__init__).args if i not in common_args]
@@ -100,8 +91,20 @@ class AfManager:
         :rtype: class:`af.model.algorithms.BaseAlgorithm` instance
 
         """
-        for algorithm in self.get_all_algorithms():
+        for algorithm in self.get_all_subclasses(BaseAlgorithm):
             if algorithm.ALGORITHM_NAME == algorithm_name:
                 algorithm_instance = algorithm(data_config=data_config, optimized_processing=optimized_processing, **algorithm_arguments)
                 return algorithm_instance
         return None
+
+    def get_automatic_dimensions(self, attribute_type):
+        """Return a list of all the available automatic dimensios for a given type.
+
+        :rtype: List of automatic dimensions
+
+        """
+        automatic_dimensions = []
+        for automatic_dimension in self.get_all_subclasses(AutomaticDimension):
+            if attribute_type in automatic_dimension.VALID_FOR_TYPE:
+                automatic_dimensions.append((automatic_dimension.AD_NAME, automatic_dimension.AD_DESCRIPTION))
+        return automatic_dimensions

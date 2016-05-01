@@ -1,4 +1,9 @@
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy
+from af.utils import (
+    BASIC_TYPE_STRING,
+    BASIC_TYPE_INT,
+    BASIC_TYPE_DATE,
+)
 
 
 class AutomaticDimension(object):
@@ -8,6 +13,7 @@ class AutomaticDimension(object):
 
     AD_NAME = ''
     AD_DESCRIPTION = ''
+    VALID_FOR_TYPE = ()
 
     def __init__(self, list_of_values):
         self.set_of_values = set([str(val) for val in list_of_values])
@@ -35,6 +41,7 @@ class PartialSupressionLeftToRight(AutomaticDimension):
 
     AD_NAME = 'Left To Right'
     AD_DESCRIPTION = 'Supresses the values from left to right, with a default of two spaces at a time.\n Example: (123456 -> **3456 -> ****56 -> ******)'
+    VALID_FOR_TYPE = (BASIC_TYPE_STRING, BASIC_TYPE_INT)
 
     def __init__(self, list_of_values, amount_to_supress=2):
         AutomaticDimension.__init__(self, list_of_values)
@@ -64,6 +71,7 @@ class PartialSupressionRightToLeft(PartialSupressionLeftToRight):
 
     AD_NAME = 'Right to Left'
     AD_DESCRIPTION = 'Supresses the values from right to left, with a default of two spaces at a time.\nExample: (123456 -> 1234** -> 12**** -> ******)'
+    VALID_FOR_TYPE = (BASIC_TYPE_STRING, BASIC_TYPE_INT)
 
     def __init__(self, list_of_values, amount_to_supress=2):
         PartialSupressionLeftToRight.__init__(self, list_of_values, amount_to_supress)
@@ -78,6 +86,7 @@ class DatePartialSupressionYYYYMMDD(AutomaticDimension):
 
     AD_NAME = 'YYYY/MM/DD Format'
     AD_DESCRIPTION = 'Supresses date string formats, from day to year, with the default separator /.\nExample: (2016/03/11 -> 2016/03/** -> 2016/**/** -> ****/**/**'
+    VALID_FOR_TYPE = (BASIC_TYPE_DATE,)
 
     def __init__(self, list_of_values):
         AutomaticDimension.__init__(self, list_of_values)
@@ -100,6 +109,7 @@ class DatePartialSupressionDDMMYYYY(DatePartialSupressionYYYYMMDD):
 
     AD_NAME = 'DD/MM/YYYY Format'
     AD_DESCRIPTION = 'Supresses date string formats, from day to year, with the default separator /.\nExample: (11/03/2016 -> **/03/2016 -> **/**/2016 -> ****/**/**'
+    VALID_FOR_TYPE = (BASIC_TYPE_DATE,)
 
     def __init__(self, list_of_values):
         DatePartialSupressionYYYYMMDD.__init__(self, list_of_values)
