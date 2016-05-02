@@ -243,3 +243,25 @@ class BaseHierarchy(object):
 
     def is_generalization_hierarchy(self):
         return self.hierarchy_type == HIERARCHY_TYPE_GENERALIZATION
+
+    def create_html_representation(self, parent_node=None, level=0, html_string=None):
+        if parent_node is None:
+            html_string = '<ul>\n'
+            parent_node = self.root_node
+
+        html_string += '\t'*(level+1) + '<li>' + str(parent_node.value) + '\n'
+
+        next_level = level + 1
+        if parent_node.nodes is not None:
+            html_string += '\t'*(level+2) + '<ul>\n'
+            for node in parent_node.nodes:
+                html_string = self.create_html_representation(node, next_level, html_string)
+
+            html_string += '\t'*(level+2) + '</ul>\n'
+
+        html_string += '\t'*(level+1) + '</li>\n'
+
+        if parent_node == self.root_node:
+            html_string += '</ul>\n'
+
+        return html_string
