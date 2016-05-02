@@ -120,3 +120,18 @@ class AfManager:
             if automatic_dimension_name == automatic_dimension.AD_NAME:
                 return automatic_dimension.AD_DESCRIPTION
         return None
+
+    def get_automatic_dimension_instance(self, automatic_dimension_name, list_of_values, automatic_dimension_arguments):
+        """Create an instance of a certain automatic dimension and return it. It receives all the arguments necessary for the instance creation.
+
+        :param string automatic_dimension_name: Name of the automatic dimension intended to create the instance
+        :param list automatic_dimension_arguments: List of particular arguments the automatic dimension needs
+        :param bool list_of_values: Values that uses to create the automatic dimension
+        :rtype: class:`af.controller.hierarchies.AutomaticDimension` instance
+
+        """
+        for automatic_dimension in self.get_all_subclasses(AutomaticDimension):
+            if automatic_dimension_name == automatic_dimension.AD_NAME:
+                automatic_dimension_instance = automatic_dimension(list_of_values, **automatic_dimension_arguments)
+                return automatic_dimension_instance
+        return None

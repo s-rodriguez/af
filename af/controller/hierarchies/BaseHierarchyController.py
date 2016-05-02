@@ -5,6 +5,7 @@ from af.utils import (
     HIERARCHY_TYPE_GENERALIZATION,
     HIERARCHY_TYPE_SUPPRESSION,
 )
+from af.model.AfManager import AfManager
 
 
 class BaseHierarchyController(object):
@@ -70,6 +71,25 @@ class BaseHierarchyController(object):
         new_hierarchy = BaseHierarchy(HIERARCHY_TYPE_SUPPRESSION)
 
         return new_hierarchy
+
+    def create_suppression_hierarchy(self, automatic_dimension_name, automatic_dimension_args, list_of_values, attribute_type=str):
+        """Given the automatic dimension name, his arguments, the attribute type and the list of values
+        create the suppression hierarchy.
+
+        :param automatic_dimension_name: Automatic dimension name used to build the hierarchy
+        :param automatic_dimension_args: List of particular arguments the automtic dimension needs
+        :param list_of_values: List containing all the values of the hierarchies, per rows
+        :param attribute_type: Attribute type (int ,str or date)
+
+
+        :rtype: BaseHierarchy instance
+
+        """
+        automatic_dimension = AfManager.get_automatic_dimension_instance(automatic_dimension_name, list_of_values, automatic_dimension_args)
+        automatic_dimension_dict = automatic_dimension.create_dimensions()
+        suppression_hierarchy = self.load_hierarchy(automatic_dimension_dict, attribute_type)
+        suppression_hierarchy.hierarchy_type = HIERARCHY_TYPE_SUPPRESSION
+        return suppression_hierarchy
 
     @staticmethod
     def _add_new_node(hierarchy, parent_node, values):
