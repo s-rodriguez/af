@@ -17,7 +17,7 @@ class HierarchyDisplay:
         self.template = self.template.replace("###JS_LOCATION_TAG###", js_path)
 
         hierarchy_representation = self.hierarchy.create_html_representation()
-        hierarchy_representation = hierarchy_representation.replace("li", """li data-jstree='{"opened":true", icon":"###ICON###"}'""")
+        hierarchy_representation = hierarchy_representation.replace("li", """li data-jstree='{"opened":true}'""")
 
         self.template = self.template.replace("###HIERARCHY_DISPLAY###", hierarchy_representation)
 
