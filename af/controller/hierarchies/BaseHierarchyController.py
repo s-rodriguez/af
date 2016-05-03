@@ -72,7 +72,7 @@ class BaseHierarchyController(object):
 
         return new_hierarchy
 
-    def create_partial_suppression_hierarchy(self, automatic_dimension_name, automatic_dimension_args, list_of_values, attribute_type=str):
+    def create_automatic_dimension_hierarchy(self, automatic_dimension_name, automatic_dimension_args, list_of_values, attribute_type=str):
         """Given the automatic dimension name, his arguments, the attribute type and the list of values
         create the suppression hierarchy.
 
@@ -85,7 +85,8 @@ class BaseHierarchyController(object):
         :rtype: BaseHierarchy instance
 
         """
-        automatic_dimension = AfManager.get_automatic_dimension_instance(automatic_dimension_name, list_of_values, automatic_dimension_args)
+        af_manager = AfManager()
+        automatic_dimension = af_manager.get_automatic_dimension_instance(automatic_dimension_name, list_of_values, automatic_dimension_args)
         automatic_dimension_dict = automatic_dimension.create_dimensions()
         suppression_hierarchy = self.load_hierarchy(automatic_dimension_dict, attribute_type)
         suppression_hierarchy.hierarchy_type = HIERARCHY_TYPE_SUPPRESSION
