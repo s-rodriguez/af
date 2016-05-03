@@ -85,7 +85,8 @@ class BaseHierarchyController(object):
         :rtype: BaseHierarchy instance
 
         """
-        automatic_dimension = AfManager.get_automatic_dimension_instance(automatic_dimension_name, list_of_values, automatic_dimension_args)
+        af_manager = AfManager()
+        automatic_dimension = af_manager.get_automatic_dimension_instance(automatic_dimension_name, list_of_values, automatic_dimension_args)
         automatic_dimension_dict = automatic_dimension.create_dimensions()
         suppression_hierarchy = self.load_hierarchy(automatic_dimension_dict, attribute_type)
         suppression_hierarchy.hierarchy_type = HIERARCHY_TYPE_SUPPRESSION
