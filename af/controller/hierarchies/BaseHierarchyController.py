@@ -72,7 +72,7 @@ class BaseHierarchyController(object):
 
         return new_hierarchy
 
-    def create_suppression_hierarchy(self, automatic_dimension_name, automatic_dimension_args, list_of_values, attribute_type=str):
+    def create_partial_suppression_hierarchy(self, automatic_dimension_name, automatic_dimension_args, list_of_values, attribute_type=str):
         """Given the automatic dimension name, his arguments, the attribute type and the list of values
         create the suppression hierarchy.
 
