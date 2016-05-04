@@ -25,7 +25,10 @@ class BaseHierarchyController(object):
         attribute_type = mapping_types(attribute_type)
         new_hierarchy = BaseHierarchy()
         if isinstance(config, dict):
-            new_hierarchy.populate_nodes(new_hierarchy.root_node, config.values()[0], attribute_type)
+            hierarchy_representation = config['hierarchy_representation']
+            hierarchy_type = config['hierarchy_type']
+            new_hierarchy.populate_nodes(new_hierarchy.root_node, hierarchy_representation.values()[0], attribute_type)
+            new_hierarchy.hierarchy_type = hierarchy_type
             if new_hierarchy.validate_hierarchy_depth() is not True:
                 raise Exception("Load hierarchy failed: all leaf nodes must have same depth")
 
@@ -87,9 +90,11 @@ class BaseHierarchyController(object):
         """
         af_manager = AfManager()
         automatic_dimension = af_manager.get_automatic_dimension_instance(automatic_dimension_name, list_of_values, automatic_dimension_args)
-        automatic_dimension_dict = automatic_dimension.create_dimensions()
+        automatic_dimension_representation = automatic_dimension.create_dimensions()
+        automatic_dimension_dict = {'hierarchy_type': HIERARCHY_TYPE_SUPPRESSION,
+                                     'hierarchy_representation': automatic_dimension_representation}
+
         suppression_hierarchy = self.load_hierarchy(automatic_dimension_dict, attribute_type)
-        suppression_hierarchy.hierarchy_type = HIERARCHY_TYPE_SUPPRESSION
         return suppression_hierarchy
 
     @staticmethod

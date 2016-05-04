@@ -52,7 +52,7 @@ class Attribute(object):
 
         """
         if self.hierarchy is not None:
-            return self.hierarchy.hierarchy_representation()
+            return self.hierarchy.get_representation()
         else:
             return None
 

@@ -18,18 +18,22 @@ if not os.path.isfile(os.path.join(db_directory, db_name)):
 supression_node = BaseHierarchy.supression_node().value
 
 # HIERARCHIES DICTIONARIES REPRESENTATIONS
-ssn_hierarchy_dict = {supression_node: None}
 
-race_hierarchy_dict = {
+ssn_hierarchy_representation = {supression_node: None}
+ssn_hierarchy_dict = {'hierarchy_type': utils.HIERARCHY_TYPE_SUPPRESSION, 'hierarchy_representation': ssn_hierarchy_representation}
+
+
+race_hierarchy_representation = {
                     supression_node: {
                         'black': None,
                         'white': None
                     }
                 }
+race_hierarchy_dict = {'hierarchy_type': utils.HIERARCHY_TYPE_GENERALIZATION, 'hierarchy_representation': race_hierarchy_representation}
 
 
 
-gender_hierarchy_dict = {
+gender_hierarchy_representation = {
                     supression_node: {
                         'person': {
                             'female': None,
@@ -37,8 +41,10 @@ gender_hierarchy_dict = {
                         }
                     }
                 }
+gender_hierarchy_dict = {'hierarchy_type': utils.HIERARCHY_TYPE_GENERALIZATION, 'hierarchy_representation': gender_hierarchy_representation}
 
-city_hierarchy_dict = {
+
+city_hierarchy_representation = {
                     supression_node: {
                         'Argentina': {
                             'Buenos Aires': {
@@ -95,8 +101,10 @@ city_hierarchy_dict = {
                         }
                     }
                 }
+city_hierarchy_dict = {'hierarchy_type': utils.HIERARCHY_TYPE_GENERALIZATION, 'hierarchy_representation': city_hierarchy_representation}
 
-profession_hierarchy_dict = {
+
+profession_hierarchy_representation = {
                     supression_node: {
                         'Professional': {
                             'Medicine': {
@@ -141,6 +149,8 @@ profession_hierarchy_dict = {
                         }
                     }
                 }
+profession_hierarchy_dict = {'hierarchy_type': utils.HIERARCHY_TYPE_SUPPRESSION, 'hierarchy_representation': profession_hierarchy_representation}
+
 
 
 with sqlite3.connect(os.path.join(db_directory, db_name)) as conn:
@@ -148,13 +158,17 @@ with sqlite3.connect(os.path.join(db_directory, db_name)) as conn:
     cursor.execute("SELECT DISTINCT(zip) FROM SICKNESS")
     zip_results = [str(v[0]) for v in cursor.fetchall()]
     zip_automatic = AutomaticDimension.PartialSupressionRightToLeft(zip_results, 1)
-    zip_hierarchy_dict = zip_automatic.create_dimensions()
+    zip_hierarchy_representation = zip_automatic.create_dimensions()
+    zip_hierarchy_dict = {'hierarchy_type': utils.HIERARCHY_TYPE_SUPPRESSION,
+                           'hierarchy_representation': zip_hierarchy_representation}
 
     cursor.execute("SELECT DISTINCT(birth) FROM SICKNESS")
     birth_results = [str(v[0]) for v in cursor.fetchall()]
     birth_automatic = AutomaticDimension.DatePartialSupressionDDMMYYYY(birth_results)
     birth_dimensions = birth_automatic.create_dimensions()
-    year_of_birth_hierarchy_dict = birth_automatic.create_dimensions()
+    year_of_birth_hierarchy_representation = birth_automatic.create_dimensions()
+    year_of_birth_hierarchy_dict = {'hierarchy_type': utils.HIERARCHY_TYPE_SUPPRESSION,
+                          'hierarchy_representation': year_of_birth_hierarchy_representation}
 
 # HIERARCHIES INSTANCES FOR EACH QI AND IDENTIFIABLE ATTRIBUTES
 ssn_hierarchy = BaseHierarchyController(BaseHierarchy()).load_hierarchy(ssn_hierarchy_dict, attribute_type=int)

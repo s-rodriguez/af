@@ -4,6 +4,10 @@ import unittest
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy
 from af.model.hierarchies.Node import Node
 from af.controller.hierarchies.BaseHierarchyController import BaseHierarchyController
+from af.utils import HIERARCHY_TYPE_GENERALIZATION
+from af.utils import HIERARCHY_TYPE_SUPPRESSION
+
+
 
 class TestBaseHierarchyController(unittest.TestCase):
 
@@ -16,7 +20,8 @@ class TestBaseHierarchyController(unittest.TestCase):
         self.assertEqual(self.h, self.bh_controller.hierarchy, "Hierarchies do not match")
 
     def test_load_generalization_hierarchy_ok(self):
-        json_saved_hierarchy = {BaseHierarchy.supression_node().value: {1: {2: {3: None}}}}
+        json_saved_hierarchy_representation = {BaseHierarchy.supression_node().value: {1: {2: {3: None}}}}
+        json_saved_hierarchy = {'hierarchy_type': HIERARCHY_TYPE_GENERALIZATION, 'hierarchy_representation': json_saved_hierarchy_representation}
 
         hierarchy_loaded = self.bh_controller.load_hierarchy(json_saved_hierarchy, attribute_type=int)
 
@@ -28,7 +33,8 @@ class TestBaseHierarchyController(unittest.TestCase):
         self.assertEqual(1, hierarchy_loaded.root_node.nodes[0].value, "The son of the root node should have value 1")
 
     def test_load_supression_hierarchy_ok(self):
-        json_saved_hierarchy = {BaseHierarchy.supression_node().value: None}
+        json_saved_hierarchy_representation = {BaseHierarchy.supression_node().value: None}
+        json_saved_hierarchy = {'hierarchy_type': HIERARCHY_TYPE_SUPPRESSION, 'hierarchy_representation': json_saved_hierarchy_representation}
 
         hierarchy_loaded = self.bh_controller.load_hierarchy(json_saved_hierarchy, attribute_type=int)
 
@@ -54,7 +60,8 @@ class TestBaseHierarchyController(unittest.TestCase):
         self.assertEqual(expected, self.bh_controller.get_hierarchy_representation())
 
     def test_load_generalization_hierarchy_fails(self):
-        json_saved_hierarchy = {BaseHierarchy.supression_node().value: {1: {2: {3: None}, 4: None}}}
+        json_saved_hierarchy_representation = {BaseHierarchy.supression_node().value: {1: {2: {3: None}, 4: None}}}
+        json_saved_hierarchy = {'hierarchy_type': HIERARCHY_TYPE_SUPPRESSION, 'hierarchy_representation': json_saved_hierarchy_representation}
 
         failed = False
         try:

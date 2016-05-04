@@ -4,6 +4,7 @@ import unittest
 from af.controller.hierarchies.BaseHierarchyController import BaseHierarchyController
 from af.model.Attribute import Attribute
 from af.model.hierarchies.BaseHierarchy import BaseHierarchy
+from af.utils import HIERARCHY_TYPE_GENERALIZATION
 
 
 class TestAttribute(unittest.TestCase):
@@ -17,7 +18,8 @@ class TestAttribute(unittest.TestCase):
 
         self.attribute = Attribute(self.name, self.basic_type, self.privacy_type, self.hierarchy_none, self.weight)
 
-        self.saved_hierarchy = {BaseHierarchy.supression_node().value: {1: {2: {3: None}}}}
+        self.saved_hierarchy_representation = {BaseHierarchy.supression_node().value: {1: {2: {3: None}}}}
+        self.saved_hierarchy = {'hierarchy_type':HIERARCHY_TYPE_GENERALIZATION, 'hierarchy_representation': self.saved_hierarchy_representation}
         self.hierarchy = BaseHierarchyController().load_hierarchy(self.saved_hierarchy, attribute_type=int)
 
     def test_attribute_creation_ok(self):

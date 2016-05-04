@@ -136,6 +136,18 @@ class BaseHierarchy(object):
             return hierarchy
         return hierarchy
 
+    def get_representation(self):
+        """Returns the hierarchy representation with the hierarchy type in the form of a dictionary
+
+         :param node: Node (Default None) Used for recursion levels.
+         :rtype: Dictionary representation of the hierarchy with the hierarchy type
+
+         """
+        hierarchy_representation = {'hierarchy_type': self.hierarchy_type,
+                                    'hierarchy_representation': self.hierarchy_representation()}
+        return hierarchy_representation
+
+
     def populate_nodes(self, parent_node, nodes, attribute_type):
         """This method is to be used every time a hierarchy is loaded, and the nodes are populated inside of it.
 
