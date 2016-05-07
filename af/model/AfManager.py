@@ -136,3 +136,17 @@ class AfManager:
                 automatic_dimension_instance = automatic_dimension(list_of_values)
                 return automatic_dimension_instance
         return None
+
+    def get_automatic_dimension_parameters(self, automatic_dimension_name):
+        """Return all the particular parameters an automatic dimension needs to be used.
+
+        :param string automatic_dimension_name: Name of the automatic dimension
+        :rtype: List of arguments
+
+        """
+        for automatic_dimension in self.get_all_subclasses(AutomaticDimension):
+            if automatic_dimension.AD_NAME == automatic_dimension_name:
+                common_args = ('self', 'list_of_values')
+                particular_arguments = [i for i in inspect.getargspec(automatic_dimension.__init__).args if i not in common_args]
+                return particular_arguments
+        return None
