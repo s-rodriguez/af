@@ -130,10 +130,9 @@ class AfManager:
         :rtype: class:`af.controller.hierarchies.AutomaticDimension` instance
 
         """
-        # TODO: add automatic_dimension_arguments
         for automatic_dimension in self.get_all_subclasses(AutomaticDimension):
             if automatic_dimension_name == automatic_dimension.AD_NAME:
-                automatic_dimension_instance = automatic_dimension(list_of_values)
+                automatic_dimension_instance = automatic_dimension(list_of_values=list_of_values, **automatic_dimension_arguments)
                 return automatic_dimension_instance
         return None
 
