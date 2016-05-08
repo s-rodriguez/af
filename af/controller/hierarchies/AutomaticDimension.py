@@ -88,11 +88,11 @@ class DatePartialSupressionYYYYMMDD(AutomaticDimension):
     AD_DESCRIPTION = 'Suppresses date string formats, from day to year, with the default separator /.\nExample: (2016/03/11 -> 2016/03/** -> 2016/**/** -> ****/**/**'
     VALID_FOR_TYPE = (BASIC_TYPE_DATE,)
 
-    def __init__(self, list_of_values):
+    def __init__(self, list_of_values, separator='/'):
         AutomaticDimension.__init__(self, list_of_values)
 
     def get_parent(self, value):
-        year, month, day = value.split('/')
+        year, month, day = value.split(separator)
         if '*' not in day:
             day = '**'
         elif '*' not in month:
@@ -111,8 +111,8 @@ class DatePartialSupressionDDMMYYYY(DatePartialSupressionYYYYMMDD):
     AD_DESCRIPTION = 'Suppresses date string formats, from day to year, with the default separator /.\nExample: (11/03/2016 -> **/03/2016 -> **/**/2016 -> ****/**/**'
     VALID_FOR_TYPE = (BASIC_TYPE_DATE,)
 
-    def __init__(self, list_of_values):
-        DatePartialSupressionYYYYMMDD.__init__(self, list_of_values)
+    def __init__(self, list_of_values, separator='/'):
+        DatePartialSupressionYYYYMMDD.__init__(self, list_of_values, separator)
 
     def get_parent(self, value):
         aux = value[::-1]
