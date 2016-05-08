@@ -45,7 +45,7 @@ class PartialSupressionLeftToRight(AutomaticDimension):
 
     def __init__(self, list_of_values, amount_to_supress=2):
         AutomaticDimension.__init__(self, list_of_values)
-        self.amount_to_supress = amount_to_supress
+        self.amount_to_supress = int(amount_to_supress)
 
     def get_parent(self, value):
         if not '*' in value:
