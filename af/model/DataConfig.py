@@ -105,18 +105,19 @@ class DataConfig:
             attributes_existance = len(self.attributes_list) > 0
             if attributes_existance:
 
-                all_attributes_with_hierarchy = True
+                all_attributes_with_hierarchy = [True, ]
                 for att in self.attributes_list:
                     if att.privacy_type in (utils.PRIVACY_TYPE_IDENTIFIER, utils.PRIVACY_TYPE_QI):
                         # must have a hierarchy
                         if att.hierarchy is None:
-                            all_attributes_with_hierarchy = False
+                            all_attributes_with_hierarchy[0] = False
+                            all_attributes_with_hierarchy.append(att.name)
                             break
 
-                if all_attributes_with_hierarchy:
+                if all_attributes_with_hierarchy[0]:
                     return True
                 else:
-                    error_message = "All identifier and quasi-identifier attributes must have a hierarchy`"
+                    error_message = "All identifier and quasi-identifier attributes must have a hierarchy: %s" % all_attributes_with_hierarchy[1]
             else:
                 error_message = "No attributes defined."
         else:
