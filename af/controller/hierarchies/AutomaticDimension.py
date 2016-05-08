@@ -90,9 +90,10 @@ class DatePartialSupressionYYYYMMDD(AutomaticDimension):
 
     def __init__(self, list_of_values, separator='/'):
         AutomaticDimension.__init__(self, list_of_values)
+        self.separator = separator
 
     def get_parent(self, value):
-        year, month, day = value.split(separator)
+        year, month, day = value.split(self.separator)
         if '*' not in day:
             day = '**'
         elif '*' not in month:
