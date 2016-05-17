@@ -10,9 +10,9 @@ def create_sickness_db(number_of_records):
     create_sickness_db.create_db(db_directory, db_name, number_of_records)
 
 
-def look_for_all_ocurrences():
-    look_for_all = raw_input("Buscar todas las ocurrencias posibles? [y/N]: ")
-    return True if look_for_all.lower() == "y" else False
+def optimize_if_possible():
+    optimize = raw_input("Optimizar algoritmo de ser posible? [Y/n]: ")
+    return False if optimize.lower() == "n" else True
 
 
 def create_db_and_data_config_associated():
@@ -37,11 +37,11 @@ def af_test():
         algorithm_instance = Datafly(dc, k=k_value)
 
     elif algorithm.lower() in ("2", "incognitok", "incognitok [2]"):
-        algorithm_instance = IncognitoK(dc, k=k_value, optimized_processing=look_for_all_ocurrences())
+        algorithm_instance = IncognitoK(dc, k=k_value, optimized_processing=optimize_if_possible())
 
     elif algorithm.lower() in ("3", "incognitol", "incognitol [3]"):
         l_value = int(raw_input("Valor de L: "))
-        algorithm_instance = IncognitoL(dc, k=k_value, l=l_value, optimized_processing=look_for_all_ocurrences())
+        algorithm_instance = IncognitoL(dc, k=k_value, l=l_value, optimized_processing=optimize_if_possible())
 
     else:
         print "\nAlgoritmo seleccionado incorrecto"
