@@ -156,8 +156,8 @@ profession_hierarchy_dict = {'hierarchy_type': utils.HIERARCHY_TYPE_SUPPRESSION,
 with sqlite3.connect(os.path.join(db_directory, db_name)) as conn:
     cursor = conn.cursor()
     cursor.execute("SELECT DISTINCT(zip) FROM SICKNESS")
-    zip_results = [str(v[0]) for v in cursor.fetchall()]
-    zip_automatic = AutomaticDimension.PartialSupressionRightToLeft(zip_results, 1)
+    zip_results = [int(v[0]) for v in cursor.fetchall()]
+    zip_automatic = AutomaticDimension.PartialSupressionRightToLeft(zip_results, 2)
     zip_hierarchy_representation = zip_automatic.create_dimensions()
     zip_hierarchy_dict = {'hierarchy_type': utils.HIERARCHY_TYPE_SUPPRESSION,
                            'hierarchy_representation': zip_hierarchy_representation}
@@ -174,7 +174,7 @@ with sqlite3.connect(os.path.join(db_directory, db_name)) as conn:
 ssn_hierarchy = BaseHierarchyController(BaseHierarchy()).load_hierarchy(ssn_hierarchy_dict, attribute_type=int)
 race_hierarchy = BaseHierarchyController(BaseHierarchy()).load_hierarchy(race_hierarchy_dict, attribute_type=str)
 gender_hierarchy = BaseHierarchyController(BaseHierarchy()).load_hierarchy(gender_hierarchy_dict, attribute_type=str)
-zip_hierarchy = BaseHierarchyController(BaseHierarchy()).load_hierarchy(zip_hierarchy_dict, attribute_type=str)
+zip_hierarchy = BaseHierarchyController(BaseHierarchy()).load_hierarchy(zip_hierarchy_dict, attribute_type=int)
 year_of_birth_hierarchy = BaseHierarchyController(BaseHierarchy()).load_hierarchy(year_of_birth_hierarchy_dict, attribute_type=str)
 city_hierarchy = BaseHierarchyController(BaseHierarchy()).load_hierarchy(city_hierarchy_dict, attribute_type=str)
 profession_hierarchy = BaseHierarchyController(BaseHierarchy()).load_hierarchy(profession_hierarchy_dict, attribute_type=str)
@@ -193,7 +193,7 @@ att_year_of_birth.hierarchy = year_of_birth_hierarchy
 att_gender = Attribute('GENDER', privacy_type=utils.PRIVACY_TYPE_QI)
 att_gender.hierarchy = gender_hierarchy
 
-att_zip = Attribute('ZIP', privacy_type=utils.PRIVACY_TYPE_QI, weight=4)
+att_zip = Attribute('ZIP', basic_type='int', privacy_type=utils.PRIVACY_TYPE_QI, weight=4)
 att_zip.hierarchy = zip_hierarchy
 
 att_city = Attribute('CITY', privacy_type=utils.PRIVACY_TYPE_QI, weight=3)

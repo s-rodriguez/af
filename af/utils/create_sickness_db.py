@@ -19,7 +19,7 @@ class RandomRecord:
         birth = RandomRecord.get_random_birth()
         race = RandomRecord.get_random_race()
         gender = RandomRecord.get_random_gender()
-        zip_code = str(random.randrange(1000, 9999))
+        zip_code = random.randrange(1000, 1100)
         city = RandomRecord.get_random_city()
         profession = RandomRecord.get_random_profession()
         problem = RandomRecord.get_random_problem()
@@ -88,7 +88,7 @@ def create_db(directory, db_name, number_of_records=100):
                RACE           CHAR(12)    NOT NULL,
                BIRTH           CHAR(12)    NOT NULL,
                GENDER        CHAR(12),
-               ZIP         CHAR(6),
+               ZIP         INT,
                CITY        CHAR(32),
                PROFESSION CHAR(32),
                PROBLEM        CHAR(20));''')
