@@ -158,11 +158,13 @@ class BaseHierarchy(object):
         """
         if isinstance(nodes, dict):
             for key, values in nodes.iteritems():
-                if values is None:
-                    use_type = attribute_type
-                else:
-                    use_type=str
-                node = Node(use_type(key))
+                try:
+                    node = Node(attribute_type(key))
+                except ValueError, e:
+                    if values is None:
+                        raise ValueError(e)
+                    else:
+                        node = Node(str(key))
                 self.add_node(parent_node, node)
                 self.populate_nodes(node, values, attribute_type)
 
