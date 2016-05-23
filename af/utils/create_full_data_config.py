@@ -149,7 +149,7 @@ profession_hierarchy_representation = {
                         }
                     }
                 }
-profession_hierarchy_dict = {'hierarchy_type': utils.HIERARCHY_TYPE_SUPPRESSION, 'hierarchy_representation': profession_hierarchy_representation}
+profession_hierarchy_dict = {'hierarchy_type': utils.HIERARCHY_TYPE_GENERALIZATION, 'hierarchy_representation': profession_hierarchy_representation}
 
 
 
